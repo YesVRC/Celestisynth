@@ -6,6 +6,7 @@ plugins {
     id("maven-publish")
     id("org.parchmentmc.librarian.forgegradle") version("${librarian_plugin_version}")
     id("com.github.johnrengelman.shadow") version("${shadow_plugin_version}")
+    id("me.modmuss50.mod-publish-plugin") version("${publisher_version}")
 }
 
 version = "${mc_version}-${mod_version}"
@@ -263,6 +264,38 @@ publishing {
         }
     }
 }
+
+publishMods {
+    file = jar.archiveFile
+    changelog = file("CHANGELOG.md").getText()
+    version = "${mc_version}-${mod_version}"
+    displayName = "${mod_name} v${mc_version}-${mod_version}"
+    type = STABLE
+
+    modLoaders.add("forge")
+
+    curseforge {
+        projectId = "872712"
+        projectSlug = "celestisynth"
+        accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+        announcementTitle = "New Celestisynth CurseForge Release!"
+
+        getMinecraftVersions().add(mc_version)
+        requires("geckolib")
+        requires("playeranimator")
+    }
+
+ /*   modrinth {
+        projectId = ""
+        accessToken = providers.environmentVariable("MODRINTH_API_KEY")
+        announcementTitle = "New Celestisynth Modrinth Release!"
+
+        getMinecraftVersions().add(mc_version)
+        requires("geckolib")
+        requires("playeranimator")
+    } */
+}
+
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
