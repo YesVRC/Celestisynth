@@ -3,7 +3,7 @@ package com.aqutheseal.celestisynth.common.item.weapons;
 import com.aqutheseal.celestisynth.api.item.CSGeoItem;
 import com.aqutheseal.celestisynth.common.attack.aquaflora.*;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
@@ -64,7 +64,7 @@ public class AquafloraItem extends SkilledSwordItem implements CSGeoItem {
 
     @Override
     public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
-        if (CSCompatManager.checkIronsSpellbooks()) {
+        if (CSIntegrationManager.checkIronsSpellbooks()) {
             map.put(AttributeRegistry.NATURE_SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Item nature spell power", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
             map.put(AttributeRegistry.NATURE_MAGIC_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Item nature resist", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
         }

@@ -13,7 +13,7 @@ import com.aqutheseal.celestisynth.client.renderers.entity.projectile.RainfallLa
 import com.aqutheseal.celestisynth.client.renderers.entity.projectile.SolarisBombRenderer;
 import com.aqutheseal.celestisynth.client.renderers.misc.CSEffectEntityRenderer;
 import com.aqutheseal.celestisynth.client.renderers.misc.NullRenderer;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSCompatItems;
 import com.aqutheseal.celestisynth.common.registry.CSBlockEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
@@ -61,7 +61,7 @@ public class CSClientSetupEvents {
             MenuScreens.register(CSMenuTypes.CELESTIAL_CRAFTING.get(), CelestialCraftingScreen::new);
         });
 
-        if (CSCompatManager.checkIronsSpellbooks()) {
+        if (CSIntegrationManager.checkIronsSpellbooks()) {
             ISSCompatItems.SPELLBOOKS_ITEMS.getEntries().stream().filter(item -> item.get() instanceof SpellBook).forEach((item) ->
                     CuriosRendererRegistry.register(item.get(), SpellBookCurioRenderer::new)
             );

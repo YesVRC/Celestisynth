@@ -2,7 +2,7 @@ package com.aqutheseal.celestisynth.common.item.weapons;
 
 import com.aqutheseal.celestisynth.api.item.CSGeoItem;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.bettercombat.SwingParticleContainer;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
@@ -41,7 +41,7 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
 
     @Override
     public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
-        if (CSCompatManager.checkIronsSpellbooks()) {
+        if (CSIntegrationManager.checkIronsSpellbooks()) {
             map.put(AttributeRegistry.BLOOD_SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Item blood spell power", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
             map.put(AttributeRegistry.BLOOD_MAGIC_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Item blood resist", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
         }

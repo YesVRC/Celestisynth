@@ -1,5 +1,6 @@
-package com.aqutheseal.celestisynth.common.network.util;
+package com.aqutheseal.celestisynth.common.network.c2s;
 
+import com.aqutheseal.celestisynth.common.network.s2c.UpdateGroupedParticlePacket;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -8,8 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
-public class C2SParticlePacket {
-
+public class UpdateParticlePacket {
     private final double x;
     private final double y;
     private final double z;
@@ -18,7 +18,7 @@ public class C2SParticlePacket {
     private final float zSpeed;
     private final ParticleType<?> particle;
 
-    public <T extends ParticleType<?>> C2SParticlePacket(T pParticle, double pX, double pY, double pZ, float xSpeed, float ySpeed, float zSpeed) {
+    public <T extends ParticleType<?>> UpdateParticlePacket(T pParticle, double pX, double pY, double pZ, float xSpeed, float ySpeed, float zSpeed) {
         this.particle = pParticle;
         this.x = pX;
         this.y = pY;
@@ -28,7 +28,7 @@ public class C2SParticlePacket {
         this.zSpeed = zSpeed;
     }
 
-    public C2SParticlePacket(FriendlyByteBuf buffer) {
+    public UpdateParticlePacket(FriendlyByteBuf buffer) {
         ParticleType<?> particletype = ForgeRegistries.PARTICLE_TYPES.getValue(buffer.readResourceLocation());
         this.x = buffer.readDouble();
         this.y = buffer.readDouble();
@@ -49,37 +49,9 @@ public class C2SParticlePacket {
         buffer.writeFloat(zSpeed);
     }
 
-    public double getX() {
-        return this.x;
-    }
-
-    public double getY() {
-        return this.y;
-    }
-
-    public double getZ() {
-        return this.z;
-    }
-
-    public float getXSpeed() {
-        return this.xSpeed;
-    }
-
-    public float getYSpeed() {
-        return this.ySpeed;
-    }
-
-    public float getZSpeed() {
-        return this.zSpeed;
-    }
-
-    public ParticleType<?> getParticle() {
-        return this.particle;
-    }
-
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         supplier.get().enqueueWork(() -> {
-            CSNetworkManager.sendToAll(new S2CGroupedParticlePacket(particle, particle.getOverrideLimiter(), x, y, z, 0, 0, 0, xSpeed, ySpeed, zSpeed, 1));
+            CSNetworkManager.sendToAll(new UpdateGroupedParticlePacket(particle, particle.getOverrideLimiter(), x, y, z, 0, 0, 0, xSpeed, ySpeed, zSpeed, 1));
         });
         return true;
     }

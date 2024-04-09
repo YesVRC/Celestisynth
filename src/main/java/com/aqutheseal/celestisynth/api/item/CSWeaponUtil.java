@@ -1,8 +1,8 @@
 package com.aqutheseal.celestisynth.api.item;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
-import com.aqutheseal.celestisynth.common.network.util.ChangeCameraTypePacket;
-import com.aqutheseal.celestisynth.common.network.util.ShakeScreenServerPacket;
+import com.aqutheseal.celestisynth.common.network.s2c.ChangeCameraTypePacket;
+import com.aqutheseal.celestisynth.common.network.c2s.ShakeScreenForAllPacket;
 import com.aqutheseal.celestisynth.common.registry.CSAttributes;
 import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
@@ -189,7 +189,7 @@ public interface CSWeaponUtil {
     }
 
     default void shakeScreens(Player target, int duration, int startFadingOut, float intensity) {
-        if (target != null) CSNetworkManager.sendToServer(new ShakeScreenServerPacket(target.getUUID(), duration, startFadingOut, intensity));
+        if (target != null) CSNetworkManager.sendToServer(new ShakeScreenForAllPacket(target.getUUID(), duration, startFadingOut, intensity));
     }
 
     default double calculateXLook(Player player) {

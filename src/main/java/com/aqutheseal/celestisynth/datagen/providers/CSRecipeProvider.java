@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.datagen.providers;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSItemUtil;
 import com.aqutheseal.celestisynth.common.recipe.celestialcrafting.CelestialShapedRecipeBuilder;
 import com.aqutheseal.celestisynth.common.registry.CSBlocks;
@@ -153,7 +153,7 @@ public class CSRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_item", has(CSItems.WINTEREIS_SHARD.get()))
                 .save(consumer, modLoc("frostbound"));
 
-        if (CSCompatManager.checkIronsSpellbooks()) {
+        if (CSIntegrationManager.checkIronsSpellbooks()) {
             ISSItemUtil.manageRecipeCompatibility(consumer, this);
         }
     }

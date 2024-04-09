@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.api.animation.player;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.common.network.animation.SetAnimationServerPacket;
+import com.aqutheseal.celestisynth.common.network.s2c.SetAnimationPacket;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration;
@@ -34,7 +34,7 @@ public class AnimationManager {
     }
 
     public static void playAnimation(AnimationsList animation, boolean isOtherLayer) {
-        CSNetworkManager.sendToServer(new SetAnimationServerPacket(isOtherLayer, animation.getId()));
+        CSNetworkManager.sendToServer(new SetAnimationPacket(isOtherLayer, animation.getId()));
     }
 
     public static void playAnimation(@Nullable KeyframeAnimation animation, ModifierLayer<IAnimation> layer) {

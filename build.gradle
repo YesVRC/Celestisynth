@@ -285,15 +285,15 @@ publishMods {
         requires("playeranimator")
     }
 
- /*   modrinth {
-        projectId = ""
+    modrinth {
+        projectId = "2ocGk7mG"
         accessToken = providers.environmentVariable("MODRINTH_API_KEY")
         announcementTitle = "New Celestisynth Modrinth Release!"
 
         getMinecraftVersions().add(mc_version)
         requires("geckolib")
         requires("playeranimator")
-    } */
+    }
 }
 
 

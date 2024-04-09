@@ -1,4 +1,4 @@
-package com.aqutheseal.celestisynth.common.network.util;
+package com.aqutheseal.celestisynth.common.network.s2c;
 
 import com.aqutheseal.celestisynth.Celestisynth;
 import net.minecraft.client.Minecraft;
@@ -10,7 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
-public class S2CGroupedParticlePacket {
+public class UpdateGroupedParticlePacket {
     private final double x;
     private final double y;
     private final double z;
@@ -24,7 +24,7 @@ public class S2CGroupedParticlePacket {
     private final boolean overrideLimiter;
     private final ParticleType<?> particle;
 
-    public <T extends ParticleType<?>> S2CGroupedParticlePacket(T pParticle, boolean pOverrideLimiter, double pX, double pY, double pZ, float pXDist, float pYDist, float pZDist, float xSpeed, float ySpeed, float zSpeed, int pCount) {
+    public <T extends ParticleType<?>> UpdateGroupedParticlePacket(T pParticle, boolean pOverrideLimiter, double pX, double pY, double pZ, float pXDist, float pYDist, float pZDist, float xSpeed, float ySpeed, float zSpeed, int pCount) {
         this.particle = pParticle;
         this.overrideLimiter = pOverrideLimiter;
         this.x = pX;
@@ -39,7 +39,7 @@ public class S2CGroupedParticlePacket {
         this.count = pCount;
     }
 
-    public S2CGroupedParticlePacket(FriendlyByteBuf buffer) {
+    public UpdateGroupedParticlePacket(FriendlyByteBuf buffer) {
         ParticleType<?> particletype = ForgeRegistries.PARTICLE_TYPES.getValue(buffer.readResourceLocation());
         this.overrideLimiter = buffer.readBoolean();
         this.x = buffer.readDouble();
@@ -70,80 +70,26 @@ public class S2CGroupedParticlePacket {
         buffer.writeInt(count);
     }
 
-    public boolean isOverrideLimiter() {
-        return this.overrideLimiter;
-    }
-
-    public double getX() {
-        return this.x;
-    }
-
-    public double getY() {
-        return this.y;
-    }
-
-    public double getZ() {
-        return this.z;
-    }
-
-    public float getXDist() {
-        return this.xDist;
-    }
-
-    public float getYDist() {
-        return this.yDist;
-    }
-
-    public float getZDist() {
-        return this.zDist;
-    }
-
-    public float getXSpeed() {
-        return this.xSpeed;
-    }
-
-    public float getYSpeed() {
-        return this.ySpeed;
-    }
-
-    public float getZSpeed() {
-        return this.zSpeed;
-    }
-
-    public int getCount() {
-        return this.count;
-    }
-
-    public ParticleType<?> getParticle() {
-        return this.particle;
-    }
-
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.level == null) {
-            return false;
-        }
-        if (getCount() == 0) {
-            double d0 = getXSpeed();
-            double d2 = getYSpeed();
-            double d4 = getZSpeed();
+
+        if (minecraft.level == null) return false;
+        if (count == 0) {
             try {
-                minecraft.level.addAlwaysVisibleParticle((ParticleOptions) getParticle(), true, getX(), getY(), getZ(), d0, d2, d4);
+                minecraft.level.addAlwaysVisibleParticle((ParticleOptions) particle, true, x, y, z, xSpeed, ySpeed, zSpeed);
             } catch (Throwable throwable1) {
-                Celestisynth.LOGGER.warn("Could not spawn particle effect {}", getParticle());
+                Celestisynth.LOGGER.warn("Could not spawn particle effect {}", particle);
             }
         } else {
-            for (int i = 0; i < getCount(); ++i) {
-                double d1 = minecraft.level.random.nextGaussian() * (double) getXDist();
-                double d3 = minecraft.level.random.nextGaussian() * (double) getYDist();
-                double d5 = minecraft.level.random.nextGaussian() * (double) getZDist();
-                double d6 = getXSpeed();
-                double d7 = getYSpeed();
-                double d8 = getZSpeed();
+            for (int i = 0; i < count; ++i) {
+                double xOffset = minecraft.level.random.nextGaussian() * xDist;
+                double yOffset = minecraft.level.random.nextGaussian() * yDist;
+                double zOffset = minecraft.level.random.nextGaussian() * zDist;
+
                 try {
-                    minecraft.level.addAlwaysVisibleParticle((ParticleOptions) getParticle(), true, getX() + d1, getY() + d3, getZ() + d5, d6, d7, d8);
+                    minecraft.level.addAlwaysVisibleParticle((ParticleOptions) particle, true, x + xOffset, y + yOffset, z + zOffset, xSpeed, ySpeed, zSpeed);
                 } catch (Throwable throwable) {
-                    Celestisynth.LOGGER.warn("Could not spawn particle effect {}", getParticle());
+                    Celestisynth.LOGGER.warn("Could not spawn particle effect {}", particle);
                 }
             }
         }

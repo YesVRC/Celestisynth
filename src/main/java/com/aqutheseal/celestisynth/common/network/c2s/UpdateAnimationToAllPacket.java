@@ -1,4 +1,4 @@
-package com.aqutheseal.celestisynth.common.network.animation;
+package com.aqutheseal.celestisynth.common.network.c2s;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.animation.player.CSAnimator;
@@ -9,18 +9,18 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class SetAnimationToAllPacket {
+public class UpdateAnimationToAllPacket {
     private final boolean isOtherLayer;
     private final int playerId;
     private final int animId;
 
-    public SetAnimationToAllPacket(boolean isOtherLayer, int playerId, int animId) {
+    public UpdateAnimationToAllPacket(boolean isOtherLayer, int playerId, int animId) {
         this.isOtherLayer = isOtherLayer;
         this.playerId = playerId;
         this.animId = animId;
     }
 
-    public SetAnimationToAllPacket(FriendlyByteBuf buf) {
+    public UpdateAnimationToAllPacket(FriendlyByteBuf buf) {
         this.isOtherLayer = buf.readBoolean();
         this.playerId = buf.readInt();
         this.animId = buf.readInt();
@@ -44,8 +44,7 @@ public class SetAnimationToAllPacket {
 
     public static void animatePlayer(boolean isOtherLayer, int animId, AbstractClientPlayer player) {
         var animation = isOtherLayer ? CSAnimator.otherAnimationData.get(player) : CSAnimator.animationData.get(player);
-        if (animation != null) {
-            AnimationManager.playAnimation(AnimationManager.getAnimFromId(animId).getAnimation(), animation);
-        }
+
+        if (animation != null) AnimationManager.playAnimation(AnimationManager.getAnimFromId(animId).getAnimation(), animation);
     }
 }

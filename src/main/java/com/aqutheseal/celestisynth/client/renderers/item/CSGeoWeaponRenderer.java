@@ -4,10 +4,10 @@ import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.api.item.CSGeoItem;
 import com.aqutheseal.celestisynth.client.models.item.CSGeoWeaponModel;
 import com.aqutheseal.celestisynth.client.renderers.entity.layer.CSGeoWeaponLayer;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.bettercombat.SwingParticleContainer;
 import com.aqutheseal.celestisynth.common.item.weapons.FrostboundItem;
-import com.aqutheseal.celestisynth.common.network.util.C2SParticlePacket;
+import com.aqutheseal.celestisynth.common.network.c2s.UpdateParticlePacket;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
@@ -43,7 +43,7 @@ public class CSGeoWeaponRenderer<T extends Item & CSGeoItem> extends GeoItemRend
     }
 
     public static void particleHandler(@NotNull LivingEntity pLivingEntity, ItemStack pItemStack, @NotNull PoseStack pPoseStack) {
-        if (CSCompatManager.checkBetterCombat() && !Minecraft.getInstance().isPaused()) {
+        if (CSIntegrationManager.checkBetterCombat() && !Minecraft.getInstance().isPaused()) {
             if (pLivingEntity instanceof Player player && player.getUUID() == Minecraft.getInstance().player.getUUID() && pItemStack.getItem() instanceof CSGeoItem item) {
                 if (item.getSwingContainer() != null && Minecraft.getInstance() instanceof MinecraftClient_BetterCombat bcPlayer) {
                     if (bcPlayer.isWeaponSwingInProgress()) {
@@ -69,7 +69,7 @@ public class CSGeoWeaponRenderer<T extends Item & CSGeoItem> extends GeoItemRend
                             z += lookAngle.z();
                         }
                         Vector3d positions = new Vector3d(x, y, z);
-                        CSNetworkManager.sendToServer(new C2SParticlePacket(swingContainer.particleType(), positions.x(), positions.y(), positions.z(), 0, 0, 0));
+                        CSNetworkManager.sendToServer(new UpdateParticlePacket(swingContainer.particleType(), positions.x(), positions.y(), positions.z(), 0, 0, 0));
                     }
                 }
             }

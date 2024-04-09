@@ -1,8 +1,11 @@
 package com.aqutheseal.celestisynth;
 
 import com.aqutheseal.celestisynth.common.events.CSRecipeBookSetupEvents;
+import com.aqutheseal.celestisynth.common.network.s2c.UpdateStatsPacket;
+import com.aqutheseal.celestisynth.common.registry.CSDataLoaders;
 import com.aqutheseal.celestisynth.common.registry.CSTags;
 import com.aqutheseal.celestisynth.manager.CSModManager;
+import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,6 +34,8 @@ public class Celestisynth {
         modEventBus.addListener(CSRecipeBookSetupEvents::registerEvent);
 
         if (modEventBus != null && forgeEventBus != null)  CSModManager.registerAll(modEventBus, forgeEventBus);
+
+        CSDataLoaders.TIERED_ITEM_STATS.subscribeAsSyncable(CSNetworkManager.INSTANCE, UpdateStatsPacket::new);
     }
 
     public static ResourceLocation prefix(String path) {

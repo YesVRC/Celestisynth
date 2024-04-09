@@ -1,4 +1,4 @@
-package com.aqutheseal.celestisynth.common.network.util;
+package com.aqutheseal.celestisynth.common.network.s2c;
 
 import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
 import net.minecraft.client.Minecraft;
@@ -16,9 +16,9 @@ public class ShakeScreenToAllPacket {
 
     public ShakeScreenToAllPacket(UUID playerId, int duration, int fadeOutStart, float intensity) {
         this.playerId = playerId;
-       this.duration = duration;
-       this.fadeOutStart = fadeOutStart;
-       this.intensity = intensity;
+        this.duration = duration;
+        this.fadeOutStart = fadeOutStart;
+        this.intensity = intensity;
     }
 
     public ShakeScreenToAllPacket(FriendlyByteBuf buf) {

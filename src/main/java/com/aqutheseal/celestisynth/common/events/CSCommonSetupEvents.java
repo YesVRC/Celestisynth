@@ -23,6 +23,7 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,6 +39,11 @@ import java.util.concurrent.CompletableFuture;
 public class CSCommonSetupEvents {
 
     public static class CSForgeSetupEvents {
+
+        @SubscribeEvent
+        public static void onAddReloadListenerEvent(AddReloadListenerEvent event) {
+            event.addListener(CSDataLoaders.TIERED_ITEM_STATS);
+        }
     }
 
     public static class CSModSetupEvents {

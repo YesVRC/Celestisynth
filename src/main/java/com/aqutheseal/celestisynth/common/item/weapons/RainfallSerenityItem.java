@@ -5,7 +5,7 @@ import com.aqutheseal.celestisynth.api.item.CSGeoItem;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualAnimation;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
@@ -99,7 +99,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
     }
 
     public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
-        if (CSCompatManager.checkIronsSpellbooks()) {
+        if (CSIntegrationManager.checkIronsSpellbooks()) {
             map.put(AttributeRegistry.SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Item spell power", 0.075, AttributeModifier.Operation.MULTIPLY_BASE));
             map.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), "Item mana regen", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
         }

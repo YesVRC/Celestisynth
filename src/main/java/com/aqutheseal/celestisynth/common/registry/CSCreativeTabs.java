@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.common.registry;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSCompatItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -25,7 +25,7 @@ public class CSCreativeTabs {
                     .displayItems((pParameters, pOutput) -> {
                         acceptItemRegistry(pOutput, CSItems.ITEMS.getEntries());
                         acceptBlockRegistry(pOutput, CSBlocks.BLOCKS.getEntries());
-                        if (CSCompatManager.checkIronsSpellbooks()) {
+                        if (CSIntegrationManager.checkIronsSpellbooks()) {
                             acceptItemRegistry(pOutput, ISSCompatItems.SPELLBOOKS_ITEMS.getEntries());
                         }
                     }).build()

@@ -1,4 +1,4 @@
-package com.aqutheseal.celestisynth.common.network.util;
+package com.aqutheseal.celestisynth.common.network.s2c;
 
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -28,11 +28,11 @@ public class ChangeCameraTypePacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
+
         context.enqueueWork(() -> {
             Minecraft instance = Minecraft.getInstance();
-            if (instance.player.getId() == playerTarget) {
-                instance.options.setCameraType(CameraType.values()[enumID]);
-            }
+
+            if (instance.player.getId() == playerTarget) instance.options.setCameraType(CameraType.values()[enumID]);
         });
         return true;
     }

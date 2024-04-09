@@ -1,6 +1,6 @@
 package com.aqutheseal.celestisynth.api.item;
 
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSArmorUtil;
 import com.aqutheseal.celestisynth.common.registry.CSAttributes;
 import com.google.common.collect.ImmutableMultimap;
@@ -58,7 +58,7 @@ public class CSArmorItem extends ArmorItem implements CSWeaponUtil {
         UUID uuid = ARMOR_MODIFIER_UUID_PER_TYPE.get(type);
         additional.putAll(this.defaultModifiers);
         this.createExtraAttributes(additional, uuid);
-        if (CSCompatManager.checkIronsSpellbooks()) {
+        if (CSIntegrationManager.checkIronsSpellbooks()) {
             ISSArmorUtil.addSpellbookAttributesOnArmor(additional, uuid, material);
         }
         return additional.build();

@@ -1,9 +1,10 @@
 package com.aqutheseal.celestisynth.manager;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.common.network.animation.SetAnimationServerPacket;
-import com.aqutheseal.celestisynth.common.network.animation.SetAnimationToAllPacket;
-import com.aqutheseal.celestisynth.common.network.util.*;
+import com.aqutheseal.celestisynth.common.network.c2s.ShakeScreenForAllPacket;
+import com.aqutheseal.celestisynth.common.network.c2s.UpdateParticlePacket;
+import com.aqutheseal.celestisynth.common.network.s2c.*;
+import com.aqutheseal.celestisynth.common.network.c2s.UpdateAnimationToAllPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -27,22 +28,22 @@ public class CSNetworkManager {
     }
 
     private static void registerC2SPackets() {
-        INSTANCE.messageBuilder(SetAnimationServerPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
-                .decoder(SetAnimationServerPacket::new)
-                .encoder(SetAnimationServerPacket::toBytes)
-                .consumerMainThread(SetAnimationServerPacket::handle)
+        INSTANCE.messageBuilder(SetAnimationPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SetAnimationPacket::new)
+                .encoder(SetAnimationPacket::toBytes)
+                .consumerMainThread(SetAnimationPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ShakeScreenServerPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
-                .decoder(ShakeScreenServerPacket::new)
-                .encoder(ShakeScreenServerPacket::toBytes)
-                .consumerMainThread(ShakeScreenServerPacket::handle)
+        INSTANCE.messageBuilder(ShakeScreenForAllPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ShakeScreenForAllPacket::new)
+                .encoder(ShakeScreenForAllPacket::toBytes)
+                .consumerMainThread(ShakeScreenForAllPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(C2SParticlePacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
-                .decoder(C2SParticlePacket::new)
-                .encoder(C2SParticlePacket::toBytes)
-                .consumerMainThread(C2SParticlePacket::handle)
+        INSTANCE.messageBuilder(UpdateParticlePacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UpdateParticlePacket::new)
+                .encoder(UpdateParticlePacket::toBytes)
+                .consumerMainThread(UpdateParticlePacket::handle)
                 .add();
     }
 
@@ -59,16 +60,22 @@ public class CSNetworkManager {
                 .consumerMainThread(ShakeScreenToAllPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(S2CGroupedParticlePacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(S2CGroupedParticlePacket::new)
-                .encoder(S2CGroupedParticlePacket::toBytes)
-                .consumerMainThread(S2CGroupedParticlePacket::handle)
+        INSTANCE.messageBuilder(UpdateGroupedParticlePacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(UpdateGroupedParticlePacket::new)
+                .encoder(UpdateGroupedParticlePacket::toBytes)
+                .consumerMainThread(UpdateGroupedParticlePacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(SetAnimationToAllPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(SetAnimationToAllPacket::new)
-                .encoder(SetAnimationToAllPacket::toBytes)
-                .consumerMainThread(SetAnimationToAllPacket::handle)
+        INSTANCE.messageBuilder(UpdateAnimationToAllPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(UpdateAnimationToAllPacket::new)
+                .encoder(UpdateAnimationToAllPacket::toBytes)
+                .consumerMainThread(UpdateAnimationToAllPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(UpdateStatsPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(UpdateStatsPacket::new)
+                .encoder(UpdateStatsPacket::toBytes)
+                .consumerMainThread(UpdateStatsPacket::handle)
                 .add();
     }
 

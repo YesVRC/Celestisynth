@@ -1,5 +1,6 @@
-package com.aqutheseal.celestisynth.common.network.util;
+package com.aqutheseal.celestisynth.common.network.c2s;
 
+import com.aqutheseal.celestisynth.common.network.s2c.ShakeScreenToAllPacket;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -7,20 +8,20 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class ShakeScreenServerPacket {
+public class ShakeScreenForAllPacket {
     private final UUID playerId;
     private final int duration;
     private final int fadeOutStart;
     private final float intensity;
 
-    public ShakeScreenServerPacket(UUID playerId, int duration, int fadeOutStart, float intensity) {
+    public ShakeScreenForAllPacket(UUID playerId, int duration, int fadeOutStart, float intensity) {
         this.playerId = playerId;
-       this.duration = duration;
-       this.fadeOutStart = fadeOutStart;
-       this.intensity = intensity;
+        this.duration = duration;
+        this.fadeOutStart = fadeOutStart;
+        this.intensity = intensity;
     }
 
-    public ShakeScreenServerPacket(FriendlyByteBuf buf) {
+    public ShakeScreenForAllPacket(FriendlyByteBuf buf) {
         this.playerId = buf.readUUID();
         this.duration = buf.readInt();
         this.fadeOutStart = buf.readInt();

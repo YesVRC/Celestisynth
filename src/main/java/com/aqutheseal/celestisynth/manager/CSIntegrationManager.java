@@ -1,8 +1,8 @@
-package com.aqutheseal.celestisynth.common.compat;
+package com.aqutheseal.celestisynth.manager;
 
 import net.minecraftforge.fml.ModList;
 
-public class CSCompatManager {
+public class CSIntegrationManager {
 
     public static boolean checkBetterCombat() {
         return ModList.get().isLoaded("bettercombat");

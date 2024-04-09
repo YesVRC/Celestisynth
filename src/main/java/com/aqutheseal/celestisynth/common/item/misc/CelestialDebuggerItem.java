@@ -11,16 +11,16 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Random;
 
 public class CelestialDebuggerItem extends Item {
+
     public CelestialDebuggerItem(Properties pProperties) {
         super(pProperties);
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-
+    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) { //TODO Refactor for optimization (I know that instantiating new Random() objects technically makes it truly "random" instead of predictable via seed but Aqu what the fuck :skull:)
         int tip = 13 + new Random().nextInt(7);
-        int topX = -10 + (new Random().nextInt(10));
-        int topZ = -10 + (new Random().nextInt(10));
+        int topX = -10 + new Random().nextInt(10);
+        int topZ = -10 + new Random().nextInt(10);
         int radius = 1 + new Random().nextInt(3);
 
         Vec3 to = new Vec3(pTarget.getX() + topX, pTarget.getY() + tip, pTarget.getZ() + topZ);

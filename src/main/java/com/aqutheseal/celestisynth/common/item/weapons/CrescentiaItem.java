@@ -5,7 +5,7 @@ import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.attack.cresentia.CrescentiaBarrageAttack;
 import com.aqutheseal.celestisynth.common.attack.cresentia.CrescentiaDragonAttack;
-import com.aqutheseal.celestisynth.common.compat.CSCompatManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
@@ -61,7 +61,7 @@ public class CrescentiaItem extends SkilledSwordItem implements CSGeoItem {
 
     @Override
     public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
-        if (CSCompatManager.checkIronsSpellbooks()) {
+        if (CSIntegrationManager.checkIronsSpellbooks()) {
             map.put(AttributeRegistry.SPELL_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Item spell resist", 0.25, AttributeModifier.Operation.MULTIPLY_BASE));
         }
     }
