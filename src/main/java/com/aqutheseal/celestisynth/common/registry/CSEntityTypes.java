@@ -1,7 +1,8 @@
 package com.aqutheseal.celestisynth.common.registry;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.projectile.*;
 import com.aqutheseal.celestisynth.common.entity.skill.*;
 import com.aqutheseal.celestisynth.common.entity.tempestboss.TempestBoss;
@@ -18,7 +19,7 @@ public class CSEntityTypes {
             .sized(0.7F, 1.95F).clientTrackingRange(8).build(Celestisynth.prefix("tempest").toString()));
 
     public static final RegistryObject<EntityType<CSEffectEntity>> CS_EFFECT = ENTITY_TYPES.register("cs_effect", () -> EntityType.Builder.of(CSEffectEntity::new, MobCategory.MISC)
-            .sized(0.5F, 0.5F).clientTrackingRange(32).build(Celestisynth.prefix("cs_effect").toString())
+            .sized(0.5F, 0.5F).clientTrackingRange(64).build(Celestisynth.prefix("cs_effect").toString())
     );
     public static final RegistryObject<EntityType<SkillCastCrescentiaRanged>> CRESCENTIA_RANGED = ENTITY_TYPES.register("crescentia_ranged", () -> EntityType.Builder.of(SkillCastCrescentiaRanged::new, MobCategory.MISC)
             .sized(0.5F, 0.5F).clientTrackingRange(16).build(Celestisynth.prefix("crescentia_ranged").toString())
@@ -39,6 +40,10 @@ public class CSEntityTypes {
             .sized(0.0F, 0.0F).clientTrackingRange(16).build(Celestisynth.prefix("rainfall_laser_marker").toString())
     );
 
+    public static final RegistryObject<EntityType<RainfallTurret>> RAINFALL_TURRET = ENTITY_TYPES.register("rainfall_turret", () -> EntityType.Builder.of(RainfallTurret::new, MobCategory.MISC)
+            .sized(0.8F, 1.2F).clientTrackingRange(64).build(Celestisynth.prefix("rainfall_turret").toString())
+    );
+
     public static final RegistryObject<EntityType<RainfallArrow>> RAINFALL_ARROW = ENTITY_TYPES.register("rainfall_arrow", () -> EntityType.Builder.<RainfallArrow>of(RainfallArrow::new, MobCategory.MISC)
             .sized(1F, 1F).clientTrackingRange(32).updateInterval(20).build(Celestisynth.prefix("rainfall_arrow").toString())
     );
@@ -49,6 +54,15 @@ public class CSEntityTypes {
             .sized(1F, 1F).clientTrackingRange(32).updateInterval(20).build(Celestisynth.prefix("solaris_bomb").toString())
     );
     public static final RegistryObject<EntityType<CrescentiaDragon>> CRESCENTIA_DRAGON = ENTITY_TYPES.register("crescentia_dragon", () -> EntityType.Builder.<CrescentiaDragon>of(CrescentiaDragon::new, MobCategory.MISC)
-            .sized(1.6F, 1.0F).clientTrackingRange(32).updateInterval(20).build(Celestisynth.prefix("crescentia_dragon").toString())
+            .sized(1.5F, 1.5F).clientTrackingRange(64).updateInterval(20).build(Celestisynth.prefix("crescentia_dragon").toString())
+    );
+    public static final RegistryObject<EntityType<KeresShadow>> KERES_SHADOW = ENTITY_TYPES.register("keres_shadow", () -> EntityType.Builder.<KeresShadow>of(KeresShadow::new, MobCategory.MISC)
+            .sized(1.5F, 1.5F).clientTrackingRange(64).updateInterval(20).build(Celestisynth.prefix("keres_shadow").toString())
+    );
+    public static final RegistryObject<EntityType<KeresRend>> KERES_REND = ENTITY_TYPES.register("keres_rend", () -> EntityType.Builder.<KeresRend>of(KeresRend::new, MobCategory.MISC)
+            .sized(2.5F, 10F).clientTrackingRange(64).updateInterval(20).build(Celestisynth.prefix("keres_rend").toString())
+    );
+    public static final RegistryObject<EntityType<KeresSlash>> KERES_SLASH = ENTITY_TYPES.register("keres_slash", () -> EntityType.Builder.<KeresSlash>of(KeresSlash::new, MobCategory.MISC)
+            .sized(1F, 1F).clientTrackingRange(64).updateInterval(20).build(Celestisynth.prefix("keres_slash").toString())
     );
 }

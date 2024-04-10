@@ -116,6 +116,7 @@ public class CSTagsProvider {
 
             tag(DamageTypeTags.BYPASSES_COOLDOWN)
                     .add(CSDamageTypes.RAPID_PLAYER_ATTACK)
+                    .add(CSDamageTypes.PULSATION)
             ;
         }
     }

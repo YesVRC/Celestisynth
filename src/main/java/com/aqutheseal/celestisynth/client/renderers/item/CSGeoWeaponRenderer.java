@@ -10,6 +10,7 @@ import com.aqutheseal.celestisynth.common.item.weapons.FrostboundItem;
 import com.aqutheseal.celestisynth.common.network.c2s.UpdateParticlePacket;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.bettercombat.api.MinecraftClient_BetterCombat;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,10 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
 import org.joml.Vector4f;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
+
+import java.awt.*;
 
 public class CSGeoWeaponRenderer<T extends Item & CSGeoItem> extends GeoItemRenderer<T> {
 
@@ -42,12 +46,23 @@ public class CSGeoWeaponRenderer<T extends Item & CSGeoItem> extends GeoItemRend
         return RenderType.entityTranslucent(texture);
     }
 
+    @Override
+    public void renderRecursively(PoseStack poseStack, T animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        Color color = new Color(1, 1, 1, 1);
+
+        if (this.getCurrentItemStack().getOrCreateTag().getBoolean("shadow")) {
+            color = new Color(0, 0, 0, 1);
+        }
+
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
+
     public static void particleHandler(@NotNull LivingEntity pLivingEntity, ItemStack pItemStack, @NotNull PoseStack pPoseStack) {
         if (CSIntegrationManager.checkBetterCombat() && !Minecraft.getInstance().isPaused()) {
             if (pLivingEntity instanceof Player player && player.getUUID() == Minecraft.getInstance().player.getUUID() && pItemStack.getItem() instanceof CSGeoItem item) {
-                if (item.getSwingContainer() != null && Minecraft.getInstance() instanceof MinecraftClient_BetterCombat bcPlayer) {
+                if (item.getSwingContainer(pLivingEntity, pItemStack) != null && Minecraft.getInstance() instanceof MinecraftClient_BetterCombat bcPlayer) {
                     if (bcPlayer.isWeaponSwingInProgress()) {
-                        SwingParticleContainer swingContainer = item.getSwingContainer();
+                        SwingParticleContainer swingContainer = item.getSwingContainer(pLivingEntity, pItemStack);
                         CameraType cameraType = Minecraft.getInstance().options.getCameraType();
                         Matrix4f localMatrix = new Matrix4f(pPoseStack.last().pose());
                         double xR = cameraType == CameraType.THIRD_PERSON_FRONT ? Math.toRadians(pLivingEntity.getXRot()) : -Math.toRadians(pLivingEntity.getXRot());

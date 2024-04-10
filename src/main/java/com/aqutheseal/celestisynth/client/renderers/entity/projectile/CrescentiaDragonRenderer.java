@@ -1,6 +1,6 @@
 package com.aqutheseal.celestisynth.client.renderers.entity.projectile;
 
-import com.aqutheseal.celestisynth.client.models.entity.projectile.CrescentiaDragonModel;
+import com.aqutheseal.celestisynth.client.models.entity.projectile.SimpleGeoModel;
 import com.aqutheseal.celestisynth.common.entity.projectile.CrescentiaDragon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -14,7 +14,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class CrescentiaDragonRenderer extends GeoEntityRenderer<CrescentiaDragon> {
     public CrescentiaDragonRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new CrescentiaDragonModel());
+        super(renderManager, new SimpleGeoModel<>("crescentia_dragon", "projectile/"));
     }
 
     @Override

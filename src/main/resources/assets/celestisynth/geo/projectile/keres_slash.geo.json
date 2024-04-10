@@ -1,0 +1,59 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.keres_slash",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 1.5,
+				"visible_bounds_offset": [0, 0.25, 0]
+			},
+			"bones": [
+				{
+					"name": "bone",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-24, 0, -8], "size": [48, 0, 16], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "center",
+					"parent": "bone",
+					"pivot": [0, 0, 7]
+				},
+				{
+					"name": "left",
+					"parent": "bone",
+					"pivot": [-9, 0, 6]
+				},
+				{
+					"name": "left2",
+					"parent": "bone",
+					"pivot": [-14, 0, 4]
+				},
+				{
+					"name": "left3",
+					"parent": "bone",
+					"pivot": [-20, 0, 1]
+				},
+				{
+					"name": "right",
+					"parent": "bone",
+					"pivot": [9, 0, 6]
+				},
+				{
+					"name": "right2",
+					"parent": "bone",
+					"pivot": [14, 0, 4]
+				},
+				{
+					"name": "right3",
+					"parent": "bone",
+					"pivot": [20, 0, 1]
+				}
+			]
+		}
+	]
+}

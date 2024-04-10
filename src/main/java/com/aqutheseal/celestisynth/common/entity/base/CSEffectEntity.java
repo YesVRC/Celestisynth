@@ -1,4 +1,4 @@
-package com.aqutheseal.celestisynth.api.entity;
+package com.aqutheseal.celestisynth.common.entity.base;
 
 import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;

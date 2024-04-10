@@ -23,6 +23,8 @@ public final class CSRegistryManager {
         CSStructures.STRUCTURE_PIECE.register(modBus);
         CSCreativeTabs.CREATIVE_MODE_TABS.register(modBus);
         CSLootModifiers.LOOT_MODIFIERS.register(modBus);
+        CSEnchantments.ENCHANTMENTS.register(modBus);
+        CSMobEffects.MOB_EFFECTS.register(modBus);
         CompatRegistryManager.registerIntegratedRegistries(modBus);
     }
 }

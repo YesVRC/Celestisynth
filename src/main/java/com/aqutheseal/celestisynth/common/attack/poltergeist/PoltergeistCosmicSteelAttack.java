@@ -1,11 +1,11 @@
 package com.aqutheseal.celestisynth.common.attack.poltergeist;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
 import com.aqutheseal.celestisynth.common.entity.skill.SkillCastPoltergeistWard;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
@@ -14,7 +14,6 @@ import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -140,18 +139,17 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
     }
 
     public void addComboPoint(ItemStack itemStack, Player player) {
-        CompoundTag elementAltsTag = itemStack.getOrCreateTagElement(CS_EXTRAS_ELEMENT);
-        boolean isImpactLarge = elementAltsTag.getBoolean(IS_IMPACT_LARGE);
+        boolean isImpactLarge = attackExtras(itemStack).getBoolean(IS_IMPACT_LARGE);
 
-        if (!isImpactLarge && elementAltsTag.getInt(SMASH_COUNT_FOR_PASSIVE) < 9) {
+        if (!isImpactLarge && attackExtras(itemStack).getInt(SMASH_COUNT_FOR_PASSIVE) < 9) {
             player.playSound(SoundEvents.ENDERMAN_TELEPORT);
-            elementAltsTag.putInt(SMASH_COUNT_FOR_PASSIVE, elementAltsTag.getInt(SMASH_COUNT_FOR_PASSIVE) + 1);
-        } else if (!isImpactLarge && elementAltsTag.getInt(SMASH_COUNT_FOR_PASSIVE) >= 9) {
+            attackExtras(itemStack).putInt(SMASH_COUNT_FOR_PASSIVE, attackExtras(itemStack).getInt(SMASH_COUNT_FOR_PASSIVE) + 1);
+        } else if (!isImpactLarge && attackExtras(itemStack).getInt(SMASH_COUNT_FOR_PASSIVE) >= 9) {
             player.playSound(SoundEvents.END_PORTAL_SPAWN);
-            elementAltsTag.putBoolean(IS_IMPACT_LARGE, true);
+            attackExtras(itemStack).putBoolean(IS_IMPACT_LARGE, true);
         } else if (isImpactLarge) {
-            elementAltsTag.putBoolean(IS_IMPACT_LARGE, false);
-            elementAltsTag.putInt(SMASH_COUNT_FOR_PASSIVE, 0);
+            attackExtras(itemStack).putBoolean(IS_IMPACT_LARGE, false);
+            attackExtras(itemStack).putInt(SMASH_COUNT_FOR_PASSIVE, 0);
         }
     }
 }

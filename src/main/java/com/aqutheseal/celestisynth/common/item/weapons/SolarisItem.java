@@ -81,7 +81,7 @@ public class SolarisItem extends SkilledSwordItem implements CSGeoItem {
     }
 
     @Override
-    public @Nullable SwingParticleContainer getSwingContainer() {
+    public @Nullable SwingParticleContainer getSwingContainer(LivingEntity holder, ItemStack stack) {
         return new SwingParticleContainer(CSParticleTypes.SOLARIS_FLAME.get(), 0.8F);
     }
 

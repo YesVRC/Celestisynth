@@ -35,8 +35,7 @@ minecraft {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
-            jvmArgs "-XX:+AllowEnhancedClassRedefinition", "-XX:HotswapAgent=fatjar"
-            //jvmArgs "-Xms6G", "-Xmx9G", "-XX:+AllowEnhancedClassRedefinition", "-XX:HotswapAgent=fatjar", "-XX:+UseG1GC", "-XX:+UnlockExperimentalVMOptions", "-XX:MaxGCPauseMillis=100", "-XX:+DisableExplicitGC", "-XX:TargetSurvivorRatio=90", "-XX:G1NewSizePercent=35", "-XX:G1MaxNewSizePercent=60", "-XX:G1MixedGCLiveThresholdPercent=50", "-XX:+AlwaysPreTouch"
+            jvmArgs "-Xms4G", "-Xmx8G", "-XX:+AllowEnhancedClassRedefinition", "-XX:HotswapAgent=fatjar", "-XX:+UseG1GC", "-XX:+UnlockExperimentalVMOptions", "-XX:MaxGCPauseMillis=100", "-XX:+DisableExplicitGC", "-XX:TargetSurvivorRatio=90", "-XX:G1NewSizePercent=35", "-XX:G1MaxNewSizePercent=60", "-XX:G1MixedGCLiveThresholdPercent=50", "-XX:+AlwaysPreTouch"
             mods {
                 modid {
                     source sourceSets.main
@@ -45,6 +44,7 @@ minecraft {
         }
 
         client {
+            args '--username', "ManMeme####"
             property 'forge.enabledGameTestNamespaces', modid
         }
         server {
@@ -68,7 +68,6 @@ sourceSets.main.resources {
 mixin {
     add sourceSets.main, "${modid}.refmap.json"
     config "${modid}.mixins.json"
-
     debug.export = true
 }
 
@@ -173,7 +172,7 @@ dependencies {
     implementation fg.deobf("curse.maven:selene-499980:5068161")
     implementation fg.deobf("curse.maven:l_ender-s-cataclysm-551586:5058433")
     implementation fg.deobf("curse.maven:citadel-331936:5065861")
-    //implementation fg.deobf("curse.maven:embeddium-908741:5077202")
+    implementation fg.deobf("curse.maven:embeddium-908741:5077202")
     //implementation fg.deobf("curse.maven:oculus-581495:5080444")
 }
 

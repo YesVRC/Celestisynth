@@ -2,7 +2,7 @@ package com.aqutheseal.celestisynth.client.renderers.misc;
 
 import com.aqutheseal.celestisynth.client.models.misc.CSEffectEntityModel;
 import com.aqutheseal.celestisynth.client.renderers.entity.projectile.SilencedRotationProjectileRenderer;
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualSpecialProperties;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.mojang.blaze3d.vertex.PoseStack;

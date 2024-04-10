@@ -1,0 +1,17 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.keres_slash.idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"bone": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time * 360 * 16) * 2"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

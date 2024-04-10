@@ -60,8 +60,8 @@ public class CSCommonConfig {
         builder.pop();
 
         builder.push("Value Modifiers - Crescentia");
-        crescentiaSkillDmg = skillDamage(builder, "crescentia", "Lunar Celebration Barrage", 0.5);
-        crescentiaShiftSkillDmg = skillDamage(builder, "crescentia", "Dragon Crescent Boom [Shift]", 0.7);
+        crescentiaSkillDmg = skillDamage(builder, "crescentia", "Lunar Celebration Barrage", 0.6);
+        crescentiaShiftSkillDmg = skillDamage(builder, "crescentia", "Dragon Crescent Boom [Shift]", 0.45);
         crescentiaSkillCD = skillCooldown(builder, "crescentia", "Lunar Celebration Barrage", 100);
         crescentiaShiftSkillCD = skillCooldown(builder, "crescentia", "Dragon Crescent Boom [Shift]", 40);
         builder.pop();

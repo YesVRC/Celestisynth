@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.common.entity.skill;
 
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
-import com.aqutheseal.celestisynth.api.entity.EffectControllerEntity;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
 import com.aqutheseal.celestisynth.common.registry.CSItems;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
@@ -25,7 +25,6 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.UUID;
 
-/// TODO: 1/10/2024 Add "TARGET" entity variable
 public class SkillCastRainfallRain extends EffectControllerEntity {
     public BlockPos targetPos = null;
 
@@ -69,7 +68,7 @@ public class SkillCastRainfallRain extends EffectControllerEntity {
                 rainfallArrow.setOwner(ownerPlayer);
                 rainfallArrow.moveTo(position());
                 rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                rainfallArrow.setOrigin(blockPosition());
+                rainfallArrow.setOrigin(this.position().add(0, 1.75, 0));
                 rainfallArrow.setPierceLevel((byte) 3);
                 rainfallArrow.setBaseDamage(CSConfigManager.COMMON.rainfallSerenityQuasarArrowDmg.get());
                 rainfallArrow.setImbueQuasar(false);

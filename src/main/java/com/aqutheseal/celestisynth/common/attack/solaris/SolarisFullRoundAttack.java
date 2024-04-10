@@ -3,7 +3,7 @@ package com.aqutheseal.celestisynth.common.attack.solaris;
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
@@ -11,13 +11,13 @@ import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
-import java.util.Random;
 
 public class SolarisFullRoundAttack extends WeaponAttackInstance {
     public static final String DIRECTION_INDEX_KEY = "cs.directionIndex";
@@ -62,8 +62,8 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
         if (getTimerProgress() == 13) {
             player.playSound(CSSoundEvents.STEP.get());
             for (int i = 0; i < 15; i++) {
-                Random rand = new Random();
-                ParticleUtil.sendParticles(level, ParticleTypes.LARGE_SMOKE, player.getX(), player.getY(), player.getZ(), 0, (-1 + rand.nextFloat(2)) * 0.5, 0.1, (-1 + rand.nextFloat(2)) * 0.5);
+                RandomSource rand = level.random;
+                ParticleUtil.sendParticles(level, ParticleTypes.LARGE_SMOKE, player.getX(), player.getY(), player.getZ(), 0, (-1 + rand.nextFloat() * 2) * 0.5, 0.1, (-1 + rand.nextFloat() * 2) * 0.5);
             }
         }
         if (getTimerProgress() > 0 && getTimerProgress() < 24) {

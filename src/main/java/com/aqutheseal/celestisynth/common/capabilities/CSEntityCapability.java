@@ -24,6 +24,7 @@ public class CSEntityCapability extends LivingEntityCapability implements CSCapa
 
     private int frostBound;
     private int trueInvisibility;
+    private int bloodthirst;
     private @Nullable LivingEntity phantomTagSource;
     private int phantomTagTime;
     private @Nullable LivingEntity quasarImbueSource;

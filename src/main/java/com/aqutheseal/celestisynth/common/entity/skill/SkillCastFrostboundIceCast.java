@@ -2,8 +2,8 @@ package com.aqutheseal.celestisynth.common.entity.skill;
 
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
-import com.aqutheseal.celestisynth.api.entity.EffectControllerEntity;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
 import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;

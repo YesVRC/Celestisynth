@@ -41,10 +41,11 @@
   "block.celestisynth.celestial_crafting_table": "Celestial Workbench",
   "gui.celestisynth.celestial_crafting": "Celestial Workbench",
 
-  "death.attack.regular_player_attack": "%s was slain by %s.",
+  "death.attack.basic_player_attack": "%s was slain by %s.",
   "death.attack.rapid_player_attack": "%s was damaged by %s repeatedly until death.",
-  "death.attack.regular_player_attack_nokb": "%s was slain by %s.",
+  "death.attack.basic_player_attack_nokb": "%s was slain by %s.",
   "death.attack.rapid_player_attack_nokb": "%s was damaged by %s repeatedly until death.",
+  "death.attack.pulsation": "%s gave %s a massive flash of power.",
 
   "------------------- SOLARIS ------------------":  "",
 

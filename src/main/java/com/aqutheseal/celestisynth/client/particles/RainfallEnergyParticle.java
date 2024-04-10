@@ -16,7 +16,7 @@ public class RainfallEnergyParticle extends SimpleAnimatedParticle {
         this.zd = pZSpeed;
         this.lifetime = 20;
         this.rotSpeed = ((float)Math.random() - 0.5F) * 0.3F;
-        this.startQuadSize = 1.5F;
+        this.quadSize = 1.5F;
 
         setFadeColor(15916745);
         setSpriteFromAge(pSprites);

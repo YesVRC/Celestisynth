@@ -1,6 +1,7 @@
 package com.aqutheseal.celestisynth.common.events;
 
 import com.aqutheseal.celestisynth.Celestisynth;
+import com.aqutheseal.celestisynth.common.entity.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
 import com.aqutheseal.celestisynth.common.entity.tempestboss.TempestBoss;
 import com.aqutheseal.celestisynth.common.registry.*;
@@ -70,6 +71,7 @@ public class CSCommonSetupEvents {
 
         @SubscribeEvent
         public static void onEntityAttributeCreationEvent(EntityAttributeCreationEvent event) {
+            event.put(CSEntityTypes.RAINFALL_TURRET.get(), RainfallTurret.createAttributes().build());
             event.put(CSEntityTypes.TEMPEST.get(), TempestBoss.createAttributes().build());
         }
 

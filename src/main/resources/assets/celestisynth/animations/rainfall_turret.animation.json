@@ -1,0 +1,68 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.rainfall_turret.idle": {
+			"loop": true,
+			"animation_length": 4,
+			"bones": {
+				"head": {
+					"rotation": {
+						"vector": [0, 0, "-math.cos(query.anim_time * 90) * 15"]
+					},
+					"position": {
+						"vector": [0, "math.sin(query.anim_time * 90) * 1.5", 0]
+					}
+				},
+				"wings": {
+					"position": {
+						"vector": [0, "math.sin(query.anim_time * 90) * 2", "-math.cos(query.anim_time * 90) * 2"]
+					}
+				},
+				"laserhead": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"4.0": {
+							"vector": ["-360 * 16", 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.rainfall_turret.shoot": {
+			"animation_length": 2,
+			"bones": {
+				"head": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -45],
+							"easing": "easeInBack",
+							"easingArgs": [4]
+						},
+						"2.0": {
+							"vector": [0, 0, 2.5],
+							"easing": "easeOutBack",
+							"easingArgs": [3]
+						}
+					}
+				},
+				"wings": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -15],
+							"easing": "easeInBack",
+							"easingArgs": [4]
+						},
+						"2.0": {
+							"vector": [0, 0, 2.5],
+							"easing": "easeOutBack",
+							"easingArgs": [5]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

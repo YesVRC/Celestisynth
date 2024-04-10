@@ -7,10 +7,7 @@ import com.aqutheseal.celestisynth.client.models.entity.projectile.SolarisBombMo
 import com.aqutheseal.celestisynth.client.particles.*;
 import com.aqutheseal.celestisynth.client.renderers.blockentity.CelestialCraftingTableBlockEntityRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.boss.TempestBossRenderer;
-import com.aqutheseal.celestisynth.client.renderers.entity.projectile.CrescentiaDragonRenderer;
-import com.aqutheseal.celestisynth.client.renderers.entity.projectile.FrostboundShardRenderer;
-import com.aqutheseal.celestisynth.client.renderers.entity.projectile.RainfallLaserRenderer;
-import com.aqutheseal.celestisynth.client.renderers.entity.projectile.SolarisBombRenderer;
+import com.aqutheseal.celestisynth.client.renderers.entity.projectile.*;
 import com.aqutheseal.celestisynth.client.renderers.misc.CSEffectEntityRenderer;
 import com.aqutheseal.celestisynth.client.renderers.misc.NullRenderer;
 import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
@@ -45,6 +42,10 @@ public class CSClientSetupEvents {
         event.registerEntityRenderer(CSEntityTypes.FROSTBOUND_SHARD.get(), FrostboundShardRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.SOLARIS_BOMB.get(), SolarisBombRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.CRESCENTIA_DRAGON.get(), CrescentiaDragonRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.KERES_SHADOW.get(), KeresShadowRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.KERES_REND.get(), KeresRendRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.RAINFALL_TURRET.get(), RainfallTurretRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.KERES_SLASH.get(), KeresSlashRenderer::new);
         event.registerBlockEntityRenderer(CSBlockEntityTypes.CELESTIAL_CRAFTING_TABLE_TILE.get(), context -> new CelestialCraftingTableBlockEntityRenderer());
     }
 
@@ -82,7 +83,7 @@ public class CSClientSetupEvents {
         event.registerSpriteSet(CSParticleTypes.CRESCENTIA_FIREWORK_PURPLE.get(), CrescentiaFireworkParticle.Purple::new);
         event.registerSpriteSet(CSParticleTypes.CRESCENTIA_FIREWORK_PINK.get(), CrescentiaFireworkParticle.Pink::new);
         event.registerSpriteSet(CSParticleTypes.CRESCENTIA_FIREWORK_BLUE.get(), CrescentiaFireworkParticle.Blue::new);
-
+        event.registerSpriteSet(CSParticleTypes.PULSATION.get(), PulsationParticle.Provider::new);
     }
 
 }

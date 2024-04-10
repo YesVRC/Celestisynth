@@ -12,5 +12,7 @@ public class CSDamageTypeProvider {
         ctx.register(CSDamageTypes.RAPID_PLAYER_ATTACK, new DamageType("rapid_player_attack", DamageScaling.ALWAYS, 1.0f));
         ctx.register(CSDamageTypes.BASIC_PLAYER_ATTACK_NOKB, new DamageType("basic_player_attack_nokb", DamageScaling.ALWAYS, 1.0f));
         ctx.register(CSDamageTypes.RAPID_PLAYER_ATTACK_NOKB, new DamageType("rapid_player_attack_nokb", DamageScaling.ALWAYS, 1.0f));
+
+        ctx.register(CSDamageTypes.PULSATION, new DamageType("pulsation", DamageScaling.ALWAYS, 1.0f));
     }
 }

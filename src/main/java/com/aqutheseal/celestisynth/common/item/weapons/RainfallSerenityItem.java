@@ -4,9 +4,10 @@ import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.item.CSGeoItem;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
+import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
 import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualAnimation;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
@@ -14,6 +15,7 @@ import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
@@ -103,6 +105,11 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
             map.put(AttributeRegistry.SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Item spell power", 0.075, AttributeModifier.Operation.MULTIPLY_BASE));
             map.put(AttributeRegistry.MANA_REGEN.get(), new AttributeModifier(UUID.randomUUID(), "Item mana regen", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
         }
+    }
+
+    @Override
+    public ImmutableList<WeaponAttackInstance> getPossibleAttacks(Player player, ItemStack stack, int useDuration) {
+        return null;
     }
 
     @Override
@@ -220,7 +227,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
 
                         rainfallArrow = (RainfallArrow) customArrow(rainfallArrow);
                         rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                        rainfallArrow.setOrigin(player.blockPosition().above());
+                        rainfallArrow.setOrigin(player.position());
                         rainfallArrow.setPierceLevel((byte) 3);
                         rainfallArrow.setBaseDamage(CSConfigManager.COMMON.rainfallSerenityArrowDmg.get() + (pLevel.random.nextDouble() * 3));
                         rainfallArrow.setImbueQuasar(true);
@@ -230,7 +237,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
                         Vec3 vec3 =  pEntityLiving.getViewVector(1.0F);
                         Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
 
-                        rainfallArrow.shoot(vector3f.x(), vector3f.y(), vector3f.z(), (float) (curPowerFromUse * 3.0F), 0);
+                        rainfallArrow.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 3.0F, 0);
 
                         int powerEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, pStack);
                         int piercingEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, pStack);

@@ -169,18 +169,17 @@ public interface CSWeaponUtil {
         return weapon.isInstance(player.getMainHandItem().getItem()) && (weapon.isInstance(player.getOffhandItem().getItem()));
     }
 
-    default Entity getLookedAtEntity(Player player, double range) {
+    default Entity getLookedAtEntity(LivingEntity holder, double range) {
         double distance = range * range;
-        Vec3 eyePos = player.getEyePosition(1);
-        Vec3 viewVec = player.getViewVector(1);
+        Vec3 eyePos = holder.getEyePosition(1);
+        Vec3 viewVec = holder.getViewVector(1);
         Vec3 targetVec = eyePos.add(viewVec.x * range, viewVec.y * range, viewVec.z * range);
-        AABB aabb = player.getBoundingBox().expandTowards(viewVec.scale(range)).inflate(4.0D, 4.0D, 4.0D);
-        EntityHitResult hitResult = expandedHitResult(player, eyePos, targetVec, aabb, (entity) -> !entity.isSpectator(), distance);
-
+        AABB aabb = holder.getBoundingBox().expandTowards(viewVec.scale(range)).inflate(4.0D, 4.0D, 4.0D);
+        EntityHitResult hitResult = expandedHitResult(holder, eyePos, targetVec, aabb, (entity) -> !entity.isSpectator(), distance);
         return hitResult != null ? hitResult.getEntity() : null;
     }
 
-    default void shakeScreensForNearbyPlayers(Player holder, Level level, double range, int maxDuration, int startFadingOut, float maxIntensity) {
+    default void shakeScreensForNearbyPlayers(Entity holder, Level level, double range, int maxDuration, int startFadingOut, float maxIntensity) {
         if (level.isClientSide()) {
             List<Player> entities = level.getEntitiesOfClass(Player.class, holder.getBoundingBox().inflate(range, range, range));
 
@@ -252,11 +251,9 @@ public interface CSWeaponUtil {
         double range = pDistance;
         Entity confirmedTarget = null;
         Vec3 clipVec = null;
-
         for (Entity potentialTarget : level.getEntities(pShooter, pBoundingBox, pFilter)) {
             AABB boundsHitbox = potentialTarget.getBoundingBox().inflate((double)potentialTarget.getPickRadius() + 1.5);
             Optional<Vec3> potentialClippedVec = boundsHitbox.clip(pStartVec, pEndVec);
-
             if (boundsHitbox.contains(pStartVec)) {
                 if (range >= 0.0D) {
                     confirmedTarget = potentialTarget;
@@ -266,7 +263,6 @@ public interface CSWeaponUtil {
             } else if (potentialClippedVec.isPresent()) {
                 Vec3 vec31 = potentialClippedVec.get();
                 double distToTargetPos = pStartVec.distanceToSqr(vec31);
-
                 if (distToTargetPos < range || range == 0.0D) {
                     if (potentialTarget.getRootVehicle() == pShooter.getRootVehicle() && !potentialTarget.canRiderInteract()) {
                         if (range == 0.0D) {
@@ -281,7 +277,6 @@ public interface CSWeaponUtil {
                 }
             }
         }
-
         return confirmedTarget == null ? null : new EntityHitResult(confirmedTarget, clipVec);
     }
 

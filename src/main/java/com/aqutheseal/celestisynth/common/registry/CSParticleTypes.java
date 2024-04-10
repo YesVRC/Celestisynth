@@ -22,4 +22,5 @@ public class CSParticleTypes {
     public static final RegistryObject<SimpleParticleType> CRESCENTIA_FIREWORK_PURPLE = PARTICLE_TYPES.register("crescentia_firework_purple", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> CRESCENTIA_FIREWORK_PINK = PARTICLE_TYPES.register("crescentia_firework_pink", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> CRESCENTIA_FIREWORK_BLUE = PARTICLE_TYPES.register("crescentia_firework_blue", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> PULSATION = PARTICLE_TYPES.register("pulsation", () -> new SimpleParticleType(true));
 }

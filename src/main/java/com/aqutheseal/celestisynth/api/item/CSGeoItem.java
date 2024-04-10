@@ -42,7 +42,7 @@ public interface CSGeoItem extends GeoItem {
     }
 
     // Only works with BetterCombat installed.
-    default @Nullable SwingParticleContainer getSwingContainer() {
+    default @Nullable SwingParticleContainer getSwingContainer(LivingEntity holder, ItemStack stack) {
         return null;
     }
 

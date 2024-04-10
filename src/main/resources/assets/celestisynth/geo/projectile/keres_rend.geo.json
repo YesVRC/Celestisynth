@@ -1,0 +1,33 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.keres_rend",
+				"texture_width": 256,
+				"texture_height": 256,
+				"visible_bounds_width": 8,
+				"visible_bounds_height": 9,
+				"visible_bounds_offset": [0, 0.5, 0]
+			},
+			"bones": [
+				{
+					"name": "rend",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-6, 0, -24], "size": [12, 0, 80], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "slash",
+					"parent": "rend",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [0, 0, -24], "size": [0, 62, 46], "uv": [0, 35]},
+						{"origin": [0, -1, -24], "size": [0, 62, 46], "pivot": [0, 0, 0], "rotation": [0, 0, -180], "uv": [0, 35]}
+					]
+				}
+			]
+		}
+	]
+}

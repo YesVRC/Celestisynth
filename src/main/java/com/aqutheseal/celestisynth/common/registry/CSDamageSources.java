@@ -55,4 +55,8 @@ public class CSDamageSources {
         return this.source(CSDamageTypes.RAPID_PLAYER_ATTACK_NOKB, pPlayer);
     }
 
+    public DamageSource pulsation(LivingEntity pPlayer) {
+        return this.source(CSDamageTypes.PULSATION, pPlayer);
+    }
+
 }

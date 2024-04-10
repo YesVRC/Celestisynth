@@ -1,5 +1,6 @@
 package com.aqutheseal.celestisynth.common.entity.projectile;
 
+import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
 import com.aqutheseal.celestisynth.common.entity.skill.SkillCastRainfallRain;
 import com.aqutheseal.celestisynth.common.item.weapons.RainfallSerenityItem;
@@ -17,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,11 +31,12 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import org.joml.Vector3f;
 
-public class RainfallArrow extends AbstractArrow {
+public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
     private static final EntityDataAccessor<Boolean> IS_STRONG = SynchedEntityData.defineId(RainfallArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_FLAMING = SynchedEntityData.defineId(RainfallArrow.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<BlockPos> ORIGIN = SynchedEntityData.defineId(RainfallArrow.class, EntityDataSerializers.BLOCK_POS);
+    private static final EntityDataAccessor<Vector3f> ORIGIN = SynchedEntityData.defineId(RainfallArrow.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Boolean> SHOULD_IMBUE_QUASAR = SynchedEntityData.defineId(RainfallArrow.class, EntityDataSerializers.BOOLEAN);
 
     private final RainfallSerenityItem rawRainfallItem = (RainfallSerenityItem) CSItems.RAINFALL_SERENITY.get();
@@ -72,16 +75,16 @@ public class RainfallArrow extends AbstractArrow {
     public void tick() {
         super.tick();
 
-        if (isStrong()) {
-            if (tickCount == 2) {
-                Vec3 from = new Vec3(getOrigin().getX(), getOrigin().getY(), getOrigin().getZ());
-                Vec3 to = new Vec3(getX(), getY(), getZ());
-                createLaser(from, to, true, true);
-            }
-        }
+//        if (isStrong()) {
+//            if (tickCount == 2) {
+//                Vec3 from = new Vec3(getOrigin().getX(), getOrigin().getY(), getOrigin().getZ());
+//                Vec3 to = new Vec3(getX(), getY(), getZ());
+//                createLaser(from, to, true, true);
+//            }
+//        }
 
         if (tickCount > 2) {
-            markForLaser(getX(), getY(), getZ());
+            markForLaser();
             remove(RemovalReason.DISCARDED);
         }
     }
@@ -99,7 +102,6 @@ public class RainfallArrow extends AbstractArrow {
                     for (Entity potentialTarget : rawRainfallItem.iterateEntities(level(), rawRainfallItem.createAABB(hitPos, 4))) {
                         if (potentialTarget instanceof LivingEntity target && potentialTarget != getOwner()) {
                             if (isFlaming()) target.setSecondsOnFire(2);
-
                             target.hurt(damageSources().indirectMagic(this, getOwner() != null ? getOwner() : null), 2);
                             target.invulnerableTime = 0;
                         }
@@ -131,17 +133,14 @@ public class RainfallArrow extends AbstractArrow {
                                         createLaser(from, to, false, false);
 
                                         if (!level().isClientSide()) {
-                                            BlockPos imbuePos = new BlockPos((int) imbueSource.getX(), (int) (imbueSource.getY() + 1.5D), (int) imbueSource.getZ());
                                             RainfallArrow rainfallArrow = new RainfallArrow(level(), player);
-
                                             rainfallArrow.setOwner(player);
                                             rainfallArrow.moveTo(imbueSource.position());
                                             rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                                            rainfallArrow.setOrigin(imbuePos);
+                                            rainfallArrow.setOrigin(imbueSource.getEyePosition());
                                             rainfallArrow.setPierceLevel((byte) 3);
                                             rainfallArrow.setBaseDamage(CSConfigManager.COMMON.rainfallSerenityQuasarArrowDmg.get());
                                             rainfallArrow.setImbueQuasar(false);
-
                                             double offsetHitResultY = ehr.getEntity().getY() + 1.5D;
                                             double finalDistX = ehr.getEntity().getX() - imbueSource.getX();
                                             double offsetDistY = offsetHitResultY - imbueSource.getY() + 1.5F;
@@ -187,24 +186,17 @@ public class RainfallArrow extends AbstractArrow {
         }
     }
 
-    public void markForLaser(double x, double y, double z) {
-        Vec3 to = new Vec3(x, y, z);
-        Vec3 from = new Vec3(getOrigin().getX(), getOrigin().getY(), getOrigin().getZ());
-        double distance = to.distanceTo(from);
-        Vec3 direction = to.subtract(from).normalize();
-        for (double i = 0; i <= distance; i += 0.5) {
-            Vec3 laserPos = from.add(direction.scale(i));
-            if (!level().isClientSide) {
-                RainfallLaserMarker marker = CSEntityTypes.RAINFALL_LASER_MARKER.get().create(level());
-                marker.moveTo(laserPos.x, laserPos.y, laserPos.z);
-                marker.setYRot(getYRot());
-                marker.setXRot(getXRot());
-                marker.yRotO = yRotO;
-                marker.xRotO = xRotO;
-                marker.setOrigin(getOrigin());
-                marker.setQuasar(this.isImbueQuasar());
-                level().addFreshEntity(marker);
-            }
+    public void markForLaser() {
+        if (!level().isClientSide) {
+            RainfallLaserMarker marker = CSEntityTypes.RAINFALL_LASER_MARKER.get().create(level());
+            marker.moveTo(this.position().add(0, -3, 0));
+            marker.setYRot(getYRot());
+            marker.setXRot(getXRot());
+            marker.yRotO = yRotO;
+            marker.xRotO = xRotO;
+            marker.setOrigin(getOrigin());
+            marker.setQuasar(this.isImbueQuasar());
+            level().addFreshEntity(marker);
         }
     }
 
@@ -218,6 +210,17 @@ public class RainfallArrow extends AbstractArrow {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         hitEffect(pResult, pResult.getEntity().blockPosition());
+        pResult.getEntity().invulnerableTime = 0;
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        return false;
+    }
+
+    @Override
+    public boolean isInvulnerable() {
+        return true;
     }
 
     @Override
@@ -235,7 +238,7 @@ public class RainfallArrow extends AbstractArrow {
         super.defineSynchedData();
         this.entityData.define(IS_STRONG, false);
         this.entityData.define(IS_FLAMING, false);
-        this.entityData.define(ORIGIN, BlockPos.ZERO);
+        this.entityData.define(ORIGIN, new Vector3f(0, 0, 0));
         this.entityData.define(SHOULD_IMBUE_QUASAR, false);
     }
 
@@ -255,12 +258,12 @@ public class RainfallArrow extends AbstractArrow {
         this.entityData.set(IS_FLAMING, isFlaming);
     }
 
-    public BlockPos getOrigin() {
-        return this.entityData.get(ORIGIN);
+    public Vec3 getOrigin() {
+        return new Vec3(this.entityData.get(ORIGIN));
     }
 
-    public void setOrigin(BlockPos origin) {
-        this.entityData.set(ORIGIN, origin);
+    public void setOrigin(Vec3 origin) {
+        this.entityData.set(ORIGIN, origin.toVector3f());
     }
 
     public boolean isImbueQuasar() {

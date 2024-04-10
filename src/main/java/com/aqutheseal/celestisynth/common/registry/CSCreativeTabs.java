@@ -1,13 +1,16 @@
 package com.aqutheseal.celestisynth.common.registry;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSCompatItems;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
@@ -25,6 +28,7 @@ public class CSCreativeTabs {
                     .displayItems((pParameters, pOutput) -> {
                         acceptItemRegistry(pOutput, CSItems.ITEMS.getEntries());
                         acceptBlockRegistry(pOutput, CSBlocks.BLOCKS.getEntries());
+                        acceptEnchantmentRegistry(pOutput, CSEnchantments.ENCHANTMENTS.getEntries());
                         if (CSIntegrationManager.checkIronsSpellbooks()) {
                             acceptItemRegistry(pOutput, ISSCompatItems.SPELLBOOKS_ITEMS.getEntries());
                         }
@@ -47,9 +51,24 @@ public class CSCreativeTabs {
         }
     }
 
+    public static void acceptEnchantmentRegistry(CreativeModeTab.Output output, Collection<RegistryObject<Enchantment>> registry) {
+        for (RegistryObject<Enchantment> enchantment : registry) {
+            if (!getEnchantmentBlackList().contains(enchantment)) {
+                for (int i = enchantment.get().getMinLevel(); i <= enchantment.get().getMaxLevel(); i++) {
+                    output.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment.get(), i)));
+                }
+            }
+        }
+    }
+
     public static List<RegistryObject<? extends ItemLike>> getBlackList() {
         return List.of(
                 CSItems.TEMPEST_SPAWN_EGG, CSItems.CELESTIAL_DEBUGGER
+        );
+    }
+
+    public static List<RegistryObject<Enchantment>> getEnchantmentBlackList() {
+        return List.of(
         );
     }
 }

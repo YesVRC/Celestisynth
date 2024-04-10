@@ -7,7 +7,7 @@ import com.aqutheseal.celestisynth.common.attack.frostbound.FrostboundCryogenesi
 import com.aqutheseal.celestisynth.common.attack.frostbound.FrostboundDanceAttack;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
 import com.aqutheseal.celestisynth.common.compat.bettercombat.SwingParticleContainer;
-import com.aqutheseal.celestisynth.api.entity.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualAnimation;
 import com.aqutheseal.celestisynth.common.entity.helper.skinset.FrostboundSlashSkinSet;
 import com.aqutheseal.celestisynth.common.entity.projectile.FrostboundShard;
@@ -70,7 +70,7 @@ public class FrostboundItem extends SkilledSwordItem implements CSGeoItem {
     }
 
     @Override
-    public @Nullable SwingParticleContainer getSwingContainer() {
+    public @Nullable SwingParticleContainer getSwingContainer(LivingEntity holder, ItemStack stack) {
         return new SwingParticleContainer(ParticleTypes.SNOWFLAKE, 1.5F);
     }
 

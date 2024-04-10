@@ -1,64 +1,61 @@
 package com.aqutheseal.celestisynth.common.item.misc;
 
-import com.aqutheseal.celestisynth.common.registry.CSBlocks;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
+import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
+import com.aqutheseal.celestisynth.common.entity.RainfallTurret;
+import com.aqutheseal.celestisynth.common.entity.projectile.KeresSlash;
+import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
+import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
-import java.util.Random;
-
-public class CelestialDebuggerItem extends Item {
-
+public class CelestialDebuggerItem extends Item implements CSWeaponUtil {
     public CelestialDebuggerItem(Properties pProperties) {
         super(pProperties);
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) { //TODO Refactor for optimization (I know that instantiating new Random() objects technically makes it truly "random" instead of predictable via seed but Aqu what the fuck :skull:)
-        int tip = 13 + new Random().nextInt(7);
-        int topX = -10 + new Random().nextInt(10);
-        int topZ = -10 + new Random().nextInt(10);
-        int radius = 1 + new Random().nextInt(3);
-
-        Vec3 to = new Vec3(pTarget.getX() + topX, pTarget.getY() + tip, pTarget.getZ() + topZ);
-
-        for (int x = -radius; x <= radius; x++) {
-            for (int z = -radius; z <= radius; z++) {
-                double fromCenter = Math.sqrt(x * x + z * z);
-                if (fromCenter <= radius) {
-                    Vec3 from = new Vec3(pTarget.getX() + x, pTarget.getY(), pTarget.getZ() + z);
-
-                    Vec3 per = to.subtract(from).normalize();
-                    Vec3 current = from.add(0, 0, 0);
-                    double distance = from.distanceTo(to);
-
-                    for (double i = 0; i < distance; i++) {
-                        BlockPos targetPos = posFromVec(current);
-                        if (i >= 0 && i < distance / (3 - (new Random().nextDouble()))) {
-                            pTarget.level().setBlock(targetPos, Blocks.DEEPSLATE.defaultBlockState(), 3);
-                        } else {
-                            pTarget.level().setBlock(targetPos, CSBlocks.WINTEREIS.get().defaultBlockState(), 3);
-                        }
-                        current = current.add(per);
-
-                        if (i <= 0) {
-                            BlockPos getFromTarget = targetPos;
-                            while (pTarget.level().isEmptyBlock(getFromTarget.below())) {
-                                pTarget.level().setBlock(getFromTarget, Blocks.DEEPSLATE.defaultBlockState(), 3);
-                                getFromTarget = getFromTarget.below();
-                            }
-                        }
-                    }
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        DoubleArrayList angles = new DoubleArrayList();
+        angles.add(0);
+//        for (double a = 0; a < 45; a = a + ((double) 15 / 2)) {
+//            if (a != 0) {
+//                angles.add(a);
+//                angles.add(-a);
+//            }
+//        }
+        if (!pPlayer.isShiftKeyDown()) {
+            if (!pLevel.isClientSide()) {
+                for (double angle : angles) {
+                    KeresSlash rend = new KeresSlash(CSEntityTypes.KERES_SLASH.get(), pPlayer, pLevel);
+                    Vec3 vec31 = pPlayer.getUpVector(1.0F);
+                    Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(angle * ((float) Math.PI / 180F), vec31.x, vec31.y, vec31.z);
+                    Vec3 vec3 = pPlayer.getViewVector(1.0F);
+                    Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
+                    rend.setRoll((float) (pLevel.random.nextGaussian() * 360));
+                    rend.shoot(shootAngle.x, shootAngle.y, shootAngle.z, 1.5F, 0);
+                    pLevel.addFreshEntity(rend);
+                }
+            }
+            pPlayer.playSound(CSSoundEvents.SLASH_WATER.get(), 0.2F, (float) (1.5F + (pPlayer.getRandom().nextGaussian() * 0.5)));
+        } else {
+            if (!pLevel.isClientSide()) {
+                for (int i = 0; i < 360; i = i + 40) {
+                    RainfallTurret turret = new RainfallTurret(CSEntityTypes.RAINFALL_TURRET.get(), pLevel);
+                    turret.moveTo(pPlayer.getX() + (Mth.sin(i) * 30), pPlayer.getY(), pPlayer.getZ() + (Mth.cos(i) * 30));
+                    turret.setOwnerUUID(pPlayer.getUUID());
+                    pLevel.addFreshEntity(turret);
                 }
             }
         }
-        return super.hurtEnemy(pStack, pTarget, pAttacker);
-    }
-
-    public BlockPos posFromVec(Vec3 vec3) {
-        return new BlockPos((int) vec3.x(), (int) vec3.y(), (int) vec3.z());
+        return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
     }
 }

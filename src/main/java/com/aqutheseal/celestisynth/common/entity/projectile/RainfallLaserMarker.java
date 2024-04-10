@@ -1,17 +1,18 @@
 package com.aqutheseal.celestisynth.common.entity.projectile;
 
-import com.aqutheseal.celestisynth.api.entity.EffectControllerEntity;
+import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.common.registry.CSItems;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class RainfallLaserMarker extends EffectControllerEntity {
-    private static final EntityDataAccessor<BlockPos> ORIGIN = SynchedEntityData.defineId(RainfallLaserMarker.class, EntityDataSerializers.BLOCK_POS);
+    private static final EntityDataAccessor<Vector3f> ORIGIN = SynchedEntityData.defineId(RainfallLaserMarker.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Boolean> IS_QUASAR = SynchedEntityData.defineId(RainfallLaserMarker.class, EntityDataSerializers.BOOLEAN);
 
     public RainfallLaserMarker(EntityType<?> pEntityType, Level pLevel) {
@@ -21,24 +22,25 @@ public class RainfallLaserMarker extends EffectControllerEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ORIGIN, BlockPos.ZERO);
+        this.entityData.define(ORIGIN, new Vector3f(0, 0, 0));
         this.entityData.define(IS_QUASAR, true);
     }
 
     @Override
     public void tick() {
         this.baseTick();
-        if (tickCount >= 5) {
+        if (tickCount >= 7) {
             this.discard();
         }
     }
 
-    public BlockPos getOrigin() {
-        return this.entityData.get(ORIGIN);
+    public Vec3 getOrigin() {
+        Vector3f vec3f = this.entityData.get(ORIGIN);
+        return new Vec3(vec3f);
     }
 
-    public void setOrigin(BlockPos origin) {
-        this.entityData.set(ORIGIN, origin);
+    public void setOrigin(Vec3 origin) {
+        this.entityData.set(ORIGIN, origin.toVector3f());
     }
 
     public boolean isQuasar() {
