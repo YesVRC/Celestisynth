@@ -29,7 +29,7 @@ public class CSBetterCombatProvider extends BCDatagenUtil {
                 "bettercombat:claymore",
                 new WeaponAttributes(
                         7.0,
-                        "bettercombat:pose_two_handed_polearm",
+                        "bettercombat:sword",
                         null,
                         false,
                         null,
@@ -89,7 +89,7 @@ public class CSBetterCombatProvider extends BCDatagenUtil {
 
     public void frostboundInit() {
         addAttribute(CSItems.FROSTBOUND, new AttributesContainer(
-                "bettercombat:claymore",
+                "bettercombat:sword",
                 new WeaponAttributes(
                         5.0,
                         "bettercombat:pose_two_handed_heavy",

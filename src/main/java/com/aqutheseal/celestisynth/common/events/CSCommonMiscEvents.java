@@ -1,6 +1,7 @@
 package com.aqutheseal.celestisynth.common.events;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
 import com.aqutheseal.celestisynth.api.item.CSArmorItem;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
@@ -157,7 +158,7 @@ public class CSCommonMiscEvents {
         Item itemR = entity.getMainHandItem().getItem();
         Item itemL = entity.getOffhandItem().getItem();
 
-        if (entity instanceof Player player && player.level().isClientSide()) AnimationManager.playAnimation(AnimationManager.AnimationsList.CLEAR, true);
+        if (entity instanceof Player player && player.level().isClientSide()) AnimationManager.playAnimation(AnimationManager.AnimationsList.CLEAR, LayerManager.LOW_PRIORITY_LAYER);
         if (itemR instanceof BreezebreakerItem || itemL instanceof BreezebreakerItem)  event.setCanceled(true);
     }
 
@@ -169,7 +170,7 @@ public class CSCommonMiscEvents {
 
         if (itemR instanceof BreezebreakerItem || itemL instanceof BreezebreakerItem) {
             if (entity instanceof Player player) {
-                if (entity.level().isClientSide()) AnimationManager.playAnimation(AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_JUMP, true);
+                if (entity.level().isClientSide()) AnimationManager.playAnimation(AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_JUMP, LayerManager.LOW_PRIORITY_LAYER);
 
                 player.playSound(CSSoundEvents.HOP.get());
 

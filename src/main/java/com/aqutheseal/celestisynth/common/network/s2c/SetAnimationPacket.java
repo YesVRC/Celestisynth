@@ -8,27 +8,27 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SetAnimationPacket {
-    private final boolean isOtherLayer;
+    private final int layerIndex;
     private final int animId;
 
-    public SetAnimationPacket(boolean isOtherLayer, int animId) {
-        this.isOtherLayer = isOtherLayer;
+    public SetAnimationPacket(int layerIndex, int animId) {
+        this.layerIndex = layerIndex;
         this.animId = animId;
     }
 
     public SetAnimationPacket(FriendlyByteBuf buf) {
-        this.isOtherLayer = buf.readBoolean();
+        this.layerIndex = buf.readInt();
         this.animId = buf.readInt();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        buf.writeBoolean(isOtherLayer);
+        buf.writeInt(layerIndex);
         buf.writeInt(animId);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
-        context.enqueueWork(() -> CSNetworkManager.sendToPlayersNearbyAndSelf(new UpdateAnimationToAllPacket(isOtherLayer, context.getSender().getId(), this.animId), context.getSender()));
+        context.enqueueWork(() -> CSNetworkManager.sendToPlayersNearbyAndSelf(new UpdateAnimationToAllPacket(layerIndex, context.getSender().getId(), this.animId), context.getSender()));
         return true;
     }
 }

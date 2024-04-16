@@ -39,7 +39,7 @@ public class RainfallLaserRenderer extends EntityRenderer<RainfallLaserMarker> {
         Minecraft.getInstance().player.displayClientMessage(Component.literal("Origin: " + originPos.toString()), true);
         double distanceCalculated = entity.position().distanceTo(originPos) * 0.5;
         poseStack.pushPose();
-        float scale = 1.2f;
+        float scale = 0.8f;
         float progress = (float) entity.tickCount / 7;
         float size = Mth.clampedLerp(scale, 0, progress);
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.yRotO, entity.getYRot()) - (90.0F)));

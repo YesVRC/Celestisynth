@@ -33,6 +33,7 @@ public final class CSEventManager {
 
         forgeBus.register(CSCommonSetupEvents.CSForgeSetupEvents.class);
         forgeBus.register(CSCommonMiscEvents.class);
+        forgeBus.register(CSCommandsManager.class);
     }
 
     private static void registerServerEvents(IEventBus modBus, IEventBus forgeBus) {

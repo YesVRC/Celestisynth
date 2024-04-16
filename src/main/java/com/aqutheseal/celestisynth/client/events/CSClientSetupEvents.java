@@ -38,6 +38,7 @@ public class CSClientSetupEvents {
         event.registerEntityRenderer(CSEntityTypes.RAINFALL_RAIN.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.FROSTBOUND_ICE_CAST.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.RAINFALL_LASER_MARKER.get(), RainfallLaserRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.KERES_SMASH.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.RAINFALL_ARROW.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.FROSTBOUND_SHARD.get(), FrostboundShardRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.SOLARIS_BOMB.get(), SolarisBombRenderer::new);

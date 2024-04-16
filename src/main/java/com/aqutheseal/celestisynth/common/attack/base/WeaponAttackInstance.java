@@ -1,6 +1,7 @@
 package com.aqutheseal.celestisynth.common.attack.base;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import net.minecraft.nbt.CompoundTag;
@@ -37,6 +38,10 @@ public abstract class WeaponAttackInstance implements CSWeaponUtil {
 
     public abstract AnimationManager.AnimationsList getAnimation();
 
+    public boolean sameAnimationForBothHands() {
+        return false;
+    }
+
     public abstract int getCooldown();
 
     public abstract int getAttackStopTime();
@@ -55,7 +60,8 @@ public abstract class WeaponAttackInstance implements CSWeaponUtil {
 
     public void baseStop() {
         stopUsing();
-        //AnimationManager.playAnimation(level, AnimationManager.AnimationsList.CLEAR);
+        AnimationManager.playAnimation(level, AnimationManager.AnimationsList.CLEAR);
+        AnimationManager.playAnimation(level, AnimationManager.AnimationsList.CLEAR, LayerManager.MIRRORED_LAYER);
         getTagController().putInt("cs.AttackIndex", -1);
         getTagController().putInt(ANIMATION_TIMER_KEY, 0);
         getTagController().putBoolean(ANIMATION_BEGUN_KEY, false);

@@ -1,7 +1,12 @@
 package com.aqutheseal.celestisynth.common.item.weapons;
 
+import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
 import com.aqutheseal.celestisynth.api.item.CSGeoItem;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
+import com.aqutheseal.celestisynth.common.attack.keres.KeresRendAttack;
+import com.aqutheseal.celestisynth.common.attack.keres.KeresSlashAttack;
+import com.aqutheseal.celestisynth.common.attack.keres.KeresSmashAttack;
 import com.aqutheseal.celestisynth.common.compat.bettercombat.SwingParticleContainer;
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresShadow;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
@@ -13,9 +18,12 @@ import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,6 +33,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -60,13 +70,16 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     @Override
     public ImmutableList<WeaponAttackInstance> getPossibleAttacks(Player player, ItemStack stack, int dur) {
         return ImmutableList.of(
+                new KeresSlashAttack(player, stack, dur),
+                new KeresRendAttack(player, stack, dur),
+                new KeresSmashAttack(player, stack, dur)
         );
     }
 
     @Override
     public @Nullable SwingParticleContainer getSwingContainer(LivingEntity holder, ItemStack stack) {
-        if (holder.hasEffect(CSMobEffects.HELLBANE.get()) && holder.getRandom().nextInt(2) == 1) {
-            return new SwingParticleContainer(ParticleTypes.FIREWORK, 2.8F);
+        if (holder.hasEffect(CSMobEffects.HELLBANE.get()) && holder.getRandom().nextInt(5) == 1) {
+            return new SwingParticleContainer(CSParticleTypes.KERES_OMEN.get(), 2.8F);
         }
         return new SwingParticleContainer(CSParticleTypes.KERES_ASH.get(), 2.8F);
     }
@@ -79,6 +92,80 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     @Override
     public int getPassiveAmount() {
         return 1;
+    }
+
+    @Override
+    public void startUsing(Level level, Player player, InteractionHand interactionHand) {
+        super.startUsing(level, player, interactionHand);
+        int layer = interactionHand == InteractionHand.OFF_HAND ? LayerManager.MAIN_LAYER : LayerManager.MIRRORED_LAYER;
+        AnimationManager.playAnimation(level, AnimationManager.AnimationsList.ANIM_KERES_CHARGE, layer);
+    }
+
+    @Override
+    public void onUseTick(Level pLevel, LivingEntity pEntity, ItemStack pStack, int pRemainingUseDuration) {
+        super.onUseTick(pLevel, pEntity, pStack, pRemainingUseDuration);
+        int dur = this.getUseDuration(pStack) - pRemainingUseDuration;
+
+        if (dur % 10 == 0) {
+            if (pEntity.getHealth() > 1 && !isCreativeOrSpectator(pEntity)) {
+                pEntity.setHealth(pEntity.getHealth() - 0.65f);
+                this.sacrificeEffect(pLevel, pEntity);
+            } else {
+                if (!isCreativeOrSpectator(pEntity)) {
+                    if (pEntity instanceof Player player) {
+                        player.getCooldowns().addCooldown(this, 20);
+                        if (pLevel.isClientSide) {
+                            player.displayClientMessage(Component.translatable("item.celestisynth.keres.notice").withStyle(ChatFormatting.RED), true);
+                        }
+                    }
+                    pEntity.stopUsingItem();
+                } else {
+                    this.sacrificeEffect(pLevel, pEntity);
+                }
+            }
+        }
+        if (pEntity instanceof Player player) {
+            if (player.isShiftKeyDown()) {
+                for (int i = 0; i < 360; i = i + 2) {
+                    ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_OMEN.get(),
+                            player.getX() + (calculateXLook(player) * ((double) dur / 3)) + (Mth.sin(i) * 5),
+                            player.getY(),
+                            player.getZ() + (calculateZLook(player) * ((double) dur / 3)) + (Mth.cos(i) * 5),
+                            -Mth.sin(i) * 0.3 , 0.5, -Mth.cos(i) * 0.3
+                    );
+                }
+            }
+        }
+        if (dur >= 200) {
+            if (pEntity instanceof Player player) {
+                shakeScreensForNearbyPlayers(player, pLevel, 12, 30, 15,  0.01F);
+            }
+            ParticleUtil.sendParticle(pLevel, ParticleTypes.FLASH, pEntity.getX(), pEntity.getY() + 4, pEntity.getZ());
+        }
+    }
+
+    @Override
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
+        if (getAttackIndex(stack) == -1) {
+            AnimationManager.playAnimation(entity.level(), AnimationManager.AnimationsList.CLEAR);
+            AnimationManager.playAnimation(entity.level(), AnimationManager.AnimationsList.CLEAR, LayerManager.MIRRORED_LAYER);
+        }
+        super.onStopUsing(stack, entity, count);
+    }
+
+    public void sacrificeEffect(Level pLevel, LivingEntity pEntity) {
+        pEntity.playSound(SoundEvents.WITHER_HURT, 0.5f, 0.1F + (pLevel.random.nextFloat() * 0.5f));
+        for (int i = 0; i < 360; i++) {
+            Vec3 particleFactor = pEntity.position().add(Mth.sin(i) * 5, 0, Mth.cos(i) * 5);
+            ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_ASH.get(), particleFactor.x(), particleFactor.y(), particleFactor.z(), -Mth.sin(i) * 0.2 , 0.2, -Mth.cos(i) * 0.2);
+        }
+    }
+
+    public boolean isCreativeOrSpectator(Entity target) {
+        if (target instanceof Player player) {
+            return player.isCreative() || player.isSpectator();
+        }
+        return false;
     }
 
     @Override
@@ -121,17 +208,22 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
             double lifesteal = 0.35;
             if (source.hasEffect(CSMobEffects.HELLBANE.get())) {
                 lifesteal = 0.85;
-//                if (source.distanceToSqr(entity) > 2) {
-//                    entity.setDeltaMovement(source.position().subtract(entity.position()).normalize().scale(0.5));
-//                }
             }
             source.heal((float) lifesteal);
             this.attackController(itemStack).putInt(PASSIVE_STACK, this.attackController(itemStack).getInt(PASSIVE_STACK) + 1);
             if (this.attackController(itemStack).getInt(PASSIVE_STACK) >= 5) {
+                if (source instanceof Player player) {
+                    player.getCooldowns().removeCooldown(this);
+                }
                 source.addEffect(new MobEffectInstance(CSMobEffects.HELLBANE.get(), 100, 0));
                 this.attackController(itemStack).putInt(PASSIVE_STACK, 0);
             }
         }
         return flag;
+    }
+
+    @Override
+    public int getUseDuration(@NotNull ItemStack stack) {
+        return 72000;
     }
 }

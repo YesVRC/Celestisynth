@@ -1,6 +1,5 @@
 package com.aqutheseal.celestisynth.common.item.base;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.google.common.collect.ImmutableList;
@@ -46,7 +45,7 @@ public abstract class SkilledAxeItem extends AxeItem implements CSWeapon {
                 for (WeaponAttackInstance attack : getPossibleAttacks(player, heldStack, 0)) {
                     if (attack.getCondition()) {
                         data.putBoolean(ANIMATION_BEGUN_KEY, true);
-                        AnimationManager.playAnimation(level, attack.getAnimation());
+                        this.executeAnimation(level, attack.getAnimation(), attack, interactionHand);
                         setAttackIndex(heldStack, index);
                         attack.baseStart();
                         player.getCooldowns().addCooldown(heldStack.getItem(), attack.getCooldown());
@@ -70,15 +69,14 @@ public abstract class SkilledAxeItem extends AxeItem implements CSWeapon {
     public void releaseUsing(ItemStack itemstack, @NotNull Level level, @NotNull LivingEntity entity, int i) {
         CompoundTag data = itemstack.getOrCreateTagElement(CS_CONTROLLER_TAG_ELEMENT);
         int dur = this.getUseDuration(itemstack) - i;
-
         if (entity instanceof Player player) {
             int index = 0;
             for (WeaponAttackInstance attack : getPossibleAttacks(player, itemstack, dur)) {
                 if (attack.getCondition()) {
                     data.putBoolean(ANIMATION_BEGUN_KEY, true);
-                    AnimationManager.playAnimation(level, attack.getAnimation());
+                    this.executeAnimation(level, attack.getAnimation(), attack, entity.getOffhandItem() == itemstack ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
                     setAttackIndex(itemstack, index);
-                    attack.startUsing();
+                    attack.baseStart();
                     player.getCooldowns().addCooldown(itemstack.getItem(), attack.getCooldown());
                     break;
                 }
@@ -97,19 +95,16 @@ public abstract class SkilledAxeItem extends AxeItem implements CSWeapon {
             int index = 0;
             for (WeaponAttackInstance attack : getPossibleAttacks(player, itemStack, 0)) {
                 if (getAttackIndex(itemStack) == index) attack.baseTickSkill();
-
                 index++;
             }
         }
     }
 
-    public static int getAttackIndex(ItemStack stack) {
-        CompoundTag data = stack.getOrCreateTagElement(CS_CONTROLLER_TAG_ELEMENT);
-        return data.getInt(ATTACK_INDEX_KEY);
+    public int getAttackIndex(ItemStack stack) {
+        return attackController(stack).getInt(ATTACK_INDEX_KEY);
     }
 
-    public static void setAttackIndex(ItemStack stack, int value) {
-        CompoundTag data = stack.getOrCreateTagElement(CS_CONTROLLER_TAG_ELEMENT);
-        data.putInt(ATTACK_INDEX_KEY, value);
+    public void setAttackIndex(ItemStack stack, int value) {
+        attackController(stack).putInt(ATTACK_INDEX_KEY, value);
     }
 }

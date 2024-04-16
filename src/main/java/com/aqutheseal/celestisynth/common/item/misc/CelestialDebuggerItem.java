@@ -26,12 +26,6 @@ public class CelestialDebuggerItem extends Item implements CSWeaponUtil {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         DoubleArrayList angles = new DoubleArrayList();
         angles.add(0);
-//        for (double a = 0; a < 45; a = a + ((double) 15 / 2)) {
-//            if (a != 0) {
-//                angles.add(a);
-//                angles.add(-a);
-//            }
-//        }
         if (!pPlayer.isShiftKeyDown()) {
             if (!pLevel.isClientSide()) {
                 for (double angle : angles) {

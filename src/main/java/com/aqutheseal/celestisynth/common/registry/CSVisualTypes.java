@@ -75,6 +75,10 @@ public class CSVisualTypes {
     public static final RegistryObject<CSVisualType> FROSTBOUND_ICE_CAST_SEABR =  addVisual(CSVisualType.createSkin("seabreeze", FrostboundSlashSkinSet.FROSTBOUND_ICE_CAST));
     public static final RegistryObject<CSVisualType> FROSTBOUND_SHARD_PULSE_SEABR = addVisual(CSVisualType.createSkin("seabreeze", FrostboundSlashSkinSet.FROSTBOUND_SHARD_PULSE));
 
+    public static final RegistryObject<CSVisualType> KERES_PULSE = addVisual(new CSVisualType("keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(40), 0, 0, 1.55, false, true, false));
+    public static final RegistryObject<CSVisualType> KERES_PULSE_1 = addVisual(new CSVisualType("keres_pulse_1", "keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(50), 0, 0, 2.5, false, true, false));
+    public static final RegistryObject<CSVisualType> KERES_PULSE_2 = addVisual(new CSVisualType("keres_pulse_2", "keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(60), 0, 0, 4, false, true, false));
+
     public static RegistryObject<CSVisualType> addVisual(CSVisualType type) {
         return VISUALS.register(type.getName(), () -> type);
     }

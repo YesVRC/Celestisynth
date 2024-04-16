@@ -24,17 +24,17 @@ public class AnimationManager {
     public static int animIndex;
 
     public static void playAnimation(Level level, AnimationsList animation) {
+        playAnimation(level, animation, LayerManager.MAIN_LAYER);
+    }
+
+    public static void playAnimation(Level level, AnimationsList animation, int layerIndex) {
         if (level.isClientSide()) {
-            playAnimation(animation, false);
+            playAnimation(animation, layerIndex);
         }
     }
 
-    public static void playAnimation(AnimationsList animation) {
-        playAnimation(animation, false);
-    }
-
-    public static void playAnimation(AnimationsList animation, boolean isOtherLayer) {
-        CSNetworkManager.sendToServer(new SetAnimationPacket(isOtherLayer, animation.getId()));
+    public static void playAnimation(AnimationsList animation, int layerIndex) {
+        CSNetworkManager.sendToServer(new SetAnimationPacket(layerIndex, animation.getId()));
     }
 
     public static void playAnimation(@Nullable KeyframeAnimation animation, ModifierLayer<IAnimation> layer) {
@@ -43,17 +43,9 @@ public class AnimationManager {
         if (animation == null) {
             layer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(3, Ease.CONSTANT), null);
         } else {
-            if (CSAnimator.animationData.containsValue(layer)) {
-                layer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(3, Ease.CONSTANT), new KeyframeAnimationPlayer(animation)
-                        .setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL)
-                        .setFirstPersonConfiguration(new FirstPersonConfiguration()
-                                .setShowRightArm(!isFirstPersonModelLoaded && CSConfigManager.CLIENT.showRightArmOnAnimate.get()).setShowRightItem(!isFirstPersonModelLoaded)
-                                .setShowLeftArm(!isFirstPersonModelLoaded && CSConfigManager.CLIENT.showLeftArmOnAnimate.get()).setShowLeftItem(!isFirstPersonModelLoaded)
-                        ), false
-                );
-            }
-            if (CSAnimator.otherAnimationData.containsValue(layer)) {
-                layer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(20, Ease.OUTCIRC), new KeyframeAnimationPlayer(animation)
+            if (CSAnimator.animationData.containsValue(layer) || CSAnimator.otherAnimationData.containsValue(layer) || CSAnimator.mirroredAnimationData.containsValue(layer)) {
+                AbstractFadeModifier fade = CSAnimator.otherAnimationData.containsValue(layer) ? AbstractFadeModifier.standardFadeIn(20, Ease.OUTCIRC) : AbstractFadeModifier.standardFadeIn(3, Ease.CONSTANT);
+                layer.replaceAnimationWithFade(fade, new KeyframeAnimationPlayer(animation)
                         .setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL)
                         .setFirstPersonConfiguration(new FirstPersonConfiguration()
                                 .setShowRightArm(!isFirstPersonModelLoaded && CSConfigManager.CLIENT.showRightArmOnAnimate.get()).setShowRightItem(!isFirstPersonModelLoaded)
@@ -94,7 +86,9 @@ public class AnimationManager {
         ANIM_RAINFALL_AIM_LEFT("cs_rainfall_aim_left"),
         ANIM_RAINFALL_AIM_RIGHT("cs_rainfall_aim_right"),
         ANIM_FROSTBOUND_TRIPLE_SLASH("cs_frostbound_triple_slash"),
-        ANIM_FROSTBOUND_CRYOGENESIS("cs_frostbound_cryogenesis");
+        ANIM_FROSTBOUND_CRYOGENESIS("cs_frostbound_cryogenesis"),
+        ANIM_KERES_CHARGE("cs_keres_charge"),
+        ANIM_KERES_SMASH("cs_keres_smash");
 
         final @Nullable String path;
         final int id;

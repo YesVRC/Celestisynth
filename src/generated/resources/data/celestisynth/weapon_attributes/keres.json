@@ -80,7 +80,7 @@
         "upswing": 0.5
       }
     ],
-    "pose": "bettercombat:pose_two_handed_polearm",
+    "pose": "bettercombat:sword",
     "two_handed": false
   }
 }

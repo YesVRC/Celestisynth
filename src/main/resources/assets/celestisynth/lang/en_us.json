@@ -41,6 +41,8 @@
   "block.celestisynth.celestial_crafting_table": "Celestial Workbench",
   "gui.celestisynth.celestial_crafting": "Celestial Workbench",
 
+  "commands.celestisynth.clear_animation": "Animation cleared successfully",
+
   "death.attack.basic_player_attack": "%s was slain by %s.",
   "death.attack.rapid_player_attack": "%s was damaged by %s repeatedly until death.",
   "death.attack.basic_player_attack_nokb": "%s was slain by %s.",
@@ -201,6 +203,8 @@
   "item.celestisynth.keres": "Keres",
   "advancement.celestisynth.obtain_keres.title": "The Ultimate Demonic Pact",
   "advancement.celestisynth.obtain_keres.description": "Obtain the Keres",
+
+  "item.celestisynth.keres.notice": "Unable to sacrifice blood. Regeneration is required.",
 
   "{o}================{o} ADVANCEMENTS [NON-WEAPONS] {o}================{o}":  "",
 

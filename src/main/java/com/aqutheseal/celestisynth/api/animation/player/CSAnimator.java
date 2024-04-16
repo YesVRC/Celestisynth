@@ -6,6 +6,7 @@ import dev.kosmx.playerAnim.api.layered.AnimationStack;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier;
+import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class CSAnimator {
     public static final Map<AbstractClientPlayer, ModifierLayer<IAnimation>> animationData = new IdentityHashMap<>();
     public static final Map<AbstractClientPlayer, ModifierLayer<IAnimation>> otherAnimationData = new IdentityHashMap<>();
+    public static final Map<AbstractClientPlayer, ModifierLayer<IAnimation>> mirroredAnimationData = new IdentityHashMap<>();
 
     public static void registerAnimationLayer(FMLClientSetupEvent event) {
         PlayerAnimationAccess.REGISTER_ANIMATION_EVENT.register(CSAnimator::registerPlayerAnimation);
@@ -96,8 +98,26 @@ public class CSAnimator {
         CSAnimator.animationData.put(player, layer);
 
         var layerOther = new ModifierLayer<>();
-        stack.addAnimLayer(0, layerOther);
+        stack.addAnimLayer(1, layerOther);
         CSAnimator.otherAnimationData.put(player, layerOther);
+
+        var layerMirrored = new ModifierLayer<>();
+        layerMirrored.addModifier(new MirrorModifier(), 0);
+        layer.addModifier(new AdjustmentModifier((partName) -> {
+            float xRotMod = 0, yRotMod = 0, zRotMod = 0;
+            float xMod = 0, yMod = 0, zMod = 0;
+            if (player.isCrouching()) {
+                if (partName.equals("rightArm") || partName.equals("leftArm")) {
+                    yMod -= 3;
+                }
+                if (partName.equals("head")) {
+                    yMod -= 3;
+                }
+            }
+            return Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(xRotMod, yRotMod, zRotMod), new Vec3f(xMod, yMod, zMod)));
+        }), 1);
+        stack.addAnimLayer(6899, layerMirrored);
+        CSAnimator.mirroredAnimationData.put(player, layerMirrored);
     }
 
     public static float rotationSplit(float faceRotation, float faceUpValue, float faceDownValue) {

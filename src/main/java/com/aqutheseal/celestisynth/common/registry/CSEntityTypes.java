@@ -39,6 +39,9 @@ public class CSEntityTypes {
     public static final RegistryObject<EntityType<RainfallLaserMarker>> RAINFALL_LASER_MARKER = ENTITY_TYPES.register("rainfall_laser_marker", () -> EntityType.Builder.of(RainfallLaserMarker::new, MobCategory.MISC)
             .sized(0.0F, 0.0F).clientTrackingRange(16).build(Celestisynth.prefix("rainfall_laser_marker").toString())
     );
+    public static final RegistryObject<EntityType<SkillCastKeresSmash>> KERES_SMASH = ENTITY_TYPES.register("keres_smash", () -> EntityType.Builder.of(SkillCastKeresSmash::new, MobCategory.MISC)
+            .sized(0.3F, 0.3F).clientTrackingRange(16).build(Celestisynth.prefix("keres_smash").toString())
+    );
 
     public static final RegistryObject<EntityType<RainfallTurret>> RAINFALL_TURRET = ENTITY_TYPES.register("rainfall_turret", () -> EntityType.Builder.of(RainfallTurret::new, MobCategory.MISC)
             .sized(0.8F, 1.2F).clientTrackingRange(64).build(Celestisynth.prefix("rainfall_turret").toString())

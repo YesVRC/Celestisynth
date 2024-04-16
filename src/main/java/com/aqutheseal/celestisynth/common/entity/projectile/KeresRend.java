@@ -7,6 +7,7 @@ import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -80,16 +81,20 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
                     BlockPos blockpos = new BlockPos(xx, yy, zz);
                     BlockState blockstate = this.level().getBlockState(blockpos);
                     if (!blockstate.isAir()) {
-                        if (yy == minY) {
-                            this.level().setBlock(blockpos, Fluids.FLOWING_LAVA.defaultFluidState().createLegacyBlock(), 3);
-                        } else {
-                            this.level().removeBlock(blockpos, false);
+                        if (!blockstate.is(BlockTags.DRAGON_IMMUNE)) {
+                            if (!level().isClientSide) {
+                                if (yy == minY) {
+                                    this.level().setBlock(blockpos, Fluids.FLOWING_LAVA.defaultFluidState().createLegacyBlock(), 2);
+                                } else {
+                                    this.level().removeBlock(blockpos, false);
+                                }
+                            }
+                            double xR = random.nextGaussian() * 0.5;
+                            double yR = random.nextGaussian() * 0.5;
+                            double zR = random.nextGaussian() * 0.5;
+                            ParticleUtil.sendParticle(level(), ParticleTypes.FLASH, xx + xR, yy + yR, zz + zR);
+                            this.playSound(SoundEvents.BLAZE_SHOOT, 0.1F, 1.0F);
                         }
-                        double xR = random.nextGaussian() * 0.5;
-                        double yR = random.nextGaussian() * 0.5;
-                        double zR = random.nextGaussian() * 0.5;
-                        ParticleUtil.sendParticle(level(), ParticleTypes.FLASH, xx + xR, yy + yR, zz + zR);
-                        this.playSound(SoundEvents.BLAZE_SHOOT, 0.1F, 1.0F);
                     }
                 }
             }
@@ -97,7 +102,7 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
         List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, pArea).stream().filter(living -> living != this.getOwner()).toList();
         for (LivingEntity target : targets) {
             if (getOwner() instanceof LivingEntity owner) {
-                this.initiateAbilityAttack(owner, target, 3F, level().damageSources().magic(), AttackHurtTypes.RAPID_NO_KB);
+                this.initiateAbilityAttack(owner, target, 10F + (target.getHealth() * 0.25F), level().damageSources().indirectMagic(this, owner), AttackHurtTypes.NO_KB);
             }
         }
     }
