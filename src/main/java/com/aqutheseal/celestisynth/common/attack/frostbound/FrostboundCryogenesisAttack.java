@@ -1,8 +1,9 @@
 package com.aqutheseal.celestisynth.common.attack.frostbound;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.common.entity.skill.SkillCastFrostboundIceCast;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +14,8 @@ public class FrostboundCryogenesisAttack extends FrostboundAttack {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.ANIM_FROSTBOUND_CRYOGENESIS;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.ANIM_FROSTBOUND_CRYOGENESIS.get();
     }
 
     @Override

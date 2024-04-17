@@ -1,9 +1,10 @@
 package com.aqutheseal.celestisynth.common.attack.solaris;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.entity.projectile.SolarisBomb;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
@@ -16,8 +17,8 @@ public class SolarisAuraAttack extends WeaponAttackInstance {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.CLEAR;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.CLEAR.get();
     }
 
     @Override

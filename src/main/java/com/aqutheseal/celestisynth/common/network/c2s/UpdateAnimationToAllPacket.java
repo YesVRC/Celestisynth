@@ -1,23 +1,29 @@
 package com.aqutheseal.celestisynth.common.network.c2s;
 
+import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.animation.player.CSAnimator;
 import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.RegistryManager;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class UpdateAnimationToAllPacket {
     private final int layerIndex;
     private final int playerId;
-    private final int animId;
+    private final ResourceLocation animId;
 
-    public UpdateAnimationToAllPacket(int layerIndex, int playerId, int animId) {
+    public UpdateAnimationToAllPacket(int layerIndex, int playerId, ResourceLocation animId) {
         this.layerIndex = layerIndex;
         this.playerId = playerId;
         this.animId = animId;
@@ -26,13 +32,13 @@ public class UpdateAnimationToAllPacket {
     public UpdateAnimationToAllPacket(FriendlyByteBuf buf) {
         this.layerIndex = buf.readInt();
         this.playerId = buf.readInt();
-        this.animId = buf.readInt();
+        this.animId = buf.readResourceLocation();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(layerIndex);
         buf.writeInt(playerId);
-        buf.writeInt(animId);
+        buf.writeResourceLocation(animId);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -45,13 +51,19 @@ public class UpdateAnimationToAllPacket {
         return true;
     }
 
-    public static void animatePlayer(int layerIndex, int animId, AbstractClientPlayer player) {
-        ModifierLayer<IAnimation> animation = switch (layerIndex) {
+    public static void animatePlayer(int layerIndex, ResourceLocation animId, AbstractClientPlayer player) {
+        ModifierLayer<IAnimation> layer = switch (layerIndex) {
             case LayerManager.MAIN_LAYER -> CSAnimator.animationData.get(player);
             case LayerManager.LOW_PRIORITY_LAYER -> CSAnimator.otherAnimationData.get(player);
             case LayerManager.MIRRORED_LAYER -> CSAnimator.mirroredAnimationData.get(player);
             default -> throw new IllegalStateException("Invalid layer index!");
         };
-        if (animation != null) AnimationManager.playAnimation(AnimationManager.getAnimFromId(animId).getAnimation(), animation);
+        if (layer != null) {
+            @Nullable PlayerAnimationContainer animation = RegistryManager.ACTIVE.getRegistry(CSPlayerAnimations.ANIMATIONS_KEY).getValue(animId);
+            if (animation == null) {
+                Celestisynth.LOGGER.warn("Failed to capture animation for server sync: " + animId);
+            }
+            AnimationManager.playAnimation(animation == null || animation == CSPlayerAnimations.CLEAR.get() ? null : animation.asAnimation(), layer);
+        }
     }
 }

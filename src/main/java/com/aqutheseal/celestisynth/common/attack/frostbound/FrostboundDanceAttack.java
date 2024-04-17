@@ -1,11 +1,12 @@
 package com.aqutheseal.celestisynth.common.attack.frostbound;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
@@ -29,8 +30,8 @@ public class FrostboundDanceAttack extends FrostboundAttack {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.ANIM_FROSTBOUND_TRIPLE_SLASH;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.ANIM_FROSTBOUND_TRIPLE_SLASH.get();
     }
 
     @Override

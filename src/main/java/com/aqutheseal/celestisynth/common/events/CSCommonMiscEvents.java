@@ -9,10 +9,7 @@ import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvide
 import com.aqutheseal.celestisynth.common.entity.projectile.SolarisBomb;
 import com.aqutheseal.celestisynth.common.entity.skill.SkillCastPoltergeistWard;
 import com.aqutheseal.celestisynth.common.item.weapons.BreezebreakerItem;
-import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
-import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
-import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
-import com.aqutheseal.celestisynth.common.registry.CSTags;
+import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.Streams;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -158,7 +155,7 @@ public class CSCommonMiscEvents {
         Item itemR = entity.getMainHandItem().getItem();
         Item itemL = entity.getOffhandItem().getItem();
 
-        if (entity instanceof Player player && player.level().isClientSide()) AnimationManager.playAnimation(AnimationManager.AnimationsList.CLEAR, LayerManager.LOW_PRIORITY_LAYER);
+        if (entity instanceof Player player && player.level().isClientSide()) AnimationManager.playAnimation(CSPlayerAnimations.CLEAR.get(), LayerManager.LOW_PRIORITY_LAYER);
         if (itemR instanceof BreezebreakerItem || itemL instanceof BreezebreakerItem)  event.setCanceled(true);
     }
 
@@ -170,7 +167,7 @@ public class CSCommonMiscEvents {
 
         if (itemR instanceof BreezebreakerItem || itemL instanceof BreezebreakerItem) {
             if (entity instanceof Player player) {
-                if (entity.level().isClientSide()) AnimationManager.playAnimation(AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_JUMP, LayerManager.LOW_PRIORITY_LAYER);
+                if (entity.level().isClientSide()) AnimationManager.playAnimation(CSPlayerAnimations.ANIM_BREEZEBREAKER_JUMP.get(), LayerManager.LOW_PRIORITY_LAYER);
 
                 player.playSound(CSSoundEvents.HOP.get());
 

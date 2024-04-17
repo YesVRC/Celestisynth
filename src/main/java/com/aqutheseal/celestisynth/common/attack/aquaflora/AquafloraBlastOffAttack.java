@@ -1,9 +1,10 @@
 package com.aqutheseal.celestisynth.common.attack.aquaflora;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.sounds.SoundEvents;
@@ -21,8 +22,8 @@ public class AquafloraBlastOffAttack extends AquafloraAttack {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.ANIM_AQUAFLORA_BASH;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.ANIM_AQUAFLORA_BASH.get();
     }
 
     @Override

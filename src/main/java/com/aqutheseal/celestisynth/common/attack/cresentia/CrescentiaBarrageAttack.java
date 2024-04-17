@@ -1,12 +1,13 @@
 package com.aqutheseal.celestisynth.common.attack.cresentia;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
-import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.projectile.CrescentiaDragon;
 import com.aqutheseal.celestisynth.common.item.weapons.CrescentiaItem;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
@@ -28,8 +29,8 @@ public class CrescentiaBarrageAttack extends WeaponAttackInstance {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.ANIM_CRESCENTIA_STRIKE;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.ANIM_CRESCENTIA_STRIKE.get();
     }
 
     @Override

@@ -2,7 +2,9 @@ package com.aqutheseal.celestisynth.common.attack.base;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -36,7 +38,7 @@ public abstract class WeaponAttackInstance implements CSWeaponUtil {
         this(player, stack, 0);
     }
 
-    public abstract AnimationManager.AnimationsList getAnimation();
+    public abstract PlayerAnimationContainer getAnimation();
 
     public boolean sameAnimationForBothHands() {
         return false;
@@ -60,8 +62,8 @@ public abstract class WeaponAttackInstance implements CSWeaponUtil {
 
     public void baseStop() {
         stopUsing();
-        AnimationManager.playAnimation(level, AnimationManager.AnimationsList.CLEAR);
-        AnimationManager.playAnimation(level, AnimationManager.AnimationsList.CLEAR, LayerManager.MIRRORED_LAYER);
+        AnimationManager.playAnimation(level, CSPlayerAnimations.CLEAR.get());
+        AnimationManager.playAnimation(level, CSPlayerAnimations.CLEAR.get(), LayerManager.MIRRORED_LAYER);
         getTagController().putInt("cs.AttackIndex", -1);
         getTagController().putInt(ANIMATION_TIMER_KEY, 0);
         getTagController().putBoolean(ANIMATION_BEGUN_KEY, false);

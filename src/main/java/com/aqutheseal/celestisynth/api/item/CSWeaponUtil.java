@@ -1,10 +1,12 @@
 package com.aqutheseal.celestisynth.api.item;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
-import com.aqutheseal.celestisynth.common.network.s2c.ChangeCameraTypePacket;
+import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
 import com.aqutheseal.celestisynth.common.network.c2s.ShakeScreenForAllPacket;
+import com.aqutheseal.celestisynth.common.network.s2c.ChangeCameraTypePacket;
 import com.aqutheseal.celestisynth.common.registry.CSAttributes;
 import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
@@ -216,7 +218,8 @@ public interface CSWeaponUtil {
 
     static void disableRunningWeapon(Entity owner) {
         if (owner instanceof Player playerOwner) {
-            AnimationManager.playAnimation(owner.level(), AnimationManager.AnimationsList.CLEAR);
+            AnimationManager.playAnimation(owner.level(), CSPlayerAnimations.CLEAR.get());
+            AnimationManager.playAnimation(owner.level(), CSPlayerAnimations.CLEAR.get(), LayerManager.MIRRORED_LAYER);
 
             for (EquipmentSlot slot : EquipmentSlot.values()) {
                 if (playerOwner.getItemBySlot(slot).getItem() instanceof CSWeapon cs) {

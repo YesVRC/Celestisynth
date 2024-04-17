@@ -1,9 +1,10 @@
 package com.aqutheseal.celestisynth.common.attack.breezebreaker;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
@@ -23,8 +24,8 @@ public class BreezebreakerDualGalestormAttack extends BreezebreakerAttack {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_NORMAL_DOUBLE;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.ANIM_BREEZEBREAKER_NORMAL_DOUBLE.get();
     }
 
     @Override

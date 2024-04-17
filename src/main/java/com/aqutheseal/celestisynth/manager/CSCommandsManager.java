@@ -1,8 +1,8 @@
 package com.aqutheseal.celestisynth.manager;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
 import com.aqutheseal.celestisynth.common.network.c2s.UpdateAnimationToAllPacket;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -24,8 +24,8 @@ public class CSCommandsManager {
 
     private static int clearAnimation(CommandContext<CommandSourceStack> command) {
         if (command.getSource().getEntity() instanceof Player player) {
-            CSNetworkManager.sendToAll(new UpdateAnimationToAllPacket(LayerManager.MAIN_LAYER, player.getId(), AnimationManager.AnimationsList.CLEAR.getId()));
-            CSNetworkManager.sendToAll(new UpdateAnimationToAllPacket(LayerManager.MIRRORED_LAYER, player.getId(), AnimationManager.AnimationsList.CLEAR.getId()));
+            CSNetworkManager.sendToAll(new UpdateAnimationToAllPacket(LayerManager.MAIN_LAYER, player.getId(), CSPlayerAnimations.CLEAR.getId()));
+            CSNetworkManager.sendToAll(new UpdateAnimationToAllPacket(LayerManager.MIRRORED_LAYER, player.getId(), CSPlayerAnimations.CLEAR.getId()));
             command.getSource().sendSuccess(() -> Component.translatable("commands.celestisynth.clear_animation"), false);
         }
         return Command.SINGLE_SUCCESS;

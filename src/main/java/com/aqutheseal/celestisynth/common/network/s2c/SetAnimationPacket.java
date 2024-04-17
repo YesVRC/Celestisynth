@@ -3,27 +3,28 @@ package com.aqutheseal.celestisynth.common.network.s2c;
 import com.aqutheseal.celestisynth.common.network.c2s.UpdateAnimationToAllPacket;
 import com.aqutheseal.celestisynth.manager.CSNetworkManager;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class SetAnimationPacket {
     private final int layerIndex;
-    private final int animId;
+    private final ResourceLocation animId;
 
-    public SetAnimationPacket(int layerIndex, int animId) {
+    public SetAnimationPacket(int layerIndex, ResourceLocation animId) {
         this.layerIndex = layerIndex;
         this.animId = animId;
     }
 
     public SetAnimationPacket(FriendlyByteBuf buf) {
         this.layerIndex = buf.readInt();
-        this.animId = buf.readInt();
+        this.animId = buf.readResourceLocation();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(layerIndex);
-        buf.writeInt(animId);
+        buf.writeResourceLocation(animId);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {

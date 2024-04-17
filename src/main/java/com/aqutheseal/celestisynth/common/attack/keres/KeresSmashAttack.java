@@ -1,11 +1,12 @@
 package com.aqutheseal.celestisynth.common.attack.keres;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.entity.skill.SkillCastKeresSmash;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSMobEffects;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -18,8 +19,8 @@ public class KeresSmashAttack extends WeaponAttackInstance {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.ANIM_KERES_SMASH;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.ANIM_KERES_SMASH.get();
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.aqutheseal.celestisynth.common.attack.breezebreaker;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.common.entity.skill.SkillCastBreezebreakerTornado;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.world.entity.player.Player;
@@ -15,15 +16,15 @@ public class BreezebreakerWhirlwindAttack extends BreezebreakerAttack {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        if (player.getMainHandItem() == stack && player.getOffhandItem() != stack) return AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_SHIFT_RIGHT;
-        else if (player.getOffhandItem() == stack && player.getMainHandItem() != stack) return AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_SHIFT_LEFT;
+    public PlayerAnimationContainer getAnimation() {
+        if (player.getMainHandItem() == stack && player.getOffhandItem() != stack) return CSPlayerAnimations.ANIM_BREEZEBREAKER_SHIFT_RIGHT.get();
+        else if (player.getOffhandItem() == stack && player.getMainHandItem() != stack) return CSPlayerAnimations.ANIM_BREEZEBREAKER_SHIFT_LEFT.get();
         else if (player.getOffhandItem() == stack && player.getMainHandItem() == stack) {
             boolean shouldShiftRight = player.getRandom().nextBoolean();
 
-            return shouldShiftRight ? AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_SHIFT_RIGHT : AnimationManager.AnimationsList.ANIM_BREEZEBREAKER_SHIFT_LEFT;
+            return shouldShiftRight ? CSPlayerAnimations.ANIM_BREEZEBREAKER_SHIFT_RIGHT.get() : CSPlayerAnimations.ANIM_BREEZEBREAKER_SHIFT_LEFT.get();
         }
-        return AnimationManager.AnimationsList.CLEAR;
+        return CSPlayerAnimations.CLEAR.get();
     }
 
     @Override

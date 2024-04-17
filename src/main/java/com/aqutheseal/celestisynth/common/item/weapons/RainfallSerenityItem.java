@@ -6,14 +6,15 @@ import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
-import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualAnimation;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -128,9 +129,9 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
             pPlayer.startUsingItem(pHand);
             elementData.putBoolean(ANIMATION_BEGUN_KEY, true);
             if (pHand == InteractionHand.MAIN_HAND) {
-                AnimationManager.playAnimation(pLevel, AnimationManager.AnimationsList.ANIM_RAINFALL_AIM_RIGHT);
+                AnimationManager.playAnimation(pLevel, CSPlayerAnimations.ANIM_RAINFALL_AIM_RIGHT.get());
             } else {
-                AnimationManager.playAnimation(pLevel, AnimationManager.AnimationsList.ANIM_RAINFALL_AIM_LEFT);
+                AnimationManager.playAnimation(pLevel, CSPlayerAnimations.ANIM_RAINFALL_AIM_LEFT.get());
             }
 
             return InteractionResultHolder.consume(heldStack);
@@ -185,7 +186,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
             int useDuration = getUseDuration(pStack) - pTimeLeft;
             double curPowerFromUse = getPowerForTime(pStack, useDuration);
 
-            AnimationManager.playAnimation(pLevel, AnimationManager.AnimationsList.CLEAR);
+            AnimationManager.playAnimation(pLevel, CSPlayerAnimations.CLEAR.get());
             elementData.putBoolean(ANIMATION_BEGUN_KEY, false);
 
             if (curPowerFromUse >= 1.0D) {

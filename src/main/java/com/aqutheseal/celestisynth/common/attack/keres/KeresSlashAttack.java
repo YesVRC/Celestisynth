@@ -1,9 +1,10 @@
 package com.aqutheseal.celestisynth.common.attack.keres;
 
-import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
+import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresSlash;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,8 +18,8 @@ public class KeresSlashAttack extends WeaponAttackInstance {
     }
 
     @Override
-    public AnimationManager.AnimationsList getAnimation() {
-        return AnimationManager.AnimationsList.ANIM_AQUAFLORA_PIERCE_RIGHT;
+    public PlayerAnimationContainer getAnimation() {
+        return CSPlayerAnimations.ANIM_AQUAFLORA_PIERCE_RIGHT.get();
     }
 
     @Override

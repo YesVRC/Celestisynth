@@ -108,10 +108,10 @@ public class CSAnimator {
             float xMod = 0, yMod = 0, zMod = 0;
             if (player.isCrouching()) {
                 if (partName.equals("rightArm") || partName.equals("leftArm")) {
-                    yMod -= 3;
+                    yMod += 3;
                 }
                 if (partName.equals("head")) {
-                    yMod -= 3;
+                    yMod += 3;
                 }
             }
             return Optional.of(new AdjustmentModifier.PartModifier(new Vec3f(xRotMod, yRotMod, zRotMod), new Vec3f(xMod, yMod, zMod)));

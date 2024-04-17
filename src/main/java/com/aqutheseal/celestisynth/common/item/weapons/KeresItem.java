@@ -13,6 +13,7 @@ import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSMobEffects;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
@@ -98,7 +99,7 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     public void startUsing(Level level, Player player, InteractionHand interactionHand) {
         super.startUsing(level, player, interactionHand);
         int layer = interactionHand == InteractionHand.OFF_HAND ? LayerManager.MAIN_LAYER : LayerManager.MIRRORED_LAYER;
-        AnimationManager.playAnimation(level, AnimationManager.AnimationsList.ANIM_KERES_CHARGE, layer);
+        AnimationManager.playAnimation(level, CSPlayerAnimations.ANIM_KERES_CHARGE.get(), layer);
     }
 
     @Override
@@ -147,8 +148,8 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     @Override
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         if (getAttackIndex(stack) == -1) {
-            AnimationManager.playAnimation(entity.level(), AnimationManager.AnimationsList.CLEAR);
-            AnimationManager.playAnimation(entity.level(), AnimationManager.AnimationsList.CLEAR, LayerManager.MIRRORED_LAYER);
+            AnimationManager.playAnimation(entity.level(), CSPlayerAnimations.CLEAR.get());
+            AnimationManager.playAnimation(entity.level(), CSPlayerAnimations.CLEAR.get(), LayerManager.MIRRORED_LAYER);
         }
         super.onStopUsing(stack, entity, count);
     }
