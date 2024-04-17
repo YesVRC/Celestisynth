@@ -126,7 +126,7 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
             }
         }
         if (pEntity instanceof Player player) {
-            if (player.isShiftKeyDown()) {
+            if (player.isShiftKeyDown() && dur < 200) {
                 for (int i = 0; i < 360; i = i + 2) {
                     ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_OMEN.get(),
                             player.getX() + (calculateXLook(player) * ((double) dur / 3)) + (Mth.sin(i) * 5),

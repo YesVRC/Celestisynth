@@ -91,7 +91,7 @@ public class KeresSlash extends ThrowableProjectile implements GeoEntity, CSWeap
             ParticleUtil.sendParticle(level(), CSParticleTypes.KERES_OMEN.get(), part.getX(), part.getY() + 0.25, part.getZ(), particleDir.x(), particleDir.y(), particleDir.z());
             if (this.getOwner() instanceof LivingEntity owner) {
                 for (LivingEntity target : level().getEntitiesOfClass(LivingEntity.class, part.getBoundingBox(), livingEntity -> livingEntity != this.getOwner())) {
-                    initiateAbilityAttack(owner, target, 2, level().damageSources().magic(), AttackHurtTypes.RAPID_NO_KB);
+                    initiateAbilityAttack(owner, target, 2, level().damageSources().indirectMagic(this, owner), AttackHurtTypes.RAPID_NO_KB);
                 }
             }
         }

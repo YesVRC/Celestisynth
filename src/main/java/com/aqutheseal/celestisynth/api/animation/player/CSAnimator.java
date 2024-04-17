@@ -83,10 +83,10 @@ public class CSAnimator {
             }
             if (player.isCrouching()) {
                 if (partName.equals("rightArm") || partName.equals("leftArm")) {
-                    yMod += 3;
+                    yMod -= 3;
                 }
                 if (partName.equals("head")) {
-                    yMod += 3;
+                    yMod -= 3;
                 }
             }
             return Optional.of(new AdjustmentModifier.PartModifier(

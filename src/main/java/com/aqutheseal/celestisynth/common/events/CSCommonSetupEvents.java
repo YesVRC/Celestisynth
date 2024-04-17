@@ -27,6 +27,7 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -54,7 +55,7 @@ public class CSCommonSetupEvents {
             CSAttributes.modifyEntityAttributes(event);
         }
 
-        @SubscribeEvent
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
         public static void onRegistryCreatingEvent(NewRegistryEvent event) {
             event.create(new RegistryBuilder<CSVisualType>().setName(CSVisualTypes.VISUALS_KEY.location()).disableSaving());
             event.create(new RegistryBuilder<CSPlayerAnimations>().setName(CSPlayerAnimations.ANIMATIONS_KEY.location()).disableSaving());

@@ -28,10 +28,8 @@ public class ChangeCameraTypePacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
-
         context.enqueueWork(() -> {
             Minecraft instance = Minecraft.getInstance();
-
             if (instance.player.getId() == playerTarget) instance.options.setCameraType(CameraType.values()[enumID]);
         });
         return true;

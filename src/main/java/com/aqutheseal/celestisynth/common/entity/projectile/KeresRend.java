@@ -44,7 +44,6 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
     @Override
     public void tick() {
         super.tick();
-        this.setDeltaMovement(this.getDeltaMovement().scale(1.35));
         for (double i = 0; i <= 18; i = i + 3) {
             this.checkWalls(this.getBoundingBox().move(getDeltaMovement().normalize().scale(i)));
         }
@@ -102,7 +101,7 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
         List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, pArea).stream().filter(living -> living != this.getOwner()).toList();
         for (LivingEntity target : targets) {
             if (getOwner() instanceof LivingEntity owner) {
-                this.initiateAbilityAttack(owner, target, 10F + (target.getHealth() * 0.25F), level().damageSources().indirectMagic(this, owner), AttackHurtTypes.NO_KB);
+                this.initiateAbilityAttack(owner, target, 5F + (target.getHealth() * 0.1F), level().damageSources().magic(), AttackHurtTypes.RAPID_NO_KB);
             }
         }
     }

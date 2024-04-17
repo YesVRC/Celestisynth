@@ -36,6 +36,8 @@ public class CSPlayerAnimations {
     public static final RegistryObject<PlayerAnimationContainer> ANIM_FROSTBOUND_CRYOGENESIS = addAnimation("cs_frostbound_cryogenesis");
     public static final RegistryObject<PlayerAnimationContainer> ANIM_KERES_CHARGE = addAnimation("cs_keres_charge");
     public static final RegistryObject<PlayerAnimationContainer> ANIM_KERES_SMASH = addAnimation("cs_keres_smash");
+    public static final RegistryObject<PlayerAnimationContainer> ANIM_KERES_SLASH = addAnimation("cs_keres_slash");
+    public static final RegistryObject<PlayerAnimationContainer> ANIM_KERES_REND = addAnimation("cs_keres_rend");
 
     public static RegistryObject<PlayerAnimationContainer> addAnimation(String id) {
         return addAnimation(Celestisynth.prefix(id));

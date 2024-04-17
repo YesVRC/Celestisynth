@@ -37,7 +37,7 @@ public class AnimationManager {
         boolean isFirstPersonModelLoaded = ModList.get().isLoaded("firstpersonmod");
 
         if (animation == null) {
-            layer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(3, Ease.CONSTANT), null);
+            layer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(0, Ease.CONSTANT), null, true);
         } else {
             if (CSAnimator.animationData.containsValue(layer) || CSAnimator.otherAnimationData.containsValue(layer) || CSAnimator.mirroredAnimationData.containsValue(layer)) {
                 AbstractFadeModifier fade = CSAnimator.otherAnimationData.containsValue(layer) ? AbstractFadeModifier.standardFadeIn(20, Ease.OUTCIRC) : AbstractFadeModifier.standardFadeIn(3, Ease.CONSTANT);

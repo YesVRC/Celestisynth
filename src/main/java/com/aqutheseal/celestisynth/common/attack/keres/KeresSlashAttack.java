@@ -19,7 +19,12 @@ public class KeresSlashAttack extends WeaponAttackInstance {
 
     @Override
     public PlayerAnimationContainer getAnimation() {
-        return CSPlayerAnimations.ANIM_AQUAFLORA_PIERCE_RIGHT.get();
+        return CSPlayerAnimations.ANIM_KERES_SLASH.get();
+    }
+
+    @Override
+    public boolean sameAnimationForBothHands() {
+        return true;
     }
 
     @Override
@@ -29,7 +34,7 @@ public class KeresSlashAttack extends WeaponAttackInstance {
 
     @Override
     public int getAttackStopTime() {
-        return 20;
+        return 5;
     }
 
     @Override

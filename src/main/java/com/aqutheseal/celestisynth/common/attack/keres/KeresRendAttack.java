@@ -5,6 +5,7 @@ import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresRend;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
+import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -18,17 +19,17 @@ public class KeresRendAttack extends WeaponAttackInstance {
 
     @Override
     public PlayerAnimationContainer getAnimation() {
-        return CSPlayerAnimations.ANIM_AQUAFLORA_PIERCE_RIGHT.get();
+        return CSPlayerAnimations.ANIM_KERES_REND.get();
     }
 
     @Override
     public int getCooldown() {
-        return 5;
+        return 100;
     }
 
     @Override
     public int getAttackStopTime() {
-        return 20;
+        return 40;
     }
 
     @Override
@@ -38,20 +39,31 @@ public class KeresRendAttack extends WeaponAttackInstance {
 
     @Override
     public void startUsing() {
-        if (!level.isClientSide) {
-            KeresRend rend = new KeresRend(CSEntityTypes.KERES_REND.get(), player, level);
-            rend.moveTo(player.position().add(calculateXLook(player) * 3, -3, calculateZLook(player) * 3));
-            Vec3 vec31 = player.getUpVector(1.0F);
-            Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(0, vec31.x, vec31.y, vec31.z);
-            Vec3 vec3 = player.getViewVector(1.0F);
-            Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
-            rend.shoot(shootAngle.x, 0, shootAngle.z, 0.5F, 0);
-            level.addFreshEntity(rend);
-        }
+        player.playSound(CSSoundEvents.BASS_DROP.get(), 0.3F, 1F);
     }
 
     @Override
     public void tickAttack() {
+        if (getTimerProgress() == 13) {
+            player.playSound(CSSoundEvents.STEP.get(), 0.3F, 0.5F);
+        }
+
+        if (getTimerProgress() == 22) {
+            player.playSound(CSSoundEvents.BASS_PULSE.get(), 0.75F, 1F);
+        }
+
+        if (getTimerProgress() == 25) {
+            if (!level.isClientSide) {
+                KeresRend rend = new KeresRend(CSEntityTypes.KERES_REND.get(), player, level);
+                rend.moveTo(player.position().add(calculateXLook(player) * 3, -3, calculateZLook(player) * 3));
+                Vec3 vec31 = player.getUpVector(1.0F);
+                Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(0, vec31.x, vec31.y, vec31.z);
+                Vec3 vec3 = player.getViewVector(1.0F);
+                Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
+                rend.shoot(shootAngle.x, 0, shootAngle.z, 7F, 0);
+                level.addFreshEntity(rend);
+            }
+        }
     }
 
     @Override

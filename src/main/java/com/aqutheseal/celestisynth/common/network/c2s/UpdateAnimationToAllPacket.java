@@ -63,6 +63,9 @@ public class UpdateAnimationToAllPacket {
             if (animation == null) {
                 Celestisynth.LOGGER.warn("Failed to capture animation for server sync: " + animId);
             }
+
+            if (layerIndex == LayerManager.MAIN_LAYER) AnimationManager.playAnimation(null, CSAnimator.mirroredAnimationData.get(player));
+            if (layerIndex == LayerManager.MIRRORED_LAYER) AnimationManager.playAnimation(null, CSAnimator.animationData.get(player));
             AnimationManager.playAnimation(animation == null || animation == CSPlayerAnimations.CLEAR.get() ? null : animation.asAnimation(), layer);
         }
     }
