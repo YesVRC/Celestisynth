@@ -15,6 +15,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import software.bernie.geckolib.core.object.Color;
 
 public class CrescentiaDragonAttack extends WeaponAttackInstance {
 
@@ -45,6 +46,7 @@ public class CrescentiaDragonAttack extends WeaponAttackInstance {
     @Override
     public void startUsing() {
         useAndDamageItem(getStack(), level, player, 5);
+        this.chantMessage(player, "crescentia2", 30, Color.WHITE.argbInt());
     }
 
     @Override
@@ -54,6 +56,8 @@ public class CrescentiaDragonAttack extends WeaponAttackInstance {
         }
 
         if (getTimerProgress() == 20) {
+            this.chantMessage(player, "crescentia3", 20, Color.PINK.argbInt());
+
             FloatArrayList angles = new FloatArrayList();
             angles.add(0.0F);
             angles.add(-30.0F);

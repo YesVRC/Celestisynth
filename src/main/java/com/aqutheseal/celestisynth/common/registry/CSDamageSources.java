@@ -59,4 +59,7 @@ public class CSDamageSources {
         return this.source(CSDamageTypes.PULSATION, pPlayer);
     }
 
+    public DamageSource erasure(LivingEntity pPlayer) {
+        return this.source(CSDamageTypes.ERASURE, pPlayer);
+    }
 }

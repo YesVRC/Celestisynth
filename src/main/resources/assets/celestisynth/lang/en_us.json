@@ -41,6 +41,11 @@
   "block.celestisynth.celestial_crafting_table": "Celestial Workbench",
   "gui.celestisynth.celestial_crafting": "Celestial Workbench",
 
+  "effect.celestisynth.hellbane": "Hell Bane",
+  "effect.celestisynth.cursebane": "Curse Bane",
+
+  "enchantment.celestisynth.pulsation": "Pulsation",
+
   "commands.celestisynth.clear_animation": "Animation cleared successfully",
 
   "death.attack.basic_player_attack": "%s was slain by %s.",
@@ -69,6 +74,11 @@
   "item.celestisynth.solaris.condition_2": "Activate: Right-click while holding SHIFT",
   "item.celestisynth.solaris.desc_2": "Dash forward, striking and temporarily igniting entities in your path.",
 
+  "chant.celestisynth.solaris": "A soul that is the sun itself.",
+  "chant.celestisynth.solaris1": "Full Spin.",
+  "chant.celestisynth.solaris2": "An unbreakable spirit.",
+  "chant.celestisynth.solaris3": "Soul Pursuit.",
+
   "------------------- CRESCENTIA ------------------":  "",
 
   "item.celestisynth.crescentia": "Crescentia",
@@ -85,6 +95,11 @@
   "item.celestisynth.crescentia.skill_2": " Eye of the Dragon",
   "item.celestisynth.crescentia.condition_2": "Activate: Right-click while holding SHIFT",
   "item.celestisynth.crescentia.desc_2": "Unleash a set of dragon-like projectiles, dragging enemies along with it whilst continuously slashing them.",
+
+  "chant.celestisynth.crescentia": "The sparks of destiny.",
+  "chant.celestisynth.crescentia1": "The festival of fates.",
+  "chant.celestisynth.crescentia2": "Dragons of the moon.",
+  "chant.celestisynth.crescentia3": "I call forth thee.",
 
   "------------------- BREEZEBREAKER ------------------":  "",
 
@@ -205,6 +220,10 @@
   "advancement.celestisynth.obtain_keres.description": "Obtain the Keres",
 
   "item.celestisynth.keres.notice": "Unable to sacrifice blood. Regeneration is required.",
+
+  "chant.celestisynth.keres": "May the blood...",
+  "chant.celestisynth.keres1": "of darkness...",
+  "chant.celestisynth.keres2": "DESTROY ALL.",
 
   "{o}================{o} ADVANCEMENTS [NON-WEAPONS] {o}================{o}":  "",
 

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
+import software.bernie.geckolib.core.object.Color;
 
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
     public void startUsing() {
         getTagController().putInt(DIRECTION_INDEX_KEY, player.getRandom().nextInt(2));
         useAndDamageItem(getStack(), level, player, 2);
+        this.chantMessage(player, "solaris", 30, Color.WHITE.argbInt());
     }
 
     @Override
@@ -67,6 +69,11 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
                 ParticleUtil.sendParticles(level, ParticleTypes.LARGE_SMOKE, player.getX(), player.getY(), player.getZ(), 0, (-1 + rand.nextFloat() * 2) * 0.5, 0.1, (-1 + rand.nextFloat() * 2) * 0.5);
             }
         }
+
+        if (getTimerProgress() == 23) {
+            this.chantMessage(player, "solaris1", 20, Color.ORANGE.argbInt());
+        }
+
         if (getTimerProgress() > 0 && getTimerProgress() < 24) {
             ParticleUtil.sendParticles(level, ParticleTypes.FLAME, player.getX(), player.getY(), player.getZ(), 0, 0, 0.1, 0);
             player.setDeltaMovement(0, 0, 0);

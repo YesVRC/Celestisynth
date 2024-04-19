@@ -17,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
+import software.bernie.geckolib.core.object.Color;
 
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class SolarisSoulDashAttack extends WeaponAttackInstance {
         getTagController().putBoolean(STARTED, true);
         getTagController().putFloat(HEAD_ROT_LOCK_KEY, player.getYRot());
         useAndDamageItem(getStack(), level, player, 3);
+        this.chantMessage(player, "solaris2", 30, Color.WHITE.argbInt());
     }
 
     @Override
@@ -70,6 +72,11 @@ public class SolarisSoulDashAttack extends WeaponAttackInstance {
                 if (!level.isClientSide()) ParticleUtil.sendParticles((ServerLevel) level, ParticleTypes.LARGE_SMOKE, player.getX(), player.getY(), player.getZ(), 0, (-1 + rand.nextFloat() * 2) * 0.5, 0.1, (-1 + rand.nextFloat() * 2) * 0.5);
             }
         }
+
+        if (getTimerProgress() == 23) {
+            this.chantMessage(player, "solaris3", 20, Color.CYAN.argbInt());
+        }
+
         if (getTimerProgress() > 0 && getTimerProgress() < 24) {
             if (!level.isClientSide()) {
                 for (int i = 0; i < 10; i++) ParticleUtil.sendParticles((ServerLevel) level, ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY(), player.getZ(), 0, -1 + rand.nextFloat() * 2, 0.1, -1 + rand.nextFloat() * 2);

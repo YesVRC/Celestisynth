@@ -1,9 +1,13 @@
 package com.aqutheseal.celestisynth.mixin;
 
+import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
+import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +24,8 @@ public abstract class InventoryMixin {
     @Shadow
     public abstract ItemStack getSelected();
 
+    @Shadow @Final public Player player;
+
     @Inject(method = "setPickedItem", at = @At("HEAD"), cancellable = true)
     public void celestisynth$setPickedItem(ItemStack stack, CallbackInfo ci) {
         cancelCI(ci);
@@ -28,11 +34,19 @@ public abstract class InventoryMixin {
     @Inject(method = "pickSlot", at = @At("HEAD"), cancellable = true)
     public void celestisynth$pickSlot(int slot, CallbackInfo ci) {
         cancelCI(ci);
+
+        if (!ci.isCancelled()) {
+            AnimationManager.playAnimation(player.level(), CSPlayerAnimations.CLEAR.get());
+        }
     }
 
     @Inject(method = "swapPaint", at = @At("HEAD"), cancellable = true)
     public void celestisynth$swapPaint(double slot, CallbackInfo ci) {
         cancelCI(ci);
+
+        if (!ci.isCancelled()) {
+            AnimationManager.playAnimation(player.level(), CSPlayerAnimations.CLEAR.get());
+        }
     }
 
     private void cancelCI(CallbackInfo ci) {

@@ -2,6 +2,7 @@ package com.aqutheseal.celestisynth.common.entity.projectile;
 
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
+import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.Direction;
@@ -91,7 +92,7 @@ public class KeresSlash extends ThrowableProjectile implements GeoEntity, CSWeap
             ParticleUtil.sendParticle(level(), CSParticleTypes.KERES_OMEN.get(), part.getX(), part.getY() + 0.25, part.getZ(), particleDir.x(), particleDir.y(), particleDir.z());
             if (this.getOwner() instanceof LivingEntity owner) {
                 for (LivingEntity target : level().getEntitiesOfClass(LivingEntity.class, part.getBoundingBox(), livingEntity -> livingEntity != this.getOwner())) {
-                    initiateAbilityAttack(owner, target, 2, level().damageSources().indirectMagic(this, owner), AttackHurtTypes.RAPID_NO_KB);
+                    initiateAbilityAttack(owner, target, 3, CSDamageSources.instance(level()).erasure(owner), AttackHurtTypes.NO_KB);
                 }
             }
         }

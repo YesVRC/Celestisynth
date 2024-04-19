@@ -145,15 +145,6 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
         }
     }
 
-    @Override
-    public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
-        if (getAttackIndex(stack) == -1) {
-            AnimationManager.playAnimation(entity.level(), CSPlayerAnimations.CLEAR.get());
-            AnimationManager.playAnimation(entity.level(), CSPlayerAnimations.CLEAR.get(), LayerManager.MIRRORED_LAYER);
-        }
-        super.onStopUsing(stack, entity, count);
-    }
-
     public void sacrificeEffect(Level pLevel, LivingEntity pEntity) {
         pEntity.playSound(SoundEvents.WITHER_HURT, 0.5f, 0.1F + (pLevel.random.nextFloat() * 0.5f));
         for (int i = 0; i < 360; i++) {
@@ -172,6 +163,7 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     @Override
     public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int itemSlot, boolean isSelected) {
         super.inventoryTick(itemStack, level, entity, itemSlot, isSelected);
+
         if (isSelected) {
             if (entity instanceof LivingEntity source) {
                 if (source.hasEffect(CSMobEffects.HELLBANE.get())) {

@@ -2,6 +2,7 @@ package com.aqutheseal.celestisynth.api.item;
 
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
+import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
 import com.aqutheseal.celestisynth.common.network.c2s.ShakeScreenForAllPacket;
 import com.aqutheseal.celestisynth.common.network.s2c.ChangeCameraTypePacket;
 import com.aqutheseal.celestisynth.common.registry.CSAttributes;
@@ -285,5 +286,13 @@ public interface CSWeaponUtil {
 
     default void playSoundAt(Level level, SoundEvent sound, BlockPos pos) {
         level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), sound, SoundSource.PLAYERS, 1.0F, 1.0F);
+    }
+
+    default void chantMessage(Entity player, String id, int time, int color) {
+        if (player instanceof PlayerMixinSupport mixinPlayer && player.level().isClientSide) {
+            mixinPlayer.setChantMark(-time);
+            mixinPlayer.setChantColor(color);
+            mixinPlayer.setChantMessage("chant.celestisynth." + id);
+        }
     }
 }

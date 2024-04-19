@@ -8,6 +8,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public final class ParticleUtil {
 
@@ -27,6 +28,10 @@ public final class ParticleUtil {
         }
 
         return i;
+    }
+
+    public static <T extends ParticleType<?>> int sendParticle(Level world, T pType, Vec3 targetPosition, Vec3 speed) {
+        return sendParticles(world, pType, targetPosition.x(), targetPosition.y(), targetPosition.z(), 0, speed.x(), speed.y(), speed.z());
     }
 
     public static <T extends ParticleType<?>> int sendParticle(Level world, T pType, double pPosX, double pPosY, double pPosZ, double pXSpeed, double pYSpeed, double pZSpeed) {

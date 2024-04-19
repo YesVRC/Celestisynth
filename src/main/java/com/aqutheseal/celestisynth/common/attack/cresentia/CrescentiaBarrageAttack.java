@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.core.object.Color;
 
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class CrescentiaBarrageAttack extends WeaponAttackInstance {
     @Override
     public void startUsing() {
         useAndDamageItem(getStack(), level, player, 4);
+        this.chantMessage(player, "crescentia", 30, Color.WHITE.argbInt());
     }
 
     @Override
@@ -63,6 +65,7 @@ public class CrescentiaBarrageAttack extends WeaponAttackInstance {
 
         if (getTimerProgress() == 15) {
             player.playSound(CSSoundEvents.WHIRLWIND.get(), 0.35F, 0.5F + level.random.nextFloat());
+            this.chantMessage(player, "crescentia1", 20, Color.MAGENTA.argbInt());
         }
 
         if (getTimerProgress() >= 15 && getTimerProgress() <= 60) {

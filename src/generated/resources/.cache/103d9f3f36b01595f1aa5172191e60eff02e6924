@@ -1,6 +1,7 @@
-// 1.20.1	2024-03-22T22:57:56.4617408	Registries
+// 1.20.1	2024-04-18T23:05:04.7115165	Registries
 70270cb0333de4ff3c72857d28377ad3703efbf2 data/celestisynth/damage_type/basic_player_attack.json
 22ca819e144bd4092b35532ca181e46759c3b4b1 data/celestisynth/damage_type/basic_player_attack_nokb.json
+1578810581653e48b66ff70a6e115531c4e2eb4b data/celestisynth/damage_type/erasure.json
 183e2413b909031116a248bf3a73ae972688166b data/celestisynth/damage_type/pulsation.json
 4fc960ae762af82d867041994877757f51fb5cef data/celestisynth/damage_type/rapid_player_attack.json
 474108c869d473f5c30ed0c1c06da428e81fc8c2 data/celestisynth/damage_type/rapid_player_attack_nokb.json

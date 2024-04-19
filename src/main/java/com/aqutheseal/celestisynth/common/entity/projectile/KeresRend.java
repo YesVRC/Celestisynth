@@ -48,11 +48,19 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
             this.checkWalls(this.getBoundingBox().move(getDeltaMovement().normalize().scale(i)));
         }
 
-        this.shakeScreensForNearbyPlayers(this, level(), 6, 60, 60, 0.02F);
+        this.shakeScreensForNearbyPlayers(this, level(), 6, 40, 30, 0.04F);
 
         Vec3 particleDelta = this.getDeltaMovement().normalize().scale(0.25).reverse();
         for (double i = 0; i <= 10; i = i + 0.2) {
             ParticleUtil.sendParticle(level(), CSParticleTypes.KERES_OMEN.get(), getX(), this.getY() + i, getZ(), particleDelta.x(), 0, particleDelta.z());
+        }
+
+        Vec3 deltaBase = this.getDeltaMovement().normalize();
+        for (double i = 0; i <= 45; i++) {
+            Vec3 rotRight = deltaBase.scale(random.nextGaussian() * 0.75).yRot(90);
+            ParticleUtil.sendParticle(level(), ParticleTypes.POOF, getX(), this.getY() + 4, getZ(), rotRight.x(), random.nextGaussian() * 0.75, rotRight.z());
+            Vec3 rotLeft = deltaBase.scale(random.nextGaussian() * 0.75).yRot(-90);
+            ParticleUtil.sendParticle(level(), ParticleTypes.POOF, getX(), this.getY() + 4, getZ(), rotLeft.x(), random.nextGaussian() * 0.75, rotLeft.z());
         }
 
         if (tickCount >= 15) {

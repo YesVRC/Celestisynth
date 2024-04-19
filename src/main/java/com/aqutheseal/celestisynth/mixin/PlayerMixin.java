@@ -21,8 +21,17 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
     private static final String
             SCREENSHAKE_DURATION = "cs.screenShakeDuration",
             SCREENSHAKE_FADEOUTBEGIN = "cs.screenShakeFadeoutStart",
-            SCREENSHAKE_INTENSITY = "cs.screenShakeIntensity"
-                    ;
+            SCREENSHAKE_INTENSITY = "cs.screenShakeIntensity";
+
+    private static final String
+            PULSE_SCALE = "cs.pulseScale",
+            PULSE_TIME_SPEED = "cs.pulseTimeSpeed";
+
+    private static final String
+            CHANT_MESSAGE = "cs.chantMessage",
+            CHANT_TIME = "cs.chantTime",
+            CHANT_COLOR = "cs.chantColor";
+
 
     private PlayerMixin(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -46,43 +55,72 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
 
                 if (getScreenShakeDuration() < getScreenShakeFadeoutBegin()) setScreenShakeIntensity(Math.max(0, getScreenShakeIntensity() - 0.001F));
             }
+
+            if (getPulseScale() > 0) {
+                setPulseScale(Math.max(0, getPulseScale() - getPulseTimeSpeed()));
+            }
+
+            if (getChantMark() < 20) {
+                setChantMark(Math.min(getChantMark() + 1, 20));
+            }
         }
     }
 
-    @Override
-    public int getScreenShakeDuration() {
+    @Override public int getPulseScale() {
+        return getPersistentData().getInt(PULSE_SCALE);
+    }
+    @Override public void setPulseScale(int scale) {
+        getPersistentData().putInt(PULSE_SCALE, scale);
+    }
+
+    @Override public String getChantMessage() {
+        return getPersistentData().getString(CHANT_MESSAGE);
+    }
+    @Override public void setChantMessage(String message) {
+        getPersistentData().putString(CHANT_MESSAGE, message);
+    }
+    @Override public int getChantMark() {
+        return getPersistentData().getInt(CHANT_TIME);
+    }
+    @Override public void setChantMark(int time) {
+        getPersistentData().putInt(CHANT_TIME, time);
+    }
+    @Override public int getChantColor() {
+        return getPersistentData().getInt(CHANT_COLOR);
+    }
+    @Override public void setChantColor(int color) {
+        getPersistentData().putInt(CHANT_COLOR, color);
+    }
+
+    @Override public int getPulseTimeSpeed() {
+        return getPersistentData().getInt(PULSE_TIME_SPEED);
+    }
+    @Override public void setPulseTimeSpeed(int speed) {
+        getPersistentData().putInt(PULSE_TIME_SPEED, speed);
+    }
+
+    @Override public int getScreenShakeDuration() {
         return getPersistentData().getInt(SCREENSHAKE_DURATION);
     }
-
-    @Override
-    public void setScreenShakeDuration(int duration) {
+    @Override public void setScreenShakeDuration(int duration) {
         getPersistentData().putInt(SCREENSHAKE_DURATION, duration);
     }
-
-    @Override
-    public int getScreenShakeFadeoutBegin() {
+    @Override public int getScreenShakeFadeoutBegin() {
             return getPersistentData().getInt(SCREENSHAKE_FADEOUTBEGIN);
     }
-
-    @Override
-    public void setScreenShakeFadeoutBegin(int beginByValue) {
+    @Override public void setScreenShakeFadeoutBegin(int beginByValue) {
         getPersistentData().putInt(SCREENSHAKE_FADEOUTBEGIN, beginByValue);
     }
-
-    @Override
-    public float getScreenShakeIntensity() {
+    @Override public float getScreenShakeIntensity() {
         return getPersistentData().getFloat(SCREENSHAKE_INTENSITY);
     }
-
-    @Override
-    public void setScreenShakeIntensity(float intensity) {
+    @Override public void setScreenShakeIntensity(float intensity) {
         getPersistentData().putFloat(SCREENSHAKE_INTENSITY, intensity);
     }
 
     private boolean cancelCI(ItemStack stack) {
         if (stack.getItem() instanceof CSWeapon) {
             CompoundTag controllerTag = stack.getTagElement(CSWeapon.CS_CONTROLLER_TAG_ELEMENT);
-
             if (controllerTag != null) return controllerTag.getBoolean(CSWeapon.ANIMATION_BEGUN_KEY);
         }
 

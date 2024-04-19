@@ -118,6 +118,18 @@ public class CSTagsProvider {
                     .add(CSDamageTypes.RAPID_PLAYER_ATTACK)
                     .add(CSDamageTypes.PULSATION)
             ;
+
+            tag(DamageTypeTags.BYPASSES_ARMOR)
+                    .add(CSDamageTypes.ERASURE)
+            ;
+
+            tag(DamageTypeTags.BYPASSES_SHIELD)
+                    .add(CSDamageTypes.ERASURE)
+            ;
+
+            tag(DamageTypeTags.BYPASSES_INVULNERABILITY)
+                    .add(CSDamageTypes.ERASURE)
+            ;
         }
     }
 }

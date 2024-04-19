@@ -22,10 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -90,6 +87,16 @@ public class CSCommonMiscEvents {
                 }
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void onLivingHealEvent(LivingHealEvent event) {
+        if (event.getEntity().hasEffect(CSMobEffects.CURSEBANE.get())) {
+            event.setAmount((float) (event.getAmount() / (1 + (event.getEntity().getEffect(CSMobEffects.CURSEBANE.get()).getAmplifier() * 1.75))));
+        }
+        if (event.getEntity().hasEffect(CSMobEffects.HELLBANE.get())) {
+            event.setAmount((float) (event.getAmount() * (1 + (event.getEntity().getEffect(CSMobEffects.HELLBANE.get()).getAmplifier() * 1.2))));
+        }
     }
 
     @SubscribeEvent
