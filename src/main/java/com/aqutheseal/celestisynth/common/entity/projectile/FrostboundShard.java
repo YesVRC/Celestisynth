@@ -42,9 +42,9 @@ public class FrostboundShard extends ThrowableProjectile {
         if (pResult.getEntity() instanceof LivingEntity target && pResult.getEntity() != this.getOwner()) {
             target.getCapability(CSEntityCapabilityProvider.CAPABILITY).ifPresent(data -> data.setFrostbound(data.getFrostbound() + 20));
             if (getOwner() instanceof Player player) {
-                target.hurt(new CSDamageSources(level().registryAccess()).rapidPlayerAttack(player), 2F);
+                target.hurt(CSDamageSources.instance(level()).rapidPlayerAttack(player), 2F);
             } else {
-                target.hurt(new CSDamageSources(level().registryAccess()).rapidPlayerAttack(), 2F);
+                target.hurt(CSDamageSources.instance(level()).rapidPlayerAttack(), 2F);
             }
             for (int i = 1; i < 65; i++) {
                 playSound(SoundEvents.PLAYER_HURT_FREEZE);

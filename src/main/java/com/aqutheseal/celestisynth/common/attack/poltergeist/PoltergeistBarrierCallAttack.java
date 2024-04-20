@@ -34,7 +34,7 @@ public class PoltergeistBarrierCallAttack extends WeaponAttackInstance {
 
     @Override
     public int getAttackStopTime() {
-        return 1;
+        return 20;
     }
 
     @Override

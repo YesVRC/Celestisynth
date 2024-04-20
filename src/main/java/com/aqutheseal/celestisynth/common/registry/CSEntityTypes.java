@@ -66,6 +66,6 @@ public class CSEntityTypes {
             .sized(2.5F, 10F).clientTrackingRange(64).updateInterval(20).build(Celestisynth.prefix("keres_rend").toString())
     );
     public static final RegistryObject<EntityType<KeresSlash>> KERES_SLASH = ENTITY_TYPES.register("keres_slash", () -> EntityType.Builder.<KeresSlash>of(KeresSlash::new, MobCategory.MISC)
-            .sized(1F, 1F).clientTrackingRange(64).updateInterval(20).build(Celestisynth.prefix("keres_slash").toString())
+            .sized(2.5F, 2.5F).clientTrackingRange(64).updateInterval(20).build(Celestisynth.prefix("keres_slash").toString())
     );
 }

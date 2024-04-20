@@ -25,7 +25,7 @@ public class FrostboundCryogenesisAttack extends FrostboundAttack {
 
     @Override
     public int getAttackStopTime() {
-        return 0;
+        return 20;
     }
 
     @Override

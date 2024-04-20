@@ -3,6 +3,7 @@ package com.aqutheseal.celestisynth.common.item.weapons;
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
 import com.aqutheseal.celestisynth.api.item.CSGeoItem;
+import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.attack.keres.KeresRendAttack;
 import com.aqutheseal.celestisynth.common.attack.keres.KeresSlashAttack;
@@ -10,10 +11,7 @@ import com.aqutheseal.celestisynth.common.attack.keres.KeresSmashAttack;
 import com.aqutheseal.celestisynth.common.compat.bettercombat.SwingParticleContainer;
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresShadow;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
-import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
-import com.aqutheseal.celestisynth.common.registry.CSMobEffects;
-import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
-import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
+import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
@@ -34,7 +32,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -107,14 +104,15 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
         super.onUseTick(pLevel, pEntity, pStack, pRemainingUseDuration);
         int dur = this.getUseDuration(pStack) - pRemainingUseDuration;
 
-        if (dur % 10 == 0) {
+        if (dur % 20 == 0) {
             if (pEntity.getHealth() > 1 && !isCreativeOrSpectator(pEntity)) {
-                pEntity.setHealth(pEntity.getHealth() - 0.65f);
+                pEntity.setHealth(pEntity.getHealth() - 1.5f);
                 this.sacrificeEffect(pLevel, pEntity);
             } else {
                 if (!isCreativeOrSpectator(pEntity)) {
                     if (pEntity instanceof Player player) {
                         player.getCooldowns().addCooldown(this, 20);
+                        AnimationManager.playAnimation(pLevel, CSPlayerAnimations.CLEAR.get());
                         if (pLevel.isClientSide) {
                             player.displayClientMessage(Component.translatable("item.celestisynth.keres.notice").withStyle(ChatFormatting.RED), true);
                         }
@@ -125,18 +123,18 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
                 }
             }
         }
-        if (pEntity instanceof Player player) {
-            if (player.isShiftKeyDown() && dur < 200) {
-                for (int i = 0; i < 360; i = i + 2) {
-                    ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_OMEN.get(),
-                            player.getX() + (calculateXLook(player) * ((double) dur / 3)) + (Mth.sin(i) * 5),
-                            player.getY(),
-                            player.getZ() + (calculateZLook(player) * ((double) dur / 3)) + (Mth.cos(i) * 5),
-                            -Mth.sin(i) * 0.3 , 0.5, -Mth.cos(i) * 0.3
-                    );
-                }
-            }
-        }
+//        if (pEntity instanceof Player player) {
+//            if (player.isShiftKeyDown() && dur < 200) {
+//                for (int i = 0; i < 360; i = i + 2) {
+//                    ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_OMEN.get(),
+//                            player.getX() + (calculateXLook(player) * ((double) dur / 3)) + (Mth.sin(i) * 5),
+//                            player.getY(),
+//                            player.getZ() + (calculateZLook(player) * ((double) dur / 3)) + (Mth.cos(i) * 5),
+//                            -Mth.sin(i) * 0.3 , 0.5, -Mth.cos(i) * 0.3
+//                    );
+//                }
+//            }
+//        }
         if (dur >= 200) {
             if (pEntity instanceof Player player) {
                 shakeScreensForNearbyPlayers(player, pLevel, 12, 30, 15,  0.01F);
@@ -146,10 +144,11 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     }
 
     public void sacrificeEffect(Level pLevel, LivingEntity pEntity) {
-        pEntity.playSound(SoundEvents.WITHER_HURT, 0.5f, 0.1F + (pLevel.random.nextFloat() * 0.5f));
-        for (int i = 0; i < 360; i++) {
-            Vec3 particleFactor = pEntity.position().add(Mth.sin(i) * 5, 0, Mth.cos(i) * 5);
-            ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_ASH.get(), particleFactor.x(), particleFactor.y(), particleFactor.z(), -Mth.sin(i) * 0.2 , 0.2, -Mth.cos(i) * 0.2);
+        pEntity.playSound(CSSoundEvents.HEARTBEAT.get(), 0.5f, (float) (1.0 + (pLevel.random.nextGaussian() * 0.2)));
+        if (pEntity instanceof PlayerMixinSupport mixinPlayer) {
+            mixinPlayer.setKeresMark(-10);
+            mixinPlayer.setKeresOrderX((int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10);
+            mixinPlayer.setKeresOrderY((int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10);
         }
     }
 

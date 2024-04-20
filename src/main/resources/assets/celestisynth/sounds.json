@@ -131,5 +131,11 @@
     "sounds": [
       "celestisynth:bass_pulse"
     ]
+  },
+  "heartbeat": {
+    "subtitle": "subtitles.celestisynth.heartbeat",
+    "sounds": [
+      "celestisynth:heartbeat"
+    ]
   }
 }

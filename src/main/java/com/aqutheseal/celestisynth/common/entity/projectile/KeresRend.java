@@ -1,8 +1,9 @@
 package com.aqutheseal.celestisynth.common.entity.projectile;
 
-import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
+import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.mixin.LivingEntityInvoker;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,10 +25,12 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeaponUtil {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final List<LivingEntity> finishedAttacking = new ArrayList<>();
 
     public KeresRend(EntityType<? extends ThrowableProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -106,10 +109,12 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
                 }
             }
         }
-        List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, pArea).stream().filter(living -> living != this.getOwner()).toList();
+        List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, pArea).stream().filter(living -> living != this.getOwner() && !finishedAttacking.contains(living)).toList();
         for (LivingEntity target : targets) {
             if (getOwner() instanceof LivingEntity owner) {
-                this.initiateAbilityAttack(owner, target, 5F + (target.getHealth() * 0.1F), level().damageSources().magic(), AttackHurtTypes.RAPID_NO_KB);
+                ((LivingEntityInvoker) target).invokeActuallyHurt(CSDamageSources.instance(level()).erasure(owner), 5F + (target.getMaxHealth() * 0.2F));
+                //this.initiateAbilityAttack(owner, target, 5F + (target.getMaxHealth() * 0.2F), level().damageSources().magic(), AttackHurtTypes.RAPID_NO_KB);
+                finishedAttacking.add(target);
             }
         }
     }

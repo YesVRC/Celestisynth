@@ -32,6 +32,11 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
             CHANT_TIME = "cs.chantTime",
             CHANT_COLOR = "cs.chantColor";
 
+    private static final String
+            KERES_TIME = "cs.keresTime",
+            KERES_ORDER_X = "cs.keresOrderX",
+            KERES_ORDER_Y = "cs.keresOrderY";
+
 
     private PlayerMixin(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -63,6 +68,10 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
             if (getChantMark() < 20) {
                 setChantMark(Math.min(getChantMark() + 1, 20));
             }
+
+            if (getKeresMark() < 20) {
+                setKeresMark(Math.min(getKeresMark() + 1, 20));
+            }
         }
     }
 
@@ -90,6 +99,25 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
     }
     @Override public void setChantColor(int color) {
         getPersistentData().putInt(CHANT_COLOR, color);
+    }
+
+    @Override public int getKeresMark() {
+        return getPersistentData().getInt(KERES_TIME);
+    }
+    @Override public void setKeresMark(int time) {
+        getPersistentData().putInt(KERES_TIME, time);
+    }
+    @Override public int[] getKeresOrderX() {
+        return getPersistentData().getIntArray(KERES_ORDER_X);
+    }
+    @Override public void setKeresOrderX(int... order) {
+        getPersistentData().putIntArray(KERES_ORDER_X, order);
+    }
+    @Override public int[] getKeresOrderY() {
+        return getPersistentData().getIntArray(KERES_ORDER_Y);
+    }
+    @Override public void setKeresOrderY(int... order) {
+        getPersistentData().putIntArray(KERES_ORDER_Y, order);
     }
 
     @Override public int getPulseTimeSpeed() {

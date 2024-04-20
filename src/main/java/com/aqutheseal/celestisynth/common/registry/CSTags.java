@@ -13,6 +13,8 @@ public class CSTags {
     public static void init() {
         Biomes.init();
         Items.init();
+        EntityTypes.init();
+        DamageTypes.init();
     }
 
     public static class Items {
@@ -48,6 +50,7 @@ public class CSTags {
         private static void init() {}
 
         public static final TagKey<DamageType> IS_CELESTIAL_ATTACK = tag("is_celestial_attack");
+        public static final TagKey<DamageType> PIERCES_THROUGH_ALL = tag("pierces_through_all");
 
         private static TagKey<DamageType> tag(String name) {
             return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Celestisynth.MODID, name));

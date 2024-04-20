@@ -57,7 +57,7 @@ public class KeresRendAttack extends WeaponAttackInstance {
         }
 
         if (getTimerProgress() == 25) {
-            this.chantMessage(player, "keres2", 20, Color.RED.argbInt());
+            this.chantMessage(player, "keres2", 40, Color.RED.argbInt());
 
             if (!level.isClientSide) {
                 KeresRend rend = new KeresRend(CSEntityTypes.KERES_REND.get(), player, level);

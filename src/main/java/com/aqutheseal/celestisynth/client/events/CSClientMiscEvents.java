@@ -3,19 +3,17 @@ package com.aqutheseal.celestisynth.client.events;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
 import com.aqutheseal.celestisynth.client.renderers.entity.layer.FrostboundGeoLayer;
+import com.aqutheseal.celestisynth.client.renderers.misc.CSGuiRenderer;
 import com.aqutheseal.celestisynth.client.renderers.misc.CSTooltipRenderer;
 import com.aqutheseal.celestisynth.common.attack.aquaflora.AquafloraSlashFrenzyAttack;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
 import com.aqutheseal.celestisynth.common.item.weapons.AquafloraItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.event.GeoRenderEvent;
 
 public class CSClientMiscEvents {
@@ -60,27 +58,17 @@ public class CSClientMiscEvents {
 
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent event) {
-        if (Minecraft.getInstance().player instanceof PlayerMixinSupport mixinPlayer) {
-            if (mixinPlayer.getPulseScale() > 0) {
-                Color pulse = Color.ofRGBA(255, 255, 255, Mth.clamp(mixinPlayer.getPulseScale(), 0, 255));
-                event.getGuiGraphics().fill(0, 0, event.getWindow().getWidth() / 2, event.getWindow().getHeight() / 2, pulse.argbInt());
-            }
+        new CSGuiRenderer(event).renderGuiAdditions();
+    }
 
-            int pointerX = event.getWindow().getWidth() / 4;
-            int pointerY = (event.getWindow().getHeight() / 4) + 10;
-            if (mixinPlayer.getChantMark() < 20) {
-                Component text = Component.translatable(mixinPlayer.getChantMessage());
-                int lerp = (int) Mth.lerp(mixinPlayer.getChantMark() / 20F, 255F, 0);
-                Color base = new Color(mixinPlayer.getChantColor());
-                Color pulse = Color.ofRGBA(base.getRed(), base.getGreen(), base.getBlue(), Mth.clamp(lerp, 0, 255));
-                event.getGuiGraphics().drawCenteredString(Minecraft.getInstance().font, text, pointerX, pointerY, pulse.argbInt());
+    @SubscribeEvent
+    public static void onRenderGuiPre(RenderGuiEvent.Pre event) {
+        new CSGuiRenderer(event).renderGuiAdditionsPre();
+    }
 
-                int lerpBack = (int) Mth.lerp(mixinPlayer.getChantMark() / 20F, 50F, 0);
-                Color back = Color.ofRGBA(0, 0, 0,  Mth.clamp(lerpBack, 0, 255));
-                event.getGuiGraphics().fill(0, pointerY - 2, (event.getWindow().getWidth() / 2), pointerY + 10, back.argbInt());
-            }
-
-        }
+    @SubscribeEvent
+    public static void onRenderGuiPost(RenderGuiEvent.Post event) {
+        new CSGuiRenderer(event).renderGuiAdditionsPost();
     }
 
     // Credits to BobMowzie for camera math

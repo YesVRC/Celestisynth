@@ -114,6 +114,10 @@ public class CSTagsProvider {
                     .add(CSDamageTypes.RAPID_PLAYER_ATTACK_NOKB)
             ;
 
+            tag(CSTags.DamageTypes.PIERCES_THROUGH_ALL)
+                    .add(CSDamageTypes.ERASURE)
+            ;
+
             tag(DamageTypeTags.BYPASSES_COOLDOWN)
                     .add(CSDamageTypes.RAPID_PLAYER_ATTACK)
                     .add(CSDamageTypes.PULSATION)
@@ -121,14 +125,17 @@ public class CSTagsProvider {
 
             tag(DamageTypeTags.BYPASSES_ARMOR)
                     .add(CSDamageTypes.ERASURE)
+                    .addTag(CSTags.DamageTypes.PIERCES_THROUGH_ALL)
             ;
 
             tag(DamageTypeTags.BYPASSES_SHIELD)
                     .add(CSDamageTypes.ERASURE)
+                    .addTag(CSTags.DamageTypes.PIERCES_THROUGH_ALL)
             ;
 
             tag(DamageTypeTags.BYPASSES_INVULNERABILITY)
                     .add(CSDamageTypes.ERASURE)
+                    .addTag(CSTags.DamageTypes.PIERCES_THROUGH_ALL)
             ;
         }
     }
