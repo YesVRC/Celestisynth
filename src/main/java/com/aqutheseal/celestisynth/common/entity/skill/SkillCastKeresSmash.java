@@ -3,12 +3,10 @@ package com.aqutheseal.celestisynth.common.entity.skill;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
-import com.aqutheseal.celestisynth.common.registry.CSItems;
-import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
-import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
-import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
+import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -57,7 +55,9 @@ public class SkillCastKeresSmash extends EffectControllerEntity {
         }
         List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, new AABB(-radius, 0, -radius, radius, 4, radius).move(position())).stream().filter(filter).toList();
         for (LivingEntity target : targets) {
+            target.addEffect(new MobEffectInstance(CSMobEffects.CURSEBANE.get(), 100, 1));
             this.initiateAbilityAttack(owner, target, 5F, AttackHurtTypes.RAPID);
+            owner.heal(2F);
         }
     }
 

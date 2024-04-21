@@ -12,15 +12,14 @@ public interface PlayerMixinSupport {
     int getChantColor();
     void setChantColor(int color);
 
-    int getKeresMark();
-    void setKeresMark(int time);
-    int[] getKeresOrderX();
-    void setKeresOrderX(int... order);
-    int[] getKeresOrderY();
-    void setKeresOrderY(int... order);
+    int getTexturePulseMark();
+    void setTexturePulseMark(int time);
+    String getTexturePulseImage();
+    void setTexturePulseImage(String order);
 
     int getPulseTimeSpeed();
     void setPulseTimeSpeed(int speed);
+
     int getScreenShakeDuration();
     void setScreenShakeDuration(int duration);
     int getScreenShakeFadeoutBegin();

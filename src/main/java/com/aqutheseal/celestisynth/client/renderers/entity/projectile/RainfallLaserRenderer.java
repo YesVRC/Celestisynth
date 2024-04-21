@@ -6,7 +6,6 @@ import com.aqutheseal.celestisynth.common.entity.projectile.RainfallLaserMarker;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -14,7 +13,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -36,7 +34,6 @@ public class RainfallLaserRenderer extends EntityRenderer<RainfallLaserMarker> {
     @Override
     public void render(RainfallLaserMarker entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
         Vec3 originPos = entity.getOrigin();
-        Minecraft.getInstance().player.displayClientMessage(Component.literal("Origin: " + originPos.toString()), true);
         double distanceCalculated = entity.position().distanceTo(originPos) * 0.5;
         poseStack.pushPose();
         float scale = 0.8f;

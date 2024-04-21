@@ -2,6 +2,7 @@ package com.aqutheseal.celestisynth.common.entity.projectile;
 
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
+import com.aqutheseal.celestisynth.common.registry.CSMobEffects;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.mixin.LivingEntityInvoker;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
@@ -10,10 +11,16 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
@@ -90,13 +97,13 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
                 for (int zz = minZ; zz <= maxZ; ++zz) {
                     BlockPos blockpos = new BlockPos(xx, yy, zz);
                     BlockState blockstate = this.level().getBlockState(blockpos);
-                    if (!blockstate.isAir()) {
+                    if (!blockstate.isAir() && !(blockpos.getX() == getOwner().getBlockX() && blockpos.getZ() == getOwner().getBlockZ())) {
                         if (!blockstate.is(BlockTags.DRAGON_IMMUNE)) {
                             if (!level().isClientSide) {
                                 if (yy == minY) {
                                     this.level().setBlock(blockpos, Fluids.FLOWING_LAVA.defaultFluidState().createLegacyBlock(), 2);
                                 } else {
-                                    this.level().removeBlock(blockpos, false);
+                                    this.level().setBlockAndUpdate(blockpos, Blocks.AIR.defaultBlockState());
                                 }
                             }
                             double xR = random.nextGaussian() * 0.5;
@@ -112,9 +119,36 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
         List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, pArea).stream().filter(living -> living != this.getOwner() && !finishedAttacking.contains(living)).toList();
         for (LivingEntity target : targets) {
             if (getOwner() instanceof LivingEntity owner) {
-                ((LivingEntityInvoker) target).invokeActuallyHurt(CSDamageSources.instance(level()).erasure(owner), 5F + (target.getMaxHealth() * 0.2F));
-                //this.initiateAbilityAttack(owner, target, 5F + (target.getMaxHealth() * 0.2F), level().damageSources().magic(), AttackHurtTypes.RAPID_NO_KB);
+                target.addEffect(new MobEffectInstance(CSMobEffects.CURSEBANE.get(), 100, 1));
+                this.bypassAllHurt(target, owner, 15F + (target.getMaxHealth() * 0.25F));
+                owner.heal(5F);
                 finishedAttacking.add(target);
+            }
+        }
+    }
+
+    public void bypassAllHurt(LivingEntity target, LivingEntity owner, float amount) {
+        DamageSource erasure = CSDamageSources.instance(level()).erasure(owner);
+        ((LivingEntityInvoker) target).invokeActuallyHurt(erasure, amount);
+        target.setLastHurtByMob(owner);
+        if (owner instanceof Player player) {
+            target.setLastHurtByPlayer(player);
+            target.lastHurtByPlayerTime = 200;
+        }
+        target.lastDamageSource = erasure;
+        target.lastDamageStamp = this.level().getGameTime();
+        if (target instanceof Mob mobTarget) {
+            if (mobTarget.getTarget() == null) {
+                mobTarget.setTarget(owner);
+            }
+        }
+        this.level().broadcastDamageEvent(target, erasure);
+        target.hurtMarked = true;
+        if (target.isDeadOrDying()) {
+            target.die(erasure);
+            if (!target.level().isClientSide()) {
+                target.level().broadcastEntityEvent(target, (byte) 60);
+                target.remove(Entity.RemovalReason.KILLED);
             }
         }
     }

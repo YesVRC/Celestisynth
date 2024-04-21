@@ -34,8 +34,7 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
 
     private static final String
             KERES_TIME = "cs.keresTime",
-            KERES_ORDER_X = "cs.keresOrderX",
-            KERES_ORDER_Y = "cs.keresOrderY";
+            KERES_IMAGE = "cs.keresImage";
 
 
     private PlayerMixin(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
@@ -69,17 +68,10 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
                 setChantMark(Math.min(getChantMark() + 1, 20));
             }
 
-            if (getKeresMark() < 20) {
-                setKeresMark(Math.min(getKeresMark() + 1, 20));
+            if (getTexturePulseMark() < 20) {
+                setTexturePulseMark(Math.min(getTexturePulseMark() + 1, 20));
             }
         }
-    }
-
-    @Override public int getPulseScale() {
-        return getPersistentData().getInt(PULSE_SCALE);
-    }
-    @Override public void setPulseScale(int scale) {
-        getPersistentData().putInt(PULSE_SCALE, scale);
     }
 
     @Override public String getChantMessage() {
@@ -101,25 +93,25 @@ public abstract class PlayerMixin extends LivingEntity implements PlayerMixinSup
         getPersistentData().putInt(CHANT_COLOR, color);
     }
 
-    @Override public int getKeresMark() {
+    @Override public int getTexturePulseMark() {
         return getPersistentData().getInt(KERES_TIME);
     }
-    @Override public void setKeresMark(int time) {
+    @Override public void setTexturePulseMark(int time) {
         getPersistentData().putInt(KERES_TIME, time);
     }
-    @Override public int[] getKeresOrderX() {
-        return getPersistentData().getIntArray(KERES_ORDER_X);
+    @Override public String getTexturePulseImage() {
+        return getPersistentData().getString(KERES_IMAGE);
     }
-    @Override public void setKeresOrderX(int... order) {
-        getPersistentData().putIntArray(KERES_ORDER_X, order);
-    }
-    @Override public int[] getKeresOrderY() {
-        return getPersistentData().getIntArray(KERES_ORDER_Y);
-    }
-    @Override public void setKeresOrderY(int... order) {
-        getPersistentData().putIntArray(KERES_ORDER_Y, order);
+    @Override public void setTexturePulseImage(String order) {
+        getPersistentData().putString(KERES_IMAGE, order);
     }
 
+    @Override public int getPulseScale() {
+        return getPersistentData().getInt(PULSE_SCALE);
+    }
+    @Override public void setPulseScale(int scale) {
+        getPersistentData().putInt(PULSE_SCALE, scale);
+    }
     @Override public int getPulseTimeSpeed() {
         return getPersistentData().getInt(PULSE_TIME_SPEED);
     }

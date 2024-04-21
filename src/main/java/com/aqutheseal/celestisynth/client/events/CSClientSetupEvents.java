@@ -47,6 +47,7 @@ public class CSClientSetupEvents {
         event.registerEntityRenderer(CSEntityTypes.KERES_REND.get(), KeresRendRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.RAINFALL_TURRET.get(), RainfallTurretRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.KERES_SLASH.get(), KeresSlashRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.KERES_SLASH_WAVE.get(), NullRenderer::new);
         event.registerBlockEntityRenderer(CSBlockEntityTypes.CELESTIAL_CRAFTING_TABLE_TILE.get(), context -> new CelestialCraftingTableBlockEntityRenderer());
     }
 

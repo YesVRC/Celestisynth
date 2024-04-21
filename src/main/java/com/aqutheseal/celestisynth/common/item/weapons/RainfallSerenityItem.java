@@ -98,7 +98,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
 
     @Override
     public int getSkillsAmount() {
-        return 2;
+        return 3;
     }
 
     public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {

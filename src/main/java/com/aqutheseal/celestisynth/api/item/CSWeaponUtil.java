@@ -256,7 +256,7 @@ public interface CSWeaponUtil {
         Entity confirmedTarget = null;
         Vec3 clipVec = null;
         for (Entity potentialTarget : level.getEntities(pShooter, pBoundingBox, pFilter)) {
-            AABB boundsHitbox = potentialTarget.getBoundingBox().inflate((double)potentialTarget.getPickRadius() + 1.5);
+            AABB boundsHitbox = potentialTarget.getBoundingBox().inflate((double)potentialTarget.getPickRadius() + 2.5);
             Optional<Vec3> potentialClippedVec = boundsHitbox.clip(pStartVec, pEndVec);
             if (boundsHitbox.contains(pStartVec)) {
                 if (range >= 0.0D) {
@@ -293,6 +293,20 @@ public interface CSWeaponUtil {
             mixinPlayer.setChantMark(-time);
             mixinPlayer.setChantColor(color);
             mixinPlayer.setChantMessage("chant.celestisynth." + id);
+        }
+    }
+
+    default void flashScreen(Entity player, int pulseScale, int speed) {
+        if (player instanceof PlayerMixinSupport mixinPlayer && player.level().isClientSide) {
+            mixinPlayer.setPulseScale(pulseScale);
+            mixinPlayer.setPulseTimeSpeed(speed);
+        }
+    }
+
+    default void pulseImageOnUI(Entity player, String textureName, int time) {
+        if (player instanceof PlayerMixinSupport mixinPlayer && player.level().isClientSide) {
+            mixinPlayer.setTexturePulseMark(time);
+            mixinPlayer.setTexturePulseImage(textureName);
         }
     }
 }

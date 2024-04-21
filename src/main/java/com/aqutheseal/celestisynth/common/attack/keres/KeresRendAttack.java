@@ -1,7 +1,6 @@
 package com.aqutheseal.celestisynth.common.attack.keres;
 
 import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
-import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresRend;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
@@ -60,18 +59,18 @@ public class KeresRendAttack extends WeaponAttackInstance {
             this.chantMessage(player, "keres2", 40, Color.RED.argbInt());
 
             if (!level.isClientSide) {
+                Vec3 lookAngleNormalized = player.getLookAngle().normalize();
                 KeresRend rend = new KeresRend(CSEntityTypes.KERES_REND.get(), player, level);
-                rend.moveTo(player.position().add(-calculateXLook(player) * 3, -3, -calculateZLook(player) * 3));
+                rend.moveTo(player.position().add(-lookAngleNormalized.x() * 9, -3, -lookAngleNormalized.z() * 9));
                 Vec3 vec31 = player.getUpVector(1.0F);
                 Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(0, vec31.x, vec31.y, vec31.z);
                 Vec3 vec3 = player.getViewVector(1.0F);
                 Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
                 rend.shoot(shootAngle.x, 0, shootAngle.z, 10F, 0);
                 level.addFreshEntity(rend);
-            } else if (player instanceof PlayerMixinSupport mixinPlayer) {
-                mixinPlayer.setPulseScale(255);
-                mixinPlayer.setPulseTimeSpeed(15);
             }
+
+            this.flashScreen(player, 255, 15);
         }
     }
 

@@ -118,7 +118,7 @@
   "item.celestisynth.breezebreaker.desc_1": "Unleashes a powerful wind slash that inflicts tremendous damage upon impact.",
 
   "item.celestisynth.breezebreaker.skill_2": "Dual Galestorm",
-  "item.celestisynth.breezebreaker.condition_2": "Activate: Hold Right-click for more than 0.5 seconds",
+  "item.celestisynth.breezebreaker.condition_2": "Activate: Hold Right-click for 0.5 or more seconds",
   "item.celestisynth.breezebreaker.desc_2": "Executes Galestorm twice consecutively, overwhelming foes with a relentless onslaught of wind slashes.",
 
   "item.celestisynth.breezebreaker.skill_3": "Full-Force Whirlwind Extravagance",
@@ -182,9 +182,6 @@
   "advancement.celestisynth.obtain_rainfall_serenity.title": "Beyond the Earth's Atmosphere",
   "advancement.celestisynth.obtain_rainfall_serenity.description": "Obtain the Rainfall Serenity",
 
-  "item.celestisynth.rainfall_serenity.passive_1": "",
-  "item.celestisynth.rainfall_serenity.passive_desc_1": "",
-
   "item.celestisynth.rainfall_serenity.skill_1": "Eons, and Eons Through the Sky",
   "item.celestisynth.rainfall_serenity.condition_1": "Activate: Fully charged bow",
   "item.celestisynth.rainfall_serenity.desc_1": "When the bow is released, it emits a laser that can pierce through every entity, marking each with a \"Quasar Mark\" for 5 seconds. This mark can trigger nearby entities to shoot lasers at the marked target.",
@@ -192,6 +189,10 @@
   "item.celestisynth.rainfall_serenity.skill_2": "Quasar Rainfall",
   "item.celestisynth.rainfall_serenity.condition_2": "Activate: Hit Entity with weapon",
   "item.celestisynth.rainfall_serenity.desc_2": "When the laser strikes a target with a \"Quasar Mark\", a portal spawns above and lasers will rain down around the target.",
+
+  "item.celestisynth.rainfall_serenity.skill_3": "True Serenity",
+  "item.celestisynth.rainfall_serenity.condition_3": "Activate: Right-click while holding SHIFT",
+  "item.celestisynth.rainfall_serenity.desc_3": "Increases speed massively and activates \"True Invisibility\" for 5 seconds.",
 
   "------------------- FROSTBOUND ------------------":  "",
 
@@ -219,7 +220,25 @@
   "advancement.celestisynth.obtain_keres.title": "The Ultimate Demonic Pact",
   "advancement.celestisynth.obtain_keres.description": "Obtain the Keres",
 
+  "item.celestisynth.keres.passive_1": "Hellbane Sequence",
+  "item.celestisynth.keres.passive_desc_1": "After consecutively attacking targets 5 times in a row, the holder activates a Hellbane state - which increases the Keres' lifesteal and repeatedly ejects homing shadow projectiles towards nearby enemies.",
+  "item.celestisynth.keres.passive_2": "Blood Sacrifice",
+  "item.celestisynth.keres.passive_desc_2": "While using the Keres to cast a skill, the holder sacrifices 1.5 health every few seconds, but every single skill regenerates the holder's health to some degree when it lands on a target.",
+  "item.celestisynth.keres.passive_3": "Cursebane Affliction",
+  "item.celestisynth.keres.passive_desc_3": "When a skill hit a target, it gives a Cursebane effect to the target for 5 seconds. The effect reduces the healing rate of the target significantly.",
+
+  "item.celestisynth.keres.skill_1": "Blood-Red Severity",
+  "item.celestisynth.keres.condition_1": "Activate: Right-click",
+  "item.celestisynth.keres.desc_1": "Sends waves of slashes that bypasses armor. The amount of slashes is proportional to the degree of \"Blood Sacrifice\".",
+  "item.celestisynth.keres.skill_2": "Dreadful Sorrow",
+  "item.celestisynth.keres.condition_2": "Activate: Right-click while holding SHIFT",
+  "item.celestisynth.keres.desc_2": "Jumps to a location and sends a shockwave to the surroundings. The jumping distance is proportional to the degree of \"Blood Sacrifice\".",
+  "item.celestisynth.keres.skill_3": "The Abolishment of Sinners",
+  "item.celestisynth.keres.condition_3": "Hold Right-click for 10 or more seconds",
+  "item.celestisynth.keres.desc_3": "Sends out a giant rend that erases blocks and deals massive damage to targets along the way. The slash ignores all armor.",
+
   "item.celestisynth.keres.notice": "Unable to sacrifice blood. Regeneration is required.",
+  "item.celestisynth.keres.notice1": "Sacrifice.",
 
   "chant.celestisynth.keres": "May the blood...",
   "chant.celestisynth.keres1": "of darkness...",

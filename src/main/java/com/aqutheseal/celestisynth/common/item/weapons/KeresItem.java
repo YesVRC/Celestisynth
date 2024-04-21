@@ -3,7 +3,6 @@ package com.aqutheseal.celestisynth.common.item.weapons;
 import com.aqutheseal.celestisynth.api.animation.player.AnimationManager;
 import com.aqutheseal.celestisynth.api.animation.player.LayerManager;
 import com.aqutheseal.celestisynth.api.item.CSGeoItem;
-import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.attack.keres.KeresRendAttack;
 import com.aqutheseal.celestisynth.common.attack.keres.KeresSlashAttack;
@@ -32,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
@@ -84,12 +84,12 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
 
     @Override
     public int getSkillsAmount() {
-        return 2;
+        return 3;
     }
 
     @Override
     public int getPassiveAmount() {
-        return 1;
+        return 3;
     }
 
     @Override
@@ -104,10 +104,12 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
         super.onUseTick(pLevel, pEntity, pStack, pRemainingUseDuration);
         int dur = this.getUseDuration(pStack) - pRemainingUseDuration;
 
-        if (dur % 20 == 0) {
-            if (pEntity.getHealth() > 1 && !isCreativeOrSpectator(pEntity)) {
-                pEntity.setHealth(pEntity.getHealth() - 1.5f);
-                this.sacrificeEffect(pLevel, pEntity);
+        int durThreshold = dur >= 200 ? 15 : 30;
+        if (dur % durThreshold == 0) {
+            float sacrificeThreshold = 1.5f;
+            if ((pEntity.getHealth() - sacrificeThreshold) > 0 && !isCreativeOrSpectator(pEntity)) {
+                pEntity.setHealth(pEntity.getHealth() - sacrificeThreshold);
+                this.sacrificeEffect(pLevel, pEntity, dur);
             } else {
                 if (!isCreativeOrSpectator(pEntity)) {
                     if (pEntity instanceof Player player) {
@@ -119,7 +121,7 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
                     }
                     pEntity.stopUsingItem();
                 } else {
-                    this.sacrificeEffect(pLevel, pEntity);
+                    this.sacrificeEffect(pLevel, pEntity, dur);
                 }
             }
         }
@@ -143,12 +145,18 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
         }
     }
 
-    public void sacrificeEffect(Level pLevel, LivingEntity pEntity) {
-        pEntity.playSound(CSSoundEvents.HEARTBEAT.get(), 0.5f, (float) (1.0 + (pLevel.random.nextGaussian() * 0.2)));
-        if (pEntity instanceof PlayerMixinSupport mixinPlayer) {
-            mixinPlayer.setKeresMark(-10);
-            mixinPlayer.setKeresOrderX((int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10);
-            mixinPlayer.setKeresOrderY((int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10, (int) pLevel.random.nextGaussian() * 10);
+    public void sacrificeEffect(Level pLevel, LivingEntity pEntity, int dur) {
+        pEntity.playSound(CSSoundEvents.HEARTBEAT.get(), 1f, (float) (1.0 + (pLevel.random.nextGaussian() * 0.2)));
+        if (dur > 0) {
+            this.pulseImageOnUI(pEntity, "keres_sacrifice_" + pLevel.random.nextInt(4), 0);
+        }
+        if (pEntity instanceof Player player) {
+            player.displayClientMessage(Component.translatable("item.celestisynth.keres.notice1").withStyle(ChatFormatting.RED), true);
+        }
+        for (int i = 0; i < 10; i++) {
+            var xr = pLevel.random.nextFloat();
+            var zr = pLevel.random.nextFloat();
+            ParticleUtil.sendParticle(pLevel, ParticleTypes.SMOKE, pEntity.position().add(xr, 0, zr), Vec3.ZERO.add(0, 0.5 * pLevel.random.nextFloat(), 0));
         }
     }
 

@@ -3,11 +3,13 @@ package com.aqutheseal.celestisynth.common.entity.projectile;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
+import com.aqutheseal.celestisynth.common.registry.CSMobEffects;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
@@ -21,8 +23,12 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class KeresSlash extends ThrowableProjectile implements GeoEntity, CSWeaponUtil {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final List<LivingEntity> finishedAttacking = new ArrayList<>();
 
     private static final EntityDataAccessor<Float> ROLL = SynchedEntityData.defineId(KeresSlash.class, EntityDataSerializers.FLOAT);
 
@@ -44,8 +50,11 @@ public class KeresSlash extends ThrowableProjectile implements GeoEntity, CSWeap
         Vec3 particleDir = getDeltaMovement().normalize().reverse().scale(0.2);
         ParticleUtil.sendParticle(level(), CSParticleTypes.KERES_OMEN.get(), position(), particleDir);
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (LivingEntity target : level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), livingEntity -> livingEntity != this.getOwner())) {
-                initiateAbilityAttack(owner, target, 3, CSDamageSources.instance(level()).erasure(owner), AttackHurtTypes.NO_KB);
+            for (LivingEntity target : level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), livingEntity -> livingEntity != this.getOwner() && !finishedAttacking.contains(livingEntity))) {
+                target.addEffect(new MobEffectInstance(CSMobEffects.CURSEBANE.get(), 100, 1));
+                initiateAbilityAttack(owner, target, 2, CSDamageSources.instance(level()).erasure(owner), AttackHurtTypes.RAPID_NO_KB);
+                owner.heal(4F);
+                finishedAttacking.add(target);
             }
         }
     }

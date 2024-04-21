@@ -42,6 +42,9 @@ public class CSEntityTypes {
     public static final RegistryObject<EntityType<SkillCastKeresSmash>> KERES_SMASH = ENTITY_TYPES.register("keres_smash", () -> EntityType.Builder.of(SkillCastKeresSmash::new, MobCategory.MISC)
             .sized(0.3F, 0.3F).clientTrackingRange(16).build(Celestisynth.prefix("keres_smash").toString())
     );
+    public static final RegistryObject<EntityType<SkillCastKeresSlashWave>> KERES_SLASH_WAVE = ENTITY_TYPES.register("keres_slash_wave", () -> EntityType.Builder.of(SkillCastKeresSlashWave::new, MobCategory.MISC)
+            .sized(0.0F, 0.0F).clientTrackingRange(16).build(Celestisynth.prefix("keres_slash_wave").toString())
+    );
 
     public static final RegistryObject<EntityType<RainfallTurret>> RAINFALL_TURRET = ENTITY_TYPES.register("rainfall_turret", () -> EntityType.Builder.of(RainfallTurret::new, MobCategory.MISC)
             .sized(0.8F, 1.2F).clientTrackingRange(64).build(Celestisynth.prefix("rainfall_turret").toString())
