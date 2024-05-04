@@ -5,6 +5,7 @@
   "refmap": "celestisynth.refmap.json",
   "mixins": [
     "AbstractArrowMixin",
+    "EntityMixin",
     "InventoryMixin",
     "ItemMixin",
     "LivingEntityInvoker",

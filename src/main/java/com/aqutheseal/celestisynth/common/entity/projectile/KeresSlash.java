@@ -2,10 +2,10 @@ package com.aqutheseal.celestisynth.common.entity.projectile;
 
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
-import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
 import com.aqutheseal.celestisynth.common.registry.CSMobEffects;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -23,12 +24,9 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class KeresSlash extends ThrowableProjectile implements GeoEntity, CSWeaponUtil {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final List<LivingEntity> finishedAttacking = new ArrayList<>();
+    public float baseDamage = 2;
 
     private static final EntityDataAccessor<Float> ROLL = SynchedEntityData.defineId(KeresSlash.class, EntityDataSerializers.FLOAT);
 
@@ -48,13 +46,21 @@ public class KeresSlash extends ThrowableProjectile implements GeoEntity, CSWeap
         }
 
         Vec3 particleDir = getDeltaMovement().normalize().reverse().scale(0.2);
-        ParticleUtil.sendParticle(level(), CSParticleTypes.KERES_OMEN.get(), position(), particleDir);
+        ParticleUtil.sendParticle(level(), CSParticleTypes.KERES_OMEN.get(), position().add(0, 1.25, 0), particleDir);
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult pResult) {
+        super.onHitEntity(pResult);
         if (this.getOwner() instanceof LivingEntity owner) {
-            for (LivingEntity target : level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), livingEntity -> livingEntity != this.getOwner() && !finishedAttacking.contains(livingEntity))) {
+            if (pResult.getEntity() instanceof LivingEntity target && target != owner) {
                 target.addEffect(new MobEffectInstance(CSMobEffects.CURSEBANE.get(), 100, 1));
-                initiateAbilityAttack(owner, target, 2, CSDamageSources.instance(level()).erasure(owner), AttackHurtTypes.RAPID_NO_KB);
-                owner.heal(4F);
-                finishedAttacking.add(target);
+                initiateAbilityAttack(owner, target, baseDamage + (target.getMaxHealth() * 0.0025F), damageSources().indirectMagic(this, this.getOwner()), AttackHurtTypes.RAPID_NO_KB);
+                owner.heal(0.5F);
+                for (int i = 0; i < 15; i++) {
+                    Vec3 attackParticle = getDeltaMovement().normalize().xRot((float) random.nextGaussian() * 0.1F).yRot((float) random.nextGaussian() * 0.1F).zRot((float) random.nextGaussian() * 0.1F);
+                    ParticleUtil.sendParticle(level(), ParticleTypes.POOF, position().add(0, 1.25, 0), attackParticle);
+                }
             }
         }
     }

@@ -30,6 +30,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -220,6 +222,14 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
             }
         }
         return flag;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (enchantment == Enchantments.MULTISHOT) {
+            return true;
+        }
+        return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
     @Override

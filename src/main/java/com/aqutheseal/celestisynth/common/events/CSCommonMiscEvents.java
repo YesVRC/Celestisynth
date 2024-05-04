@@ -6,8 +6,9 @@ import com.aqutheseal.celestisynth.api.item.CSArmorItem;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
+import com.aqutheseal.celestisynth.common.entity.mob.natural.Traverser;
 import com.aqutheseal.celestisynth.common.entity.projectile.SolarisBomb;
-import com.aqutheseal.celestisynth.common.entity.skill.SkillCastPoltergeistWard;
+import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastPoltergeistWard;
 import com.aqutheseal.celestisynth.common.item.weapons.BreezebreakerItem;
 import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -90,12 +92,17 @@ public class CSCommonMiscEvents {
     }
 
     @SubscribeEvent
+    public static void onWeaponCrit(CriticalHitEvent event) {
+
+    }
+
+    @SubscribeEvent
     public static void onLivingHealEvent(LivingHealEvent event) {
         if (event.getEntity().hasEffect(CSMobEffects.CURSEBANE.get())) {
-            event.setAmount((float) (event.getAmount() / (1 + (event.getEntity().getEffect(CSMobEffects.CURSEBANE.get()).getAmplifier() * 1.75))));
+            event.setAmount((float) (event.getAmount() / (1 + (event.getEntity().getEffect(CSMobEffects.CURSEBANE.get()).getAmplifier() * 2.4))));
         }
         if (event.getEntity().hasEffect(CSMobEffects.HELLBANE.get())) {
-            event.setAmount((float) (event.getAmount() * (1 + (event.getEntity().getEffect(CSMobEffects.HELLBANE.get()).getAmplifier() * 1.2))));
+            event.setAmount((float) (event.getAmount() * (1 + (event.getEntity().getEffect(CSMobEffects.HELLBANE.get()).getAmplifier() * 1.6))));
         }
     }
 
@@ -134,6 +141,16 @@ public class CSCommonMiscEvents {
     }
 
     @SubscribeEvent
+    public static void onLivingCritEvent(CriticalHitEvent event) {
+        if (event.getTarget() instanceof Traverser traverser) {
+            if (event.isVanillaCritical()) {
+                traverser.resetAnimationTick();
+                traverser.setAction(Traverser.ACTION_STUNNED);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingDeathEvent(LivingDeathEvent event) {
         if (event.getEntity() instanceof Player player) {
             CSWeaponUtil.disableRunningWeapon(player);
@@ -142,7 +159,7 @@ public class CSCommonMiscEvents {
         CSEntityCapabilityProvider.get(event.getEntity()).ifPresent(data -> {
             if (data.getPhantomTagSource() instanceof Player player) {
                 SkillCastPoltergeistWard poltergeistProjectile = CSEntityTypes.POLTERGEIST_WARD.get().create(event.getEntity().level());
-                poltergeistProjectile.setOwnerUuid(player.getUUID());
+                poltergeistProjectile.setOwnerUUID(player.getUUID());
                 poltergeistProjectile.moveTo(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ());
                 event.getEntity().level().addFreshEntity(poltergeistProjectile);
             }

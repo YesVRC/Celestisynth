@@ -1,6 +1,5 @@
 package com.aqutheseal.celestisynth.common.entity.base;
 
-import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import net.minecraft.nbt.CompoundTag;
@@ -12,8 +11,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class EffectControllerEntity extends Entity implements CSWeaponUtil {
+public abstract class EffectControllerEntity extends Entity implements CSWeaponUtil, OwnableEntity {
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(EffectControllerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<ItemStack> ORIGIN_ITEM = SynchedEntityData.defineId(EffectControllerEntity.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Float> ANGLE_X = SynchedEntityData.defineId(EffectControllerEntity.class, EntityDataSerializers.FLOAT);
@@ -49,16 +48,9 @@ public abstract class EffectControllerEntity extends Entity implements CSWeaponU
     @Override
     public void tick() {
         super.tick();
-        UUID ownerUuid = getOwnerUuid();
+        UUID ownerUuid = getOwnerUUID();
         Player ownerPlayer = ownerUuid == null ? null : level().getPlayerByUUID(ownerUuid);
         if (ownerPlayer == null || ownerPlayer.isDeadOrDying()) remove(RemovalReason.DISCARDED);
-    }
-
-    public abstract Item getCorrespondingItem();
-
-    public CSWeapon fromInterfaceWeapon() {
-        if (getCorrespondingItem() instanceof CSWeapon interfaceApplied) return interfaceApplied;
-        else throw new IllegalStateException("Item [" + getCorrespondingItem() + "] is an invalid Celestisynth weapon for [" + getDisplayName() + "].");
     }
 
     @Override
@@ -99,12 +91,16 @@ public abstract class EffectControllerEntity extends Entity implements CSWeaponU
         super.remove(pReason);
     }
 
-    public void setOwnerUuid(@Nullable UUID ownerUuid) {
+    public void setOwner(Player player) {
+        this.setOwnerUUID(player.getUUID());
+    }
+
+    public void setOwnerUUID(@Nullable UUID ownerUuid) {
         this.entityData.set(OWNER_UUID, Optional.ofNullable(ownerUuid));
     }
 
     @Nullable
-    public UUID getOwnerUuid() {
+    public UUID getOwnerUUID() {
         return this.entityData.get(OWNER_UUID).orElse(null);
     }
 

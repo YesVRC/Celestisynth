@@ -7,7 +7,7 @@ import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
-import com.aqutheseal.celestisynth.common.entity.skill.SkillCastPoltergeistWard;
+import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastPoltergeistWard;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
@@ -83,7 +83,7 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
             if (isGiantImpact) {
                 if (!level.isClientSide()) {
                     SkillCastPoltergeistWard projectile = CSEntityTypes.POLTERGEIST_WARD.get().create(level);
-                    projectile.setOwnerUuid(player.getUUID());
+                    projectile.setOwnerUUID(player.getUUID());
                     projectile.moveTo(player.getX() + xx, player.getY(), player.getZ() + zz);
                     level.addFreshEntity(projectile);
                 }

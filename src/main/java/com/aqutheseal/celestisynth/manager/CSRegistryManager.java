@@ -26,6 +26,7 @@ public final class CSRegistryManager {
         CSEnchantments.ENCHANTMENTS.register(modBus);
         CSMobEffects.MOB_EFFECTS.register(modBus);
         CSPlayerAnimations.ANIMATIONS.register(modBus);
+        CSStructureModifiers.STRUCTURE_MODIFIER_SERIALIZERS.register(modBus);
         CompatRegistryManager.registerIntegratedRegistries(modBus);
     }
 }

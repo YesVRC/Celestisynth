@@ -7,6 +7,8 @@ import com.aqutheseal.celestisynth.client.models.entity.projectile.SolarisBombMo
 import com.aqutheseal.celestisynth.client.particles.*;
 import com.aqutheseal.celestisynth.client.renderers.blockentity.CelestialCraftingTableBlockEntityRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.boss.TempestBossRenderer;
+import com.aqutheseal.celestisynth.client.renderers.entity.mob.StarMonolithRenderer;
+import com.aqutheseal.celestisynth.client.renderers.entity.mob.TraverserRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.projectile.*;
 import com.aqutheseal.celestisynth.client.renderers.misc.CSEffectEntityRenderer;
 import com.aqutheseal.celestisynth.client.renderers.misc.NullRenderer;
@@ -29,6 +31,7 @@ public class CSClientSetupEvents {
 
     @SubscribeEvent
     public static void onRegisterRenderersEvent(final EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(CSEntityTypes.TRAVERSER.get(), TraverserRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.TEMPEST.get(), TempestBossRenderer::new);
 
         event.registerEntityRenderer(CSEntityTypes.CS_EFFECT.get(), CSEffectEntityRenderer::new);
@@ -46,8 +49,10 @@ public class CSClientSetupEvents {
         event.registerEntityRenderer(CSEntityTypes.KERES_SHADOW.get(), KeresShadowRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.KERES_REND.get(), KeresRendRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.RAINFALL_TURRET.get(), RainfallTurretRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.STAR_MONOLITH.get(), StarMonolithRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.KERES_SLASH.get(), KeresSlashRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.KERES_SLASH_WAVE.get(), NullRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.AQUAFLORA_CAMERA.get(), NullRenderer::new);
         event.registerBlockEntityRenderer(CSBlockEntityTypes.CELESTIAL_CRAFTING_TABLE_TILE.get(), context -> new CelestialCraftingTableBlockEntityRenderer());
     }
 
@@ -79,7 +84,7 @@ public class CSClientSetupEvents {
         event.registerSpriteSet(CSParticleTypes.RAINFALL_ENERGY.get(), RainfallEnergyParticle.Provider::new);
         event.registerSpriteSet(CSParticleTypes.RAINFALL_ENERGY_SMALL.get(), RainfallEnergyParticle.Small.Provider::new);
         event.registerSpriteSet(CSParticleTypes.WATER_DROP.get(), WaterDropParticle.Provider::new);
-        event.registerSpriteSet(CSParticleTypes.KERES_OMEN.get(), SlowFallParticle.Provider::new);
+        event.registerSpriteSet(CSParticleTypes.KERES_OMEN.get(), KeresOmenParticle.Provider::new);
         event.registerSpriteSet(CSParticleTypes.KERES_ASH.get(), SlowFallParticle.Ash.Provider::new);
         event.registerSpriteSet(CSParticleTypes.SOLARIS_FLAME.get(), SlowFallParticle.Provider::new);
         event.registerSpriteSet(CSParticleTypes.CRESCENTIA_FIREWORK_PURPLE.get(), CrescentiaFireworkParticle.Purple::new);

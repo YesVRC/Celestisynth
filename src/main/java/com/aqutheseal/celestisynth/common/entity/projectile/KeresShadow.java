@@ -4,6 +4,7 @@ import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -101,6 +102,19 @@ public class KeresShadow extends ThrowableProjectile implements CSWeaponUtil {
     @Override
     public boolean isNoGravity() {
         return true;
+    }
+
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        this.remove(RemovalReason.DISCARDED);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.remove(RemovalReason.DISCARDED);
     }
 
     public @Nullable LivingEntity getHomingTarget() {

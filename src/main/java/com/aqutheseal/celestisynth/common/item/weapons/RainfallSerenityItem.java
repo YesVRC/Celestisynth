@@ -23,6 +23,7 @@ import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
@@ -32,6 +33,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -51,6 +53,7 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
 
 public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem {
     public static CSVisualAnimation SPECIAL_RAINFALL = new CSVisualAnimation("animation.cs_effect.special_rainfall", 50);
@@ -174,9 +177,12 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
         player.playSound(CSSoundEvents.VANISH.get());
         player.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SPEED, 100, 3));
         player.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.INVISIBILITY, 100, 0));
-        CSEntityCapabilityProvider.get(player).ifPresent(data -> {
-            data.setTrueInvisibility(100);
-        });
+        CSEntityCapabilityProvider.get(player).ifPresent(data -> data.setTrueInvisibility(100));
+        if (level instanceof ServerLevel server) {
+            for (Mob mob : StreamSupport.stream(server.getAllEntities().spliterator(), false).filter(e -> e instanceof Mob).map(Mob.class::cast).filter(m -> m.getTarget() == player).toList()) {
+                mob.setTarget(null);
+            }
+        }
     }
 
     @Override

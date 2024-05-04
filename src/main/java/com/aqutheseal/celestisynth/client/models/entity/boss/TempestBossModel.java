@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.client.models.entity.boss;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.common.entity.tempestboss.TempestBoss;
+import com.aqutheseal.celestisynth.common.entity.tempestboss_scrapped.TempestBoss;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

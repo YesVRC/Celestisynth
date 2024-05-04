@@ -121,9 +121,8 @@ public class CSClientMiscEvents {
 
     private static void checkAndSetFOV(ViewportEvent.ComputeFov event, ItemStack itemStack) {
         CompoundTag tagElement = itemStack.getTagElement(CSWeapon.CS_CONTROLLER_TAG_ELEMENT);
-
         if (tagElement != null && itemStack.getItem() instanceof AquafloraItem aq) {
-            if (tagElement.getBoolean(CSWeapon.ANIMATION_BEGUN_KEY) && tagElement.getBoolean(AquafloraSlashFrenzyAttack.ATTACK_ONGOING)) event.setFOV(140);
+            //if (tagElement.getBoolean(CSWeapon.ANIMATION_BEGUN_KEY) && tagElement.getBoolean(AquafloraSlashFrenzyAttack.ATTACK_ONGOING)) event.setFOV(140);
         }
     }
 }

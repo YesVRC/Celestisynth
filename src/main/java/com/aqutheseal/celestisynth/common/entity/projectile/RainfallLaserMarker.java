@@ -1,12 +1,10 @@
 package com.aqutheseal.celestisynth.common.entity.projectile;
 
 import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
-import com.aqutheseal.celestisynth.common.registry.CSItems;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
@@ -51,8 +49,4 @@ public class RainfallLaserMarker extends EffectControllerEntity {
         this.entityData.set(IS_QUASAR, quasar);
     }
 
-    @Override
-    public Item getCorrespondingItem() {
-        return CSItems.RAINFALL_SERENITY.get();
-    }
 }

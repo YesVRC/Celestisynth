@@ -2,7 +2,7 @@ package com.aqutheseal.celestisynth.common.entity.projectile;
 
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
-import com.aqutheseal.celestisynth.common.entity.skill.SkillCastRainfallRain;
+import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastRainfallRain;
 import com.aqutheseal.celestisynth.common.item.weapons.RainfallSerenityItem;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSItems;
@@ -53,24 +53,6 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
         super(CSEntityTypes.RAINFALL_ARROW.get(), pShooter, pLevel);
     }
 
-    public void createLaser(Vec3 from, Vec3 to, boolean isMainArrow, boolean strictLoading) {
-        /**
-        double distance = from.distanceTo(to);
-        Vec3 direction = to.subtract(from).normalize();
-
-        for (double i = 0; i <= distance; i += 0.1) {
-            Vec3 particlePos = from.add(direction.scale(i));
-            BlockPos particleBlockPos = new BlockPos((int) particlePos.x(), (int) particlePos.y(), (int) particlePos.z());
-
-            if (strictLoading && !level().isLoaded(particleBlockPos)) return;
-
-            SimpleParticleType curParticle = isMainArrow ? CSParticleTypes.RAINFALL_BEAM.get() : CSParticleTypes.RAINFALL_BEAM_QUASAR.get();
-
-            ParticleUtil.sendParticles(level(), curParticle, particlePos.x, particlePos.y, particlePos.z, 1, 0, 0, 0);
-        }
-         **/
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -83,7 +65,7 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
 //            }
 //        }
 
-        if (tickCount > 2) {
+        if (tickCount > 1) {
             markForLaser();
             remove(RemovalReason.DISCARDED);
         }
@@ -115,7 +97,7 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
                         if (getOwner() instanceof Player player && data.getQuasarImbueSource() == player) {
                             SkillCastRainfallRain projectile = CSEntityTypes.RAINFALL_RAIN.get().create(player.level());
                             projectile.targetPos = new BlockPos(ehr.getEntity().blockPosition());
-                            projectile.setOwnerUuid(player.getUUID());
+                            projectile.setOwnerUUID(player.getUUID());
                             projectile.moveTo(ehr.getEntity().getX(), ehr.getEntity().getY() + 15, ehr.getEntity().getZ());
                             player.level().addFreshEntity(projectile);
                         }
@@ -127,10 +109,6 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
                                 CSEntityCapabilityProvider.get(livingSource).ifPresent(data -> {
                                     if (imbueSource != ehr.getEntity() && getOwner() instanceof Player player && data.getQuasarImbueSource() == player) {
                                         ehr.getEntity().invulnerableTime = 0;
-
-                                        Vec3 from = new Vec3(imbueSource.getX(), imbueSource.getY() + 1.5, imbueSource.getZ());
-                                        Vec3 to = new Vec3(ehr.getEntity().getX(), ehr.getEntity().getY() + 1.5F, ehr.getEntity().getZ());
-                                        createLaser(from, to, false, false);
 
                                         if (!level().isClientSide()) {
                                             RainfallArrow rainfallArrow = new RainfallArrow(level(), player);
@@ -184,6 +162,12 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
                 }
             }
         }
+    }
+
+    @Override
+    public void remove(RemovalReason pReason) {
+        this.markForLaser();
+        super.remove(pReason);
     }
 
     public void markForLaser() {

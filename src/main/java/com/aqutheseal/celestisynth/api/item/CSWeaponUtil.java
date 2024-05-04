@@ -186,7 +186,7 @@ public interface CSWeaponUtil {
         if (level.isClientSide()) {
             List<Player> entities = level.getEntitiesOfClass(Player.class, holder.getBoundingBox().inflate(range, range, range));
 
-            for (Player entity : entities) shakeScreens(entity, maxDuration, startFadingOut, Math.max(0, maxIntensity - (float) (entity.distanceToSqr(holder) * 0.0001)));
+            for (Player entity : entities) shakeScreens(entity, maxDuration, startFadingOut, Math.max(0, maxIntensity - (float) (entity.distanceToSqr(holder) * 0.00001)));
         }
     }
 

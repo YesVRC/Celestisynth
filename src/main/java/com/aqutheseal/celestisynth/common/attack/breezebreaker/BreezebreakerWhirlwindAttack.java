@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.common.attack.breezebreaker;
 
 import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
-import com.aqutheseal.celestisynth.common.entity.skill.SkillCastBreezebreakerTornado;
+import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastBreezebreakerTornado;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
@@ -58,7 +58,7 @@ public class BreezebreakerWhirlwindAttack extends BreezebreakerAttack {
             if (!level.isClientSide()) {
                 SkillCastBreezebreakerTornado tornadoSkillCast = CSEntityTypes.BREEZEBREAKER_TORNADO.get().create(level);
 
-                tornadoSkillCast.setOwnerUuid(player.getUUID());
+                tornadoSkillCast.setOwnerUUID(player.getUUID());
                 tornadoSkillCast.setAngleX((float) calculateXLook(player));
                 tornadoSkillCast.setAngleY((float) calculateYLook(player));
                 tornadoSkillCast.setAngleZ((float) calculateZLook(player));

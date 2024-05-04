@@ -2,7 +2,7 @@ package com.aqutheseal.celestisynth.common.attack.keres;
 
 import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
-import com.aqutheseal.celestisynth.common.entity.skill.SkillCastKeresSmash;
+import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastKeresSmash;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSMobEffects;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
@@ -71,7 +71,7 @@ public class KeresSmashAttack extends WeaponAttackInstance {
             player.addEffect(new MobEffectInstance(CSMobEffects.HELLBANE.get(), 60, 4));
             if (!level.isClientSide()) {
                 SkillCastKeresSmash smash = CSEntityTypes.KERES_SMASH.get().create(level);
-                smash.setOwnerUuid(player.getUUID());
+                smash.setOwnerUUID(player.getUUID());
                 smash.moveTo(player.position());
                 level.addFreshEntity(smash);
             }

@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.common.attack.frostbound;
 
 import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
-import com.aqutheseal.celestisynth.common.entity.skill.SkillCastFrostboundIceCast;
+import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastFrostboundIceCast;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
@@ -40,7 +40,7 @@ public class FrostboundCryogenesisAttack extends FrostboundAttack {
             double offX = calculateXLook(player) * 3;
             double offZ = calculateZLook(player) * 3;
             int floorPos = getFloorPositionUnderPlayerYLevel(level, player.blockPosition().offset((int) offX, 0, (int) offZ));
-            frostboundIceCast.setOwnerUuid(player.getUUID());
+            frostboundIceCast.setOwnerUUID(player.getUUID());
             frostboundIceCast.setOriginItem(stack);
             frostboundIceCast.setCastLevel(5);
             frostboundIceCast.setAngleX((float) (calculateXLook(player) * 3));

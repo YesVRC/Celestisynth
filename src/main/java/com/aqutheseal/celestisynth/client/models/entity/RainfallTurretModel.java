@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.client.models.entity;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.common.entity.RainfallTurret;
+import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;

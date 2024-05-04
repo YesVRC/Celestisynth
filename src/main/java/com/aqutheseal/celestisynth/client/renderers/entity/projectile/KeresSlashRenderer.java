@@ -43,7 +43,7 @@ public class KeresSlashRenderer extends GeoEntityRenderer<KeresSlash> {
     @Override
     public void render(KeresSlash entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         poseStack.pushPose();
-        poseStack.translate(0, 0.5, 0);
+        poseStack.translate(0, 1.25, 0);
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, entity.yRotO, entity.getYRot()) - 180));
         poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTick, entity.xRotO, entity.getXRot())));
         poseStack.mulPose(Axis.ZP.rotationDegrees(entity.getRoll()));

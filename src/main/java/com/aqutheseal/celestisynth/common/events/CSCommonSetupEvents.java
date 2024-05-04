@@ -1,13 +1,14 @@
 package com.aqutheseal.celestisynth.common.events;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.common.entity.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
-import com.aqutheseal.celestisynth.common.entity.tempestboss.TempestBoss;
+import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
+import com.aqutheseal.celestisynth.common.entity.mob.misc.StarMonolith;
+import com.aqutheseal.celestisynth.common.entity.mob.natural.Traverser;
+import com.aqutheseal.celestisynth.common.entity.tempestboss_scrapped.TempestBoss;
 import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.datagen.providers.*;
 import com.aqutheseal.celestisynth.datagen.providers.compat.CSBetterCombatProvider;
-import com.aqutheseal.celestisynth.datagen.providers.CSGlobalLootModifiersProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -16,9 +17,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
@@ -27,6 +30,7 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -72,8 +76,15 @@ public class CSCommonSetupEvents {
         }
 
         @SubscribeEvent
+        public static void onSpawnPlacementRegisterEvent(SpawnPlacementRegisterEvent event) {
+            event.register(CSEntityTypes.STAR_MONOLITH.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, StarMonolith::canSpawn, SpawnPlacementRegisterEvent.Operation.OR);
+        }
+
+        @SubscribeEvent
         public static void onEntityAttributeCreationEvent(EntityAttributeCreationEvent event) {
             event.put(CSEntityTypes.RAINFALL_TURRET.get(), RainfallTurret.createAttributes().build());
+            event.put(CSEntityTypes.STAR_MONOLITH.get(), StarMonolith.createAttributes().build());
+            event.put(CSEntityTypes.TRAVERSER.get(), Traverser.createAttributes().build());
             event.put(CSEntityTypes.TEMPEST.get(), TempestBoss.createAttributes().build());
         }
 
@@ -110,6 +121,7 @@ public class CSCommonSetupEvents {
                     .add(ForgeRegistries.Keys.BIOME_MODIFIERS, CSFeatureProvider.BiomeModifiers::bootstrap)
                     .add(Registries.STRUCTURE, CSStructureProvider.Structures::bootstrap)
                     .add(Registries.STRUCTURE_SET, CSStructureProvider.StructureSets::bootstrap)
+                    .add(ForgeRegistries.Keys.STRUCTURE_MODIFIERS, CSMobSpawnProvider.StructureModifiers::bootstrap)
                     ;
             return List.of(
                     new DatapackBuiltinEntriesProvider(output, lookup, builder, Set.of(Celestisynth.MODID)),

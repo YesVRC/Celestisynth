@@ -2,7 +2,7 @@ package com.aqutheseal.celestisynth.client.renderers.entity.boss;
 
 import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.client.models.entity.boss.TempestBossModel;
-import com.aqutheseal.celestisynth.common.entity.tempestboss.TempestBoss;
+import com.aqutheseal.celestisynth.common.entity.tempestboss_scrapped.TempestBoss;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;

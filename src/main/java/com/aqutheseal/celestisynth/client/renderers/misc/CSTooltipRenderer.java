@@ -20,10 +20,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class CSTooltipRenderer {
-    @OnlyIn(Dist.CLIENT)
-    public static int menu;
-    @OnlyIn(Dist.CLIENT)
-    public static int scroll;
+    @OnlyIn(Dist.CLIENT) public static int menu;
+    @OnlyIn(Dist.CLIENT) public static int scroll;
 
     public static void manageCelestialTooltips(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();

@@ -4,6 +4,9 @@
   "attribute.celestisynth.celestial_damage": "Celestial Weapon Damage",
   "attribute.celestisynth.celestial_damage_reduction": "Celestial Weapon Damage Reduction",
 
+  "entity.celestisynth.star_monolith": "Celestial Monolith",
+  "entity.celestisynth.traverser": "Traverser",
+
   "item.celestisynth.test": "SCROLL: %s",
   "item.celestisynth.scroll_notice": "[Scroll to navigate through abilities]",
   "item.celestisynth.shift_notice": "[Press Shift or Ctrl to switch pages]",

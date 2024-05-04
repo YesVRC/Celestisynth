@@ -3,16 +3,21 @@ package com.aqutheseal.celestisynth.common.attack.aquaflora;
 import com.aqutheseal.celestisynth.api.animation.player.PlayerAnimationContainer;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastAquafloraCamera;
 import com.aqutheseal.celestisynth.common.item.weapons.AquafloraItem;
+import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.google.common.collect.Lists;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetCameraPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -58,15 +63,24 @@ public class AquafloraSlashFrenzyAttack extends AquafloraAttack {
     public void startUsing() {
         getTagController().putBoolean(ATTACK_ONGOING, true);
         getTagController().putFloat(INITIAL_VIEW_ANGLE, player.getXRot());
+
+        if (!level.isClientSide) {
+            SkillCastAquafloraCamera camera = CSEntityTypes.AQUAFLORA_CAMERA.get().create(level);
+            camera.setOwner(player);
+            camera.setXRot(-180);
+            camera.moveTo(player.getEyePosition().add(0, 15, 0));
+            level.addFreshEntity(camera);
+            ((ServerPlayer) player).connection.send(new ClientboundSetCameraPacket(camera));
+        }
     }
 
     @Override
     public void tickAttack() {
-        player.setXRot(90);
+        //player.setXRot(90);
         setCameraAngle(player, 1);
 
         if (getTimerProgress() >= 15 && getTimerProgress() % (checkDualWield(player, AquafloraItem.class) ? 2 : 5) == 0) {
-            Predicate<Entity> filter = (e) -> e != player && e instanceof LivingEntity le && (player.hasLineOfSight(le) || le.hasLineOfSight(player)) &&  le.isAlive() && !player.isAlliedTo(le);
+            Predicate<Entity> filter = (e) -> e != player && e instanceof LivingEntity le && (player.hasLineOfSight(le) || le.hasLineOfSight(player)) && le.isAlive() && !player.isAlliedTo(le);
             List<LivingEntity> entities = iterateEntities(level, createAABB(player.blockPosition(), 12)).stream().filter(filter).map(LivingEntity.class::cast).toList();
             LivingEntity target = !entities.isEmpty() ? entities.get(level.random.nextInt(entities.size())) : null;
 
@@ -74,7 +88,7 @@ public class AquafloraSlashFrenzyAttack extends AquafloraAttack {
                 player.displayClientMessage(Component.translatable("item.celestisynth.aquaflora.skill_3.notice"), true);
                 player.playSound(CSSoundEvents.BLING.get(), 0.25F, 1.5F);
                 CSEffectEntity.createInstance(player, null, CSVisualTypes.AQUAFLORA_DASH.get(), 0, 0.55, 0);
-                baseStop();
+                this.baseStop();
                 return;
             }
 
@@ -110,6 +124,11 @@ public class AquafloraSlashFrenzyAttack extends AquafloraAttack {
         getTagController().putBoolean(ATTACK_ONGOING, false);
         player.setXRot( getTagController().getFloat(INITIAL_VIEW_ANGLE));
         setCameraAngle(player, getTagController().getInt(INITIAL_PERSPECTIVE));
+        if (!level.isClientSide) {
+            ((ServerPlayer) player).connection.send(new ClientboundSetCameraPacket(player));
+        } else {
+            Minecraft.getInstance().setCameraEntity(player);
+        }
     }
 
     public static void createAquafloraFirework(ItemStack itemStack, Level level, Player player, double x, double y, double z) {

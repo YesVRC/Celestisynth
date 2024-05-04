@@ -28,7 +28,7 @@ public class PulsationParticle extends SimpleAnimatedParticle {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
+    public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
             PulsationParticle particle = new PulsationParticle(pLevel, pX, pY, pZ, this.sprites);
             return particle;

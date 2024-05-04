@@ -1,7 +1,7 @@
 package com.aqutheseal.celestisynth.client.renderers.entity.projectile;
 
 import com.aqutheseal.celestisynth.client.models.entity.RainfallTurretModel;
-import com.aqutheseal.celestisynth.common.entity.RainfallTurret;
+import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 

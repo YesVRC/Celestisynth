@@ -67,7 +67,7 @@ public class CSGuiRenderer {
                     renderVignette(gui, getWidth(), getHeight(), lerp * 0.5F);
                 }
 
-                render256x256(location, gui, getWidth(), getHeight(), 1.0F, 0.1F, 0.2F, lerp);
+                render256x256(location, gui, getWidth(), getHeight(), 1.0F, 0.0F, 0.1F, lerp);
             }
 
             int pointerX = (getWidth() / 2);
