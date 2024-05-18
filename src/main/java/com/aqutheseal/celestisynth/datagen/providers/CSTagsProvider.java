@@ -3,6 +3,7 @@ package com.aqutheseal.celestisynth.datagen.providers;
 import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.common.registry.CSBlocks;
 import com.aqutheseal.celestisynth.common.registry.CSDamageTypes;
+import com.aqutheseal.celestisynth.common.registry.CSItems;
 import com.aqutheseal.celestisynth.common.registry.CSTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -64,6 +65,11 @@ public class CSTagsProvider {
                     .add(Items.HEART_OF_THE_SEA)
                     .add(Items.NETHER_STAR)
                     .add(Items.END_CRYSTAL)
+            ;
+
+            tag(CSTags.Items.BLOOD_RUNE_ACTIVATOR)
+                    .add(CSItems.CRISMSON_PIECE.get())
+                    .add(Items.NETHER_WART)
             ;
         }
     }

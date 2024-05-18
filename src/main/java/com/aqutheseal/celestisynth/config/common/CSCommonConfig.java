@@ -40,7 +40,6 @@ public class CSCommonConfig {
 
     public final ForgeConfigSpec.ConfigValue<Boolean> enablePoltergeistHeightDmg;
     public final ForgeConfigSpec.ConfigValue<Double> rainfallSerenityArrowDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> rainfallSerenityQuasarArrowDmg;
     public final ForgeConfigSpec.ConfigValue<Double> rainfallSerenityDrawSpeed;
 
     public CSCommonConfig(ForgeConfigSpec.Builder builder) {
@@ -107,8 +106,6 @@ public class CSCommonConfig {
         builder.push("Value Modifiers - Rainfall Serenity");
         rainfallSerenityArrowDmg = builder.comment("Define how much damage does the Rainfall Serenity's Arrow deal.")
                 .defineInRange("Damage: Rainfall Serenity Arrow", 4.0, 0, 1000);
-        rainfallSerenityQuasarArrowDmg = builder.comment("Define how much damage does the Rainfall Serenity's Arrow from Quasar Link deal.")
-                .defineInRange("Damage: Rainfall Serenity Arrow (Quasar)", 2.0, 0, 1000);
         rainfallSerenityDrawSpeed = builder.comment("Define how much damage does the Rainfall Serenity's Arrow from Quasar Link deal.")
                 .defineInRange("Extra: Rainfall Serenity Draw Speed", 7.5, 0, 1000);
         builder.pop();

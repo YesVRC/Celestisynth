@@ -1,6 +1,5 @@
 package com.aqutheseal.celestisynth.common.entity.projectile;
 
-import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
@@ -138,9 +137,11 @@ public class KeresRend extends ThrowableProjectile implements GeoEntity, CSWeapo
                 float damageCalculation = 15F + (target.getMaxHealth() * 0.25F);
                 if (ForgeRegistries.ENTITY_TYPES.getKey(target.getType()).getNamespace().equals("cataclysm")) {
                     this.bypassAllHurt(target, owner, damageCalculation);
-                    Celestisynth.LOGGER.info("CATACLYSM!");
                 } else {
                     this.initiateAbilityAttack(owner, target, damageCalculation, CSDamageSources.instance(level()).erasure(owner), AttackHurtTypes.RAPID_NO_KB);
+                    if (target.isDeadOrDying()) {
+                        target.remove(Entity.RemovalReason.KILLED);
+                    }
                 }
 
                 owner.heal(5F);

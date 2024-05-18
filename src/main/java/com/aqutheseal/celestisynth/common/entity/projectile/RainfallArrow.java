@@ -8,7 +8,6 @@ import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSItems;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
@@ -99,6 +98,7 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
                             projectile.targetPos = new BlockPos(ehr.getEntity().blockPosition());
                             projectile.setOwnerUUID(player.getUUID());
                             projectile.moveTo(ehr.getEntity().getX(), ehr.getEntity().getY() + 15, ehr.getEntity().getZ());
+                            projectile.baseDamage = this.getBaseDamage() * 0.25;
                             player.level().addFreshEntity(projectile);
                         }
                     });
@@ -117,7 +117,7 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
                                             rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                                             rainfallArrow.setOrigin(imbueSource.getEyePosition());
                                             rainfallArrow.setPierceLevel((byte) 3);
-                                            rainfallArrow.setBaseDamage(CSConfigManager.COMMON.rainfallSerenityQuasarArrowDmg.get());
+                                            rainfallArrow.setBaseDamage(this.getBaseDamage() * 0.35);
                                             rainfallArrow.setImbueQuasar(false);
                                             double offsetHitResultY = ehr.getEntity().getY() + 1.5D;
                                             double finalDistX = ehr.getEntity().getX() - imbueSource.getX();

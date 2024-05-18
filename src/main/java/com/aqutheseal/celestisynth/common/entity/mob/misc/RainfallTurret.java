@@ -7,19 +7,25 @@ import com.aqutheseal.celestisynth.common.entity.goals.CSLookAtTargetGoal;
 import com.aqutheseal.celestisynth.common.entity.goals.CSOwnerAttackGoal;
 import com.aqutheseal.celestisynth.common.entity.goals.CSOwnerAttackedGoal;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
+import com.aqutheseal.celestisynth.common.item.weapons.RainfallSerenityItem;
+import com.aqutheseal.celestisynth.common.registry.CSItems;
+import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
-import com.aqutheseal.celestisynth.util.TargetUtil;
+import com.aqutheseal.celestisynth.util.EntityUtil;
+import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,8 +33,12 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,9 +52,12 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
+
 public class RainfallTurret extends SummonableEntity implements GeoEntity {
     private static final EntityDataAccessor<Boolean> SHOOTING = SynchedEntityData.defineId(RainfallTurret.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> X_SYNC_ROT = SynchedEntityData.defineId(RainfallTurret.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<CompoundTag> ITEM_DATA = SynchedEntityData.defineId(RainfallTurret.class, EntityDataSerializers.COMPOUND_TAG);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public int shootTime;
@@ -71,40 +84,48 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
         this.goalSelector.addGoal(3, new CSLookAroundGoal(this, entity -> entity.getTarget() == null));
         this.targetSelector.addGoal(3, new CSOwnerAttackedGoal<>(this));
         this.targetSelector.addGoal(4, new CSOwnerAttackGoal<>(this));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, target -> TargetUtil.isValidTargetForOwnable(this, target)));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false, target -> EntityUtil.isValidTargetForOwnable(this, target)));
         super.registerGoals();
     }
 
     public void tickShooting() {
-        int shootInterval = 10;
+        double enchantmentAdjustment = (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, createBowFromData()) * 4.5) - (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, createBowFromData()) * 6);
+        int shootInterval = (int) (20 - Math.min(19, enchantmentAdjustment));
         if (this.getTarget() != null && !this.isRemoved() && this.getOwner() instanceof Player player) {
             this.shootTime++;
-            if (this.shootTime == shootInterval) {
+            if (this.shootTime > 0 && this.shootTime % shootInterval == 0) {
                 this.entityData.set(SHOOTING, true);
                 this.playSound(CSSoundEvents.LASER_SHOOT.get(), 0.2F, 0.2F + random.nextFloat());
                 CSEffectEntity.createInstance(player, this, CSVisualTypes.RAINFALL_SHOOT.get(), this.getLookAngle().x() * 2, 0.5 + this.getLookAngle().y() * 2, this.getLookAngle().z() * 2);
                 double finalDistX = this.getTarget().getX() - this.getX();
                 double finalDistY = this.getTarget().getY() - this.getY();
                 double finalDistZ = this.getTarget().getZ() - this.getZ();
-                if (!level().isClientSide) {
-                    RainfallArrow rainfallArrow = new RainfallArrow(level(), player);
-                    rainfallArrow.setOwner(player);
-                    rainfallArrow.moveTo(this.position().add(0, 0.5, 0));
-                    rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                    rainfallArrow.setOrigin(rainfallArrow.position().add(0, 0.5, 0));
-                    rainfallArrow.setPierceLevel((byte) 3);
-                    rainfallArrow.setBaseDamage(CSConfigManager.COMMON.rainfallSerenityQuasarArrowDmg.get());
-                    rainfallArrow.setImbueQuasar(true);
-                    rainfallArrow.shoot(finalDistX, finalDistY, finalDistZ, 1.0F, 0);
-                    level().addFreshEntity(rainfallArrow);
+                ArrayList<Vec3> angles = new ArrayList<>();
+                angles.add(Vec3.ZERO);
+                if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, createBowFromData()) > 0) {
+                    double factor = 0.75;
+                    angles.add(getLookAngle().multiply(factor, 0, -factor));
+                    angles.add(getLookAngle().multiply(-factor, 0, factor));
+                }
+                for (Vec3 angle : angles) {
+                    if (!level().isClientSide) {
+                        RainfallArrow rainfallArrow = new RainfallArrow(level(), player);
+                        rainfallArrow.setOwner(player);
+                        rainfallArrow.moveTo(this.position().add(0, 0.5, 0).add(angle));
+                        rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                        rainfallArrow.setOrigin(rainfallArrow.position().add(0, 0.5, 0));
+                        rainfallArrow.setPierceLevel((byte) 3);
+
+                        RainfallSerenityItem.installLaserProperties(rainfallArrow, this.createBowFromData());
+                        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage());
+
+                        rainfallArrow.setImbueQuasar(true);
+                        rainfallArrow.shoot(finalDistX, finalDistY, finalDistZ, 1.0F, 0);
+                        level().addFreshEntity(rainfallArrow);
+                    }
                 }
             }
-            if (this.shootTime > shootInterval + 20) {
-                this.entityData.set(SHOOTING, false);
-                this.shootTime = 5 - random.nextInt(5);
-            }
         } else {
-            this.entityData.set(SHOOTING, false);
             this.shootTime = 0;
         }
     }
@@ -114,6 +135,7 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
         super.defineSynchedData();
         this.entityData.define(SHOOTING, false);
         this.entityData.define(X_SYNC_ROT, 0F);
+        this.entityData.define(ITEM_DATA, new CompoundTag());
     }
 
     public void setXSyncedRot(float value) {
@@ -122,6 +144,48 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
 
     public float getXSyncedRot() {
         return this.entityData.get(X_SYNC_ROT);
+    }
+
+    public void setItemData(CompoundTag tag) {
+        this.entityData.set(ITEM_DATA, tag);
+    }
+
+    public CompoundTag getItemData() {
+        return this.entityData.get(ITEM_DATA);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.put("itemDataRF", getItemData());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        this.setItemData(pCompound.getCompound("itemDataRF"));
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        if (pPlayer == this.getOwner() && pPlayer.isShiftKeyDown()) {
+            pPlayer.addItem(this.createBowFromData());
+            playSound(SoundEvents.ITEM_PICKUP);
+            for (int i = 0; i < 16; i++) {
+                ParticleUtil.sendParticle(level(), CSParticleTypes.RAINFALL_ENERGY_SMALL.get(),
+                        position().add(level().random.nextGaussian() * 0.4, 0, level().random.nextGaussian() * 0.4),
+                        Vec3.ZERO.add(0, level().random.nextDouble() * 0.65, 0));
+            }
+            this.remove(RemovalReason.DISCARDED);
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(pPlayer, pHand);
+    }
+
+    public ItemStack createBowFromData() {
+        ItemStack stack = new ItemStack(CSItems.RAINFALL_SERENITY.get());
+        stack.deserializeNBT(this.getItemData());
+        return stack;
     }
 
     @Override
@@ -135,6 +199,10 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
             ((ServerLevel) level()).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ANDESITE.defaultBlockState()), this.getX(), this.getY(), this.getZ(),
                     50, this.getBbWidth(), this.getBbHeight(), this.getBbWidth(), 0.1
             );
+            ItemEntity dataItem = new ItemEntity(level(), this.getX(), this.getY(), this.getZ(), this.createBowFromData());
+            dataItem.push(0, 0.3, 0);
+            dataItem.getItem().setDamageValue(dataItem.getItem().getMaxDamage() - 1);
+            level().addFreshEntity(dataItem);
             this.remove(RemovalReason.KILLED);
             this.gameEvent(GameEvent.ENTITY_DIE);
         }
@@ -155,14 +223,7 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
     }
 
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, (state) -> {
-            if (this.entityData.get(SHOOTING)) {
-                //state.setControllerSpeed(0.5f);
-                return state.setAndContinue(RawAnimation.begin().thenPlayAndHold("animation.rainfall_turret.shoot"));
-            }
-            state.setControllerSpeed(1);
-            return state.setAndContinue(RawAnimation.begin().thenLoop("animation.rainfall_turret.idle"));
-        }));
+        controllers.add(new AnimationController<>(this, (state) -> state.setAndContinue(RawAnimation.begin().thenLoop("animation.rainfall_turret.idle"))));
     }
 
     public boolean isControlledByLocalInstance() {

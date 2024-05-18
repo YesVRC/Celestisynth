@@ -1,6 +1,22 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
+		"animation.star_monolith.off": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"1": {
+					"rotation": {
+						"vector": [0, 45, 0]
+					}
+				},
+				"spikes": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
 		"animation.star_monolith.idle": {
 			"loop": true,
 			"animation_length": 4,

@@ -2,9 +2,15 @@ package com.aqutheseal.celestisynth.util;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.level.material.Fluids;
 
-public class TargetUtil {
+public class EntityUtil {
+    public static final SpawnPlacements.Type MONOLITH_SPAWNING_CONDITION = SpawnPlacements.Type.create("any_with_solid_under", (levelReader, blockPos, entityType) ->
+            SpawnPlacements.Type.ON_GROUND.canSpawnAt(levelReader, blockPos, entityType) || levelReader.getFluidState(blockPos).is(Fluids.WATER)
+    );
+
     private static <T extends LivingEntity & OwnableEntity> boolean isValidTargetForOwnableBase(T pet, LivingEntity potentialTarget) {
         if (potentialTarget == pet) {
             return false;

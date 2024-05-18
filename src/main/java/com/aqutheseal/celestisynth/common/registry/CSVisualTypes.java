@@ -24,6 +24,7 @@ public class CSVisualTypes {
     public static final RegistryObject<CSVisualType> SOLARIS_AIR_MEDIUM_FLAT = addVisual(new CSVisualType("solaris_air_medium_flat", "solaris_air", CSVisualModel.FLAT, CSVisualAnimation.SPIN, 0, 0, 2.5, false, true, false));
     public static final RegistryObject<CSVisualType> SOLARIS_AIR_LARGE_FLAT = addVisual(new CSVisualType("solaris_air_large_flat", "solaris_air", CSVisualModel.FLAT, CSVisualAnimation.SPIN, 0, 0, 3.5, false, true, false));
 
+
     public static final RegistryObject<CSVisualType> CRESCENTIA_STRIKE = addVisual(new CSVisualType("crescentia_strike", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(12), 6, 2, 3.5, false, true, true));
     public static final RegistryObject<CSVisualType> CRESCENTIA_STRIKE_INVERTED = addVisual(new CSVisualType("crescentia_strike_inverted", "crescentia_strike", CSVisualModel.FLAT_INVERTED, CSVisualAnimation.noAnimWithLifespan(12), 6, 2, 3.5, false, true, true));
     public static final RegistryObject<CSVisualType> CRESCENTIA_THROW = addVisual(new CSVisualType("crescentia_throw", CSVisualModel.FLAT, CSVisualAnimation.SWEEP_RTOL, 0, 0, 3, false, true, true));
@@ -68,6 +69,12 @@ public class CSVisualTypes {
     public static final RegistryObject<CSVisualType> FROSTBOUND_ICE_CAST = addVisual(FrostboundSlashSkinSet.FROSTBOUND_ICE_CAST);
     public static final RegistryObject<CSVisualType> FROSTBOUND_SHARD_PULSE = addVisual(FrostboundSlashSkinSet.FROSTBOUND_SHARD_PULSE);
 
+    public static final RegistryObject<CSVisualType> KERES_PULSE = addVisual(new CSVisualType("keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(40), 0, 0, 1.55, false, true, false));
+    public static final RegistryObject<CSVisualType> KERES_PULSE_1 = addVisual(new CSVisualType("keres_pulse_1", "keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(50), 0, 0, 2.5, false, true, false));
+    public static final RegistryObject<CSVisualType> KERES_PULSE_2 = addVisual(new CSVisualType("keres_pulse_2", "keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(60), 0, 0, 4, false, true, false));
+
+    // Skins
+
     public static final RegistryObject<CSVisualType> FROSTBOUND_SLASH_SEABR = addVisual(CSVisualType.createSkin("seabreeze", FrostboundSlashSkinSet.FROSTBOUND_SLASH));
     public static final RegistryObject<CSVisualType> FROSTBOUND_SLASH_INVERTED_SEABR = addVisual(CSVisualType.createSkin("seabreeze", FrostboundSlashSkinSet.FROSTBOUND_SLASH_INVERTED));
     public static final RegistryObject<CSVisualType> FROSTBOUND_SLASH_LARGE_SEABR = addVisual(CSVisualType.createSkin("seabreeze", FrostboundSlashSkinSet.FROSTBOUND_SLASH_LARGE));
@@ -75,9 +82,9 @@ public class CSVisualTypes {
     public static final RegistryObject<CSVisualType> FROSTBOUND_ICE_CAST_SEABR =  addVisual(CSVisualType.createSkin("seabreeze", FrostboundSlashSkinSet.FROSTBOUND_ICE_CAST));
     public static final RegistryObject<CSVisualType> FROSTBOUND_SHARD_PULSE_SEABR = addVisual(CSVisualType.createSkin("seabreeze", FrostboundSlashSkinSet.FROSTBOUND_SHARD_PULSE));
 
-    public static final RegistryObject<CSVisualType> KERES_PULSE = addVisual(new CSVisualType("keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(40), 0, 0, 1.55, false, true, false));
-    public static final RegistryObject<CSVisualType> KERES_PULSE_1 = addVisual(new CSVisualType("keres_pulse_1", "keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(50), 0, 0, 2.5, false, true, false));
-    public static final RegistryObject<CSVisualType> KERES_PULSE_2 = addVisual(new CSVisualType("keres_pulse_2", "keres_pulse", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(60), 0, 0, 4, false, true, false));
+    // Misc
+
+    public static final RegistryObject<CSVisualType> SOLAR_EXPLOSION = addVisual(new CSVisualType("solaris_explosion", CSVisualModel.FLAT, CSVisualAnimation.noAnimWithLifespan(16), 8, 2, 1.75, false, false, false));
 
     public static RegistryObject<CSVisualType> addVisual(CSVisualType type) {
         return VISUALS.register(type.getName(), () -> type);

@@ -12,7 +12,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.RegistryObject;
@@ -49,7 +49,7 @@ public class CSEffectEntity extends Entity implements GeoEntity {
     }
 
     @Nullable
-    public static CSEffectEntity getEffectInstance(Player owner, @Nullable Entity toFollow, CSVisualType visual, double offsetX, double offsetY, double offsetZ) {
+    public static CSEffectEntity getEffectInstance(LivingEntity owner, @Nullable Entity toFollow, CSVisualType visual, double offsetX, double offsetY, double offsetZ) {
         if (owner == null) return null;
         CSEffectEntity slash = CSEntityTypes.CS_EFFECT.get().create(owner.level());
         slash.setVisualID(visual.getName());
@@ -78,18 +78,18 @@ public class CSEffectEntity extends Entity implements GeoEntity {
         setRotationZ(rotationZ);
     }
 
-    public static void createInstance(Player owner, @Nullable Entity toFollow, CSVisualType effectTypes) {
+    public static void createInstance(LivingEntity owner, @Nullable Entity toFollow, CSVisualType effectTypes) {
         createInstance(owner, toFollow, effectTypes, 0, 0, 0);
     }
 
-    public static void createInstanceLockedPos(Player owner, @Nullable Entity toFollow, CSVisualType effectTypes, double x, double y, double z) {
+    public static void createInstanceLockedPos(LivingEntity owner, @Nullable Entity toFollow, CSVisualType effectTypes, double x, double y, double z) {
         if (owner == null) return;
         CSEffectEntity slash = getEffectInstance(owner, toFollow, effectTypes, x, y, z);
         slash.moveTo(x, y, z);
         owner.level().addFreshEntity(slash);
     }
 
-    public static void createInstance(Player owner, @Nullable Entity toFollow, CSVisualType effectTypes, double xOffset, double yOffset, double zOffset) {
+    public static void createInstance(LivingEntity owner, @Nullable Entity toFollow, CSVisualType effectTypes, double xOffset, double yOffset, double zOffset) {
         if (owner == null) return;
         CSEffectEntity slash = getEffectInstance(owner, toFollow, effectTypes, xOffset, yOffset, zOffset);
         slash.setOwnerUuid(owner.getUUID());

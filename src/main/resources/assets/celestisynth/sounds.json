@@ -137,5 +137,23 @@
     "sounds": [
       "celestisynth:heartbeat"
     ]
+  },
+  "traverser_death": {
+    "subtitle": "subtitles.celestisynth.traverser_death",
+    "sounds": [
+      "celestisynth:traverser_death"
+    ]
+  },
+  "traverser_hurt": {
+    "subtitle": "subtitles.celestisynth.traverser_hurt",
+    "sounds": [
+      "celestisynth:traverser_hurt"
+    ]
+  },
+  "traverser_step": {
+    "subtitle": "subtitles.celestisynth.traverser_step",
+    "sounds": [
+      "celestisynth:traverser_step"
+    ]
   }
 }

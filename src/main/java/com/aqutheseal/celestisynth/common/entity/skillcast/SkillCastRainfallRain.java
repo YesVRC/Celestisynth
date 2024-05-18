@@ -5,7 +5,6 @@ import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,13 +17,13 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.UUID;
 
 public class SkillCastRainfallRain extends EffectControllerEntity {
     public BlockPos targetPos = null;
+    public double baseDamage = 1;
 
     public SkillCastRainfallRain(EntityType<?> type, Level level) {
         super(type, level);
@@ -44,7 +43,7 @@ public class SkillCastRainfallRain extends EffectControllerEntity {
         }
 
         if (tickCount >= 20 && tickCount <= 40 && tickCount % 2 == 0) {
-            level().playSound(null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), CSSoundEvents.LASER_SHOOT.get(), SoundSource.PLAYERS, 0.4f, 0.5F + random.nextFloat());
+            level().playSound(null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), CSSoundEvents.LASER_SHOOT.get(), SoundSource.PLAYERS, 0.05f, 1.2F + random.nextFloat());
 
             double rx = -5 + random.nextInt(10);
             double rz = -5 + random.nextInt(10);
@@ -63,14 +62,11 @@ public class SkillCastRainfallRain extends EffectControllerEntity {
                 rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 rainfallArrow.setOrigin(this.position().add(0, 1.75, 0));
                 rainfallArrow.setPierceLevel((byte) 3);
-                rainfallArrow.setBaseDamage(CSConfigManager.COMMON.rainfallSerenityQuasarArrowDmg.get());
+                rainfallArrow.setBaseDamage(this.baseDamage);
                 rainfallArrow.setImbueQuasar(false);
 
                 rainfallArrow.shoot(finalDistX, finalDistY, finalDistZ, 3.0F, 0);
                 level().addFreshEntity(rainfallArrow);
-
-                Vec3 from = new Vec3(getX(), getY(), getZ());
-                Vec3 to = new Vec3(floor.getX(), floor.getY(), floor.getZ());
             }
         }
 

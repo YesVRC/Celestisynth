@@ -153,6 +153,17 @@ public class CSRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_item", has(CSItems.WINTEREIS_SHARD.get()))
                 .save(consumer, modLoc("frostbound"));
 
+        CelestialShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, CSItems.KERES.get())
+                .pattern(" sl")
+                .pattern(" is")
+                .pattern("n  ")
+                .define('n', Ingredient.of(CSItems.CELESTIAL_NETHERITE_INGOT.get()))
+                .define('s', Ingredient.of(CSItems.CRISMSON_PIECE.get()))
+                .define('i', Ingredient.of(CSItems.CELESTIAL_CORE_HEATED.get()))
+                .define('l', Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()))
+                .unlockedBy("has_item", has(CSItems.CRISMSON_PIECE.get()))
+                .save(consumer, modLoc("keres"));
+
         if (CSIntegrationManager.checkIronsSpellbooks()) {
             ISSItemUtil.manageRecipeCompatibility(consumer, this);
         }

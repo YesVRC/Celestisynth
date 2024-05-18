@@ -6,6 +6,7 @@
 
   "entity.celestisynth.star_monolith": "Celestial Monolith",
   "entity.celestisynth.traverser": "Traverser",
+  "entity.celestisynth.rainfall_turret": "Rainfall Turret",
 
   "item.celestisynth.test": "SCROLL: %s",
   "item.celestisynth.scroll_notice": "[Scroll to navigate through abilities]",
@@ -27,6 +28,10 @@
   "item.celestisynth.starstruck_feather": "Starstruck Feather",
   "block.celestisynth.wintereis": "Wintereis",
   "item.celestisynth.wintereis_shard": "Wintereis Shard",
+  "item.celestisynth.crimson_piece": "Crimson Piece",
+  "item.celestisynth.traverser_spawn_egg": "Traverser Spawn Egg",
+  "item.celestisynth.star_monolith": "Blank Celestial Monolith",
+  "item.celestisynth.star_monolith_blood": "Blood Rune Celestial Monolith",
 
   "item.celestisynth.solar_crystal_helmet": "Solar Crystal Helmet",
   "item.celestisynth.solar_crystal_chestplate": "Solar Crystal Chestplate",

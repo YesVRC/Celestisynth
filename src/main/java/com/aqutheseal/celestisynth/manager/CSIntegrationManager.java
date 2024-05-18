@@ -11,4 +11,8 @@ public class CSIntegrationManager {
     public static boolean checkIronsSpellbooks() {
         return ModList.get().isLoaded("irons_spellbooks");
     }
+
+    public static boolean checkApothicAttributes() {
+        return ModList.get().isLoaded("attributeslib");
+    }
 }

@@ -5,20 +5,27 @@ import com.aqutheseal.celestisynth.common.entity.mob.misc.StarMonolith;
 import com.aqutheseal.celestisynth.common.entity.mob.natural.Traverser;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.common.registry.CSTags;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.TriConsumer;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 public enum MonolithRunes {
     NO_RUNE((ResourceLocation) null, 0, 0, 0, MonolithRunes::noRuneTick, MonolithRunes::noRuneConsume),
-    BLOOD_RUNE("blood", 400, 10, 3, MonolithRunes::bloodRuneTick, MonolithRunes::bloodRuneConsume);
+    BLOOD_RUNE("blood", 400, 10, 3, MonolithRunes::bloodRuneTick, MonolithRunes::bloodRuneConsume),
+    AQUA_RUNE("aqua", 0, 0, 0, MonolithRunes::noRuneTick, MonolithRunes::noRuneConsume);
+
+    public static final HashMap<TagKey<Item>, MonolithRunes> ACTIVATORS_LIST = new HashMap<>();
 
     public final @Nullable ResourceLocation runeTexture;
     public final int summonInterval;
@@ -34,6 +41,10 @@ public enum MonolithRunes {
         this.summonLimit = summonLimit;
         this.ambientTick = ambientTick;
         this.summonAction = summonAction;
+    }
+
+    static {
+        ACTIVATORS_LIST.put(CSTags.Items.BLOOD_RUNE_ACTIVATOR, BLOOD_RUNE);
     }
 
     MonolithRunes(String runeId, int summonInterval, int summonRange, int summonLimit, BiConsumer<StarMonolith, Level> ambientTick, TriConsumer<StarMonolith, BlockPos, ServerLevel> summonAction) {
@@ -55,6 +66,7 @@ public enum MonolithRunes {
         Traverser traverser = CSEntityTypes.TRAVERSER.get().create(level);
         traverser.moveTo(summonPosition, 0, 0);
         traverser.setMonolith(monolith);
+        traverser.setAction(Traverser.ACTION_SPAWNED);
         level.addFreshEntity(traverser);
 
         Vec3 from = monolith.position().add(0, 1.25, 0);

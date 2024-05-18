@@ -36,6 +36,7 @@ public class CSItemModelProvider extends ItemModelProvider {
         exemptions.add(CSItems.AQUAFLORA);
         exemptions.add(CSItems.RAINFALL_SERENITY);
         exemptions.add(CSItems.FROSTBOUND);
+        exemptions.add(CSItems.TRAVERSER_SPAWN_EGG);
         exemptions.add(CSItems.TEMPEST_SPAWN_EGG);
 
         this.defaultItem(CSItems.ITEMS.getEntries());
@@ -48,6 +49,8 @@ public class CSItemModelProvider extends ItemModelProvider {
         this.defaultItem(CSItems.LUNAR_STONE_CHESTPLATE);
         this.defaultItem(CSItems.LUNAR_STONE_LEGGINGS);
         this.defaultItem(CSItems.LUNAR_STONE_BOOTS);
+
+        this.spawnEgg(CSItems.TRAVERSER_SPAWN_EGG);
 
         this.csCustomModel(CSBlocks.SOLAR_CRYSTAL.get().asItem(), getMcLoc("item/generated"));
         this.block(CSBlocks.LUNAR_STONE);
@@ -85,6 +88,12 @@ public class CSItemModelProvider extends ItemModelProvider {
         Item getItem = item.get();
         ModelFile.ExistingModelFile modelType = getItem instanceof DiggerItem || getItem instanceof SwordItem ? getMcLoc("item/handheld") : getMcLoc("item/generated");
         this.getBuilder(name).parent(modelType).texture("layer0", ITEM_FOLDER + "/" + name);
+    }
+
+    public void spawnEgg(RegistryObject<Item> item) {
+        String name = item.getId().getPath();
+        Item getItem = item.get();
+        this.getBuilder(name).parent(getMcLoc("item/template_spawn_egg"));
     }
 
     public void block(RegistryObject<Block> blockItem) {

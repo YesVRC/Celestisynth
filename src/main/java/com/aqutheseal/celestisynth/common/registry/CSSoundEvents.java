@@ -33,6 +33,10 @@ public class CSSoundEvents {
     public static final RegistryObject<SoundEvent> BASS_PULSE = createSound("bass_pulse");
     public static final RegistryObject<SoundEvent> HEARTBEAT = createSound("heartbeat");
 
+    public static final RegistryObject<SoundEvent> TRAVERSER_DEATH = createSound("traverser_death");
+    public static final RegistryObject<SoundEvent> TRAVERSER_HURT = createSound("traverser_hurt");
+    public static final RegistryObject<SoundEvent> TRAVERSER_STEP = createSound("traverser_step");
+
     public static RegistryObject<SoundEvent> createSound(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(Celestisynth.prefix(name)));
     }

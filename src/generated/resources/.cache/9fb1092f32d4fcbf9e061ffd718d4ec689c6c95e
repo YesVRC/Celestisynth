@@ -1,9 +1,10 @@
-// 1.20.1	2024-03-07T20:12:57.0946296	Recipes
+// 1.20.1	2024-05-17T21:31:38.9529958	Recipes
 f80db3c334ac7531d040b2b81e03c72d94208060 data/celestisynth/advancements/recipes/combat/aquaflora.json
 e4a60005ca7a99de20076a20053e1fccfa247b71 data/celestisynth/advancements/recipes/combat/breezebreaker.json
 8f889e3d049e4e19fa4b780d92b40dfa5add47ef data/celestisynth/advancements/recipes/combat/celestial_spellbook.json
 69238b7ee64f60e752a645658bad1acbff87b7ab data/celestisynth/advancements/recipes/combat/crescentia.json
 f4694f38e4fb8bd9aa3e1e0b886d6dab481cbf52 data/celestisynth/advancements/recipes/combat/frostbound.json
+2ab68408d6dd1670668512436bca66111dc143bb data/celestisynth/advancements/recipes/combat/keres.json
 ea92acdab854805b7252a60db25a9f4e67702387 data/celestisynth/advancements/recipes/combat/lunar_stone_boots.json
 e67533aeda0f6dbe642472cd307bce0eb0964349 data/celestisynth/advancements/recipes/combat/lunar_stone_chestplate.json
 f0bb2b8ffe94ae48e36bd0535aefc65faa895dd8 data/celestisynth/advancements/recipes/combat/lunar_stone_helmet.json
@@ -40,6 +41,7 @@ afcf1a48aeae32c3249669bdbf63fe1d61c8da2a data/celestisynth/recipes/celestial_spe
 91c7a76f10877fe5ab78296ae8d74af97bfd544f data/celestisynth/recipes/crescentia.json
 455af62f9568ceca68162ec8267f19163346acf4 data/celestisynth/recipes/eyebomination.json
 4140cb4d28b032bd25c22b44468cfcd6fc4afe11 data/celestisynth/recipes/frostbound.json
+4d825c0ae2b97d6012908e050fae0757d7c5e9c9 data/celestisynth/recipes/keres.json
 e21d56a2ff42a028a6a7c098caa4b9a594020175 data/celestisynth/recipes/lunar_scrap_blasting.json
 6d35a60a385cbcec02163c097c4224f821cde27d data/celestisynth/recipes/lunar_scrap_smelting.json
 74b52b691a1410871430dfe17a5a7195715f216c data/celestisynth/recipes/lunar_stone_boots.json

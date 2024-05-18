@@ -6,6 +6,7 @@ import com.aqutheseal.celestisynth.common.entity.helper.MonolithRunes;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.StarMonolith;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class StarMonolithSpikeGoal extends Goal {
         mob.incrementAnimationTick();
         if (mob.getAnimationTick() == 5) {
             this.getTargets().forEach(target -> {
-                mob.initiateAbilityAttack(mob, target, 2, AttackHurtTypes.RAPID);
+                mob.initiateAbilityAttack(mob, target, (float) mob.getAttribute(Attributes.ATTACK_DAMAGE).getValue(), AttackHurtTypes.RAPID);
                 target.setDeltaMovement(target.position().subtract(mob.position()).normalize().multiply(4, 0, 4));
             });
         }

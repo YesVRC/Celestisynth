@@ -12,12 +12,14 @@ import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -33,6 +35,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -184,6 +187,38 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
     }
 
     @Override
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
+        super.playStepSound(pPos, pState);
+        this.playSound(CSSoundEvents.TRAVERSER_STEP.get(), 0.2F, 1.3F);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return CSSoundEvents.TRAVERSER_STEP.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return CSSoundEvents.TRAVERSER_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return CSSoundEvents.TRAVERSER_DEATH.get();
+    }
+
+    @Override
+    protected float getSoundVolume() {
+        return 0.2F;
+    }
+
+    @Override
+    public float getVoicePitch() {
+        return 1.3F + (random.nextFloat() * 0.3F);
+    }
+
+    @Override
     public boolean isNoAi() {
         return super.isNoAi() || getAction() == ACTION_SPAWNED;
     }
@@ -191,8 +226,7 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
     @Override
     public void onAddedToWorld() {
         super.onAddedToWorld();
-        this.setAction(ACTION_SPAWNED);
-        this.playSound(CSSoundEvents.FIRE_SHOOT.get(), 0.2F, 1.0f);
+        this.playSound(CSSoundEvents.SWORD_SWING_FIRE.get(), 0.2F, 1.0f);
     }
 
     public void loopAttack() {

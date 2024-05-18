@@ -118,10 +118,13 @@ public class CSCommonSetupEvents {
                     .add(Registries.DAMAGE_TYPE, CSDamageTypeProvider::bootstrap)
                     .add(Registries.CONFIGURED_FEATURE, CSFeatureProvider.ConfiguredFeatures::bootstrap)
                     .add(Registries.PLACED_FEATURE, CSFeatureProvider.PlacedFeatures::bootstrap)
-                    .add(ForgeRegistries.Keys.BIOME_MODIFIERS, CSFeatureProvider.BiomeModifiers::bootstrap)
                     .add(Registries.STRUCTURE, CSStructureProvider.Structures::bootstrap)
                     .add(Registries.STRUCTURE_SET, CSStructureProvider.StructureSets::bootstrap)
                     .add(ForgeRegistries.Keys.STRUCTURE_MODIFIERS, CSMobSpawnProvider.StructureModifiers::bootstrap)
+                    .add(ForgeRegistries.Keys.BIOME_MODIFIERS, ctx -> {
+                        CSFeatureProvider.BiomeModifiers.bootstrap(ctx);
+                        CSMobSpawnProvider.BiomeModifiers.bootstrap(ctx);
+                    })
                     ;
             return List.of(
                     new DatapackBuiltinEntriesProvider(output, lookup, builder, Set.of(Celestisynth.MODID)),

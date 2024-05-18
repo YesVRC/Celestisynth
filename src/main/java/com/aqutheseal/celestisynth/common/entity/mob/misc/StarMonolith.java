@@ -5,28 +5,40 @@ import com.aqutheseal.celestisynth.common.entity.base.FixedMovesetEntity;
 import com.aqutheseal.celestisynth.common.entity.base.MonolithSummonedEntity;
 import com.aqutheseal.celestisynth.common.entity.goals.star_monolith.StarMonolithSpikeGoal;
 import com.aqutheseal.celestisynth.common.entity.helper.MonolithRunes;
+import com.aqutheseal.celestisynth.common.registry.CSItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -37,6 +49,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.StreamSupport;
 
 public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, CSWeaponUtil {
@@ -50,8 +63,9 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
 
     public static final int ACTION_SPIKE = 1;
 
+    public static final int VARIANT_OVERWORLD = 0;
     public static final int VARIANT_NETHER = 1;
-
+    public static final int VARIANT_END = 2;
 
     public StarMonolith(EntityType<? extends Mob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -78,7 +92,9 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
                     int summoned = StreamSupport.stream(((ServerLevel) level()).getAllEntities().spliterator(), false).filter(e -> e instanceof MonolithSummonedEntity summonedEntity && summonedEntity.getMonolith() == this).toList().size();
                     if (summoned < getRune().summonLimit) {
                         List<BlockPos> validSpawns = getValidSpawnPoints(getRune().summonRange);
-                        this.getRune().summonAction.accept(this, validSpawns.get(random.nextInt(validSpawns.size())), (ServerLevel) this.level());
+                        if (!validSpawns.isEmpty()) {
+                            this.getRune().summonAction.accept(this, validSpawns.get(random.nextInt(validSpawns.size())), (ServerLevel) this.level());
+                        }
                     }
                 }
             }
@@ -86,7 +102,7 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
     }
 
     public boolean hasNearbyAlivePlayerWithFilter(double pX, double pY, double pZ, double pDistance) {
-        for(Player player : this.level().players()) {
+        for (Player player : this.level().players()) {
             if (EntitySelector.NO_SPECTATORS.test(player) && EntitySelector.LIVING_ENTITY_STILL_ALIVE.test(player) && this.hasLineOfSight(player)) {
                 double distanceOfPlayer = player.distanceToSqr(pX, pY, pZ);
                 if (pDistance < 0.0D || distanceOfPlayer < pDistance * pDistance) {
@@ -94,7 +110,6 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
                 }
             }
         }
-
         return false;
     }
 
@@ -132,7 +147,10 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
             if (isDeadOrDying()) {
                 return state.setAndContinue(RawAnimation.begin().thenLoop("animation.star_monolith.death"));
             }
-            return state.setAndContinue(RawAnimation.begin().thenLoop("animation.star_monolith.idle"));
+            if (getRune() != MonolithRunes.NO_RUNE) {
+                return state.setAndContinue(RawAnimation.begin().thenLoop("animation.star_monolith.idle"));
+            }
+            return state.setAndContinue(RawAnimation.begin().thenLoop("animation.star_monolith.off"));
         }));
     }
 
@@ -142,7 +160,7 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
                 .add(Attributes.FOLLOW_RANGE, 16.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.0)
                 .add(Attributes.ARMOR, 0.0)
-                .add(Attributes.ATTACK_DAMAGE, 0.0)
+                .add(Attributes.ATTACK_DAMAGE, 2.0)
                 .add(Attributes.FLYING_SPEED, 0.0);
     }
 
@@ -154,7 +172,52 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
     public void onAddedToWorld() {
         super.onAddedToWorld();
         this.moveTo(this.getFloorPositionUnderPlayer(level(), this.blockPosition()).above(), 0, 0);
-        this.setRune(MonolithRunes.BLOOD_RUNE);
+    }
+
+    @Override
+    protected InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        ItemStack stack = pPlayer.getItemInHand(pHand);
+        for (Map.Entry<TagKey<Item>, MonolithRunes> activatorEntry : MonolithRunes.ACTIVATORS_LIST.entrySet()) {
+            if (stack.is(activatorEntry.getKey())) {
+                this.setRune(activatorEntry.getValue());
+                if (!pPlayer.isCreative()) {
+                    stack.shrink(1);
+                }
+                this.playSound(SoundEvents.BOOK_PAGE_TURN, 1.0F, 1.0F);
+                this.playSound(SoundEvents.BEACON_ACTIVATE, 1.0F, 1.0F);
+                return InteractionResult.SUCCESS;
+            }
+        }
+        if (stack.is(CSItems.CELESTIAL_DEBUGGER.get())) {
+            this.setRune(MonolithRunes.NO_RUNE);
+            this.playSound(SoundEvents.WITHER_BREAK_BLOCK, 1.0F, 1.0F);
+            return InteractionResult.SUCCESS;
+        }
+        return super.mobInteract(pPlayer, pHand);
+    }
+
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        if (pReason == MobSpawnType.NATURAL || pReason == MobSpawnType.STRUCTURE || pReason == MobSpawnType.CHUNK_GENERATION) {
+            if (this.level().dimension().equals(Level.OVERWORLD)) {
+                this.setVariant(VARIANT_OVERWORLD);
+                if (pLevel.getBiome(this.blockPosition()).is(BiomeTags.IS_OCEAN) || pLevel.getBiome(this.blockPosition()).is(BiomeTags.IS_DEEP_OCEAN)) {
+                    this.setRune(MonolithRunes.AQUA_RUNE);
+                }
+            }
+            if (this.level().dimension().equals(Level.NETHER)) {
+                this.setVariant(VARIANT_NETHER);
+                if (isInCurrentStructure(BuiltinStructures.FORTRESS)) {
+                    this.setRune(MonolithRunes.BLOOD_RUNE);
+                }
+            }
+        }
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    public boolean isInCurrentStructure(ResourceKey<Structure> structure) {
+        return this.level() instanceof ServerLevel server && server.structureManager().getStructureWithPieceAt(this.blockPosition(), structure).isValid();
     }
 
     @Nullable
@@ -244,6 +307,16 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
         this.entityData.define(ANIMATION_TICK, 0);
         this.entityData.define(RUNE, 0);
         this.entityData.define(VARIANT, 0);
+    }
+
+    @Override
+    public int getMaxAirSupply() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public boolean canDrownInFluidType(FluidType type) {
+        return false;
     }
 
     public void setDeltaMovement(Vec3 motionIn) {

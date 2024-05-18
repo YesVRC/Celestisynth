@@ -35,7 +35,7 @@ public class CSBlockLoot extends BlockLootSubProvider {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return CSLootTableProvider.knownBlocksHelper(ForgeRegistries.BLOCKS);
+        return CSLootTableProvider.knownSet(ForgeRegistries.BLOCKS);
     }
 
     protected LootTable.Builder createWintereisDrops(Block pBlock) {

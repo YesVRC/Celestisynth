@@ -33,10 +33,10 @@ public class RainfallTurretModel extends GeoModel<RainfallTurret> {
         CoreGeoBone subhead = getAnimationProcessor().getBone("subhead");
         EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         if (head != null) {
-            head.setRotZ(animatable.getXSyncedRot() * Mth.DEG_TO_RAD);
+            head.setRotY((entityData.netHeadYaw() - 90) * Mth.DEG_TO_RAD);
         }
         if (subhead != null) {
-            subhead.setRotY((entityData.netHeadYaw() - 90) * Mth.DEG_TO_RAD);
+            subhead.setRotZ(animatable.getXSyncedRot() * Mth.DEG_TO_RAD);
         }
     }
 }

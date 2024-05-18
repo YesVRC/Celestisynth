@@ -6,13 +6,12 @@ import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
+import com.aqutheseal.celestisynth.common.compat.apotheosis.CSCompatAP;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualAnimation;
+import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
-import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
-import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
-import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
-import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
+import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
@@ -21,9 +20,9 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
@@ -36,6 +35,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.BowItem;
@@ -51,6 +51,7 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
@@ -159,7 +160,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
                 attackExtras(pStack).putFloat(PULL, 0);
                 attackExtras(pStack).putFloat(PULLING, 0);
             } else {
-                attackExtras(pStack).putFloat(PULL, (pStack.getUseDuration() - living.getUseItemRemainingTicks()) / ((RainfallSerenityItem) pStack.getItem()).getDrawSpeed(pStack));
+                attackExtras(pStack).putFloat(PULL, (pStack.getUseDuration() - living.getUseItemRemainingTicks()) / ((RainfallSerenityItem) pStack.getItem()).getDrawSpeed(living, pStack));
                 attackExtras(pStack).putFloat(PULLING, 1);
             }
         }
@@ -190,7 +191,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
         if (pEntityLiving instanceof Player player) {
             CompoundTag elementData = pStack.getOrCreateTagElement(CS_CONTROLLER_TAG_ELEMENT);
             int useDuration = getUseDuration(pStack) - pTimeLeft;
-            double curPowerFromUse = getPowerForTime(pStack, useDuration);
+            double curPowerFromUse = getPowerForTime(pEntityLiving, pStack, useDuration);
 
             AnimationManager.playAnimation(pLevel, CSPlayerAnimations.CLEAR.get());
             elementData.putBoolean(ANIMATION_BEGUN_KEY, false);
@@ -246,18 +247,17 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
 
                         rainfallArrow.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 3.0F, 0);
 
-                        int powerEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, pStack);
-                        int piercingEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, pStack);
                         int multishotEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, pStack);
-                        int punchEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, pStack);
-                        int flameEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, pStack);
 
                         if (curPowerFromUse == 1.0F) rainfallArrow.setStrong(true);
-                        if (powerEnchLvl > 0) rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + powerEnchLvl);
-                        if (piercingEnchLvl > 0) rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + (piercingEnchLvl * 4));
+                        installLaserProperties(rainfallArrow, pStack);
+
+                        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + CSCompatAP.apothRainfallSerenityDamage(pEntityLiving));
+                        if (pLevel.random.nextFloat() < CSCompatAP.apothRainfallSerenityCritChance(pEntityLiving)) {
+                            rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + CSCompatAP.apothRainfallSerenityCritDamage(pEntityLiving));
+                        }
+
                         if (multishotEnchLvl > 0) rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() * 0.75F);
-                        if (punchEnchLvl > 0) rainfallArrow.setKnockback(punchEnchLvl);
-                        if (flameEnchLvl > 0) rainfallArrow.setFlaming(true);
 
                         pLevel.addFreshEntity(rainfallArrow);
                     }
@@ -271,27 +271,67 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
         }
     }
 
+    public static void installLaserProperties(RainfallArrow rainfallArrow, ItemStack pStack) {
+        int powerEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, pStack);
+        int piercingEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, pStack);
+        int punchEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, pStack);
+        int flameEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, pStack);
+
+        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + powerEnchLvl);
+        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + (piercingEnchLvl * 4));
+        if (punchEnchLvl > 0) rainfallArrow.setKnockback(punchEnchLvl);
+        if (flameEnchLvl > 0) rainfallArrow.setFlaming(true);
+    }
+
     @Override
-    public AbstractArrow customArrow(AbstractArrow arrow) {
-        return super.customArrow(arrow);
+    public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
+        if (entity.onGround() && stack.getDamageValue() < stack.getMaxDamage() - 1) {
+            entity.playSound(SoundEvents.ENDER_EYE_DEATH);
+            if (!entity.level().isClientSide) {
+                Entity owner = entity.level().getEntity(attackExtras(stack).getInt("ownerRF"));
+                if (owner instanceof Player player) {
+                    RainfallTurret turret = CSEntityTypes.RAINFALL_TURRET.get().create(entity.level());
+                    turret.moveTo(entity.position());
+                    turret.setOwner(player);
+                    entity.level().addFreshEntity(turret);
+                    turret.setItemData(stack.serializeNBT());
+                    for (int i = 0; i < 16; i++) {
+                        ParticleUtil.sendParticle(entity.level(), CSParticleTypes.RAINFALL_ENERGY_SMALL.get(),
+                                entity.position().add(entity.level().random.nextGaussian() * 0.4, 0, entity.level().random.nextGaussian() * 0.4),
+                                Vec3.ZERO.add(0, entity.level().random.nextDouble() * 0.65, 0));
+                    }
+                    entity.remove(Entity.RemovalReason.DISCARDED);
+                }
+            }
+        }
+        return super.onEntityItemUpdate(stack, entity);
+    }
+
+    @Override
+    public boolean onDroppedByPlayer(ItemStack stack, Player player) {
+        attackExtras(stack).putInt("ownerRF", player.getId());
+        return super.onDroppedByPlayer(stack, player);
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        List<Enchantment> enchantments = new ObjectArrayList<>();
+        List<Enchantment> enchantments = new ArrayList<>();
         enchantments.add(Enchantments.POWER_ARROWS);
         enchantments.add(Enchantments.PUNCH_ARROWS);
         enchantments.add(Enchantments.FLAMING_ARROWS);
         enchantments.add(Enchantments.MULTISHOT);
         enchantments.add(Enchantments.PIERCING);
 
-        if (enchantment == Enchantments.PIERCING) {
-            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack) > 0) return false;
-            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack) > 0) return false;
+        if (enchantment == Enchantments.MULTISHOT || enchantment == Enchantments.QUICK_CHARGE) {
+            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, stack) > 0) {
+                return false;
+            }
         }
 
-        if (enchantment == Enchantments.MULTISHOT || enchantment == Enchantments.QUICK_CHARGE) {
-            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, stack) > 0) return false;
+        if (enchantment == Enchantments.PIERCING) {
+            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack) > 0 || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack) > 0) {
+                return false;
+            }
         }
 
         if (enchantments.contains(enchantment)) return true;
@@ -299,14 +339,17 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }
 
-    public float getDrawSpeed(ItemStack stack) {
+    public float getDrawSpeed(LivingEntity entity, ItemStack stack) {
         float piercingEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, stack);
         float quickEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, stack);
-        return (float) (CSConfigManager.COMMON.rainfallSerenityDrawSpeed.get() + (piercingEnchLvl * 10)) / ((quickEnchLvl + 1) * 0.6f);
+
+        float apoth_drawSpeed = CSCompatAP.apothRainfallSerenityDrawSpeed(entity);
+
+        return (float) (CSConfigManager.COMMON.rainfallSerenityDrawSpeed.get() + (piercingEnchLvl * 10)) / ((quickEnchLvl + 1) * 0.6f) + apoth_drawSpeed;
     }
 
-    public static float getPowerForTime(ItemStack stack, int pCharge) {
-        float totalCharge = (float) pCharge / ((RainfallSerenityItem) stack.getItem()).getDrawSpeed(stack);
+    public static float getPowerForTime(LivingEntity pEntityLiving, ItemStack stack, int pCharge) {
+        float totalCharge = (float) pCharge / ((RainfallSerenityItem) stack.getItem()).getDrawSpeed(pEntityLiving, stack);
         totalCharge = (totalCharge * totalCharge + totalCharge * 2.0F) / 3.0F;
 
         if (totalCharge > 1.0F) totalCharge = 1.0F;

@@ -27,6 +27,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
     public static final String IS_IMPACT_LARGE = "cs.isImpactLarge";
+    public static final String QUEUE_COMBO_LARGE = "cs.queueComboLarge";
     public static final String SMASH_HEIGHT = "cs.poltergeistSmashHeight";
     public static final String SMASH_COUNT_FOR_PASSIVE = "cs.smashCountForPassive";
 
@@ -57,11 +58,18 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
     @Override
     public void startUsing() {
         useAndDamageItem(getStack(), level, player, 5);
+        getTagExtras().putBoolean(QUEUE_COMBO_LARGE, false);
     }
 
     @Override
     public void tickAttack() {
         boolean isGiantImpact = getTagExtras().getBoolean(IS_IMPACT_LARGE);
+
+        if (getTimerProgress() == 5) {
+            if (getTagExtras().getBoolean(IS_IMPACT_LARGE)) {
+                player.push(0, 1, 0);
+            }
+        }
 
         if (getTimerProgress() == 18) {
             int groundY = getFloorPositionUnderPlayer(level, player.blockPosition()).getY();
@@ -74,11 +82,11 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
             double range = isGiantImpact ? 6.5 : 4;
             double xx = calculateXLook(player) * 3;
             double zz = calculateZLook(player) * 3;
-            doImpact(isGiantImpact, xx, zz, range);
 
             player.playSound(SoundEvents.END_GATEWAY_SPAWN, 1.0F, 1.75F);
             player.playSound(CSSoundEvents.LOUD_IMPACT.get(), 1.5F, 1.0F);
             CSEffectEntity.createInstance(player, null, crack, xx, isGiantImpact ? -1.3 : -0.5, zz);
+            doImpact(isGiantImpact, xx, zz, range);
 
             if (isGiantImpact) {
                 if (!level.isClientSide()) {
@@ -98,6 +106,12 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
             if (getTagController().getInt(SMASH_HEIGHT) > 1) {
                 player.getCooldowns().removeCooldown(getStack().getItem());
             }
+
+            if (getTagExtras().getBoolean(QUEUE_COMBO_LARGE)) {
+                player.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SPEED, 80, 1));
+                getTagExtras().putBoolean(IS_IMPACT_LARGE, true);
+                getTagExtras().putBoolean(QUEUE_COMBO_LARGE, false);
+            }
         }
     }
 
@@ -116,15 +130,21 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
                         data.setPhantomTag(player, 100);
                     });
                 }
+
+                if (target.isDeadOrDying()) {
+                    player.getCooldowns().removeCooldown(getStack().getItem());
+                    this.getTagExtras().putBoolean(QUEUE_COMBO_LARGE, true);
+                }
             }
 
-            if (entityBatch instanceof Projectile projectile) projectile.setDeltaMovement(0, 3, 0);
+            if (entityBatch instanceof Projectile projectile) projectile.setDeltaMovement(0, 1.2, 0);
         }
     }
 
     @Override
     public void stopUsing() {
         getTagController().putInt(SMASH_HEIGHT, 0);
+        getTagExtras().putBoolean(QUEUE_COMBO_LARGE, false);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.aqutheseal.celestisynth.common.entity.goals;
 
-import com.aqutheseal.celestisynth.util.TargetUtil;
+import com.aqutheseal.celestisynth.util.EntityUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
@@ -28,7 +28,7 @@ public class CSOwnerAttackGoal<T extends Mob & OwnableEntity> extends TargetGoal
             } else {
                 this.ownerLastHurt = livingentity.getLastHurtMob();
                 int i = livingentity.getLastHurtMobTimestamp();
-                return i != this.timestamp && this.canAttack(this.ownerLastHurt, TargetUtil.isValidTargetForOwnableCondition(ownable));
+                return i != this.timestamp && this.canAttack(this.ownerLastHurt, EntityUtil.isValidTargetForOwnableCondition(ownable));
             }
         } else {
             return false;

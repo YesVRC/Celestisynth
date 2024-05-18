@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class SlowFallParticle extends SnowflakeParticle {
     protected SlowFallParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pSprites);
-        this.quadSize = 0.05F * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
+        this.quadSize = 0.12F * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -13,7 +13,13 @@ public class StarMonolithModel extends GeoModel<StarMonolith> {
 
     @Override
     public ResourceLocation getTextureResource(StarMonolith animatable) {
-        return Celestisynth.prefix("textures/entity/mob/star_monolith/star_monolith_nether.png");
+        if (animatable.getVariant() == StarMonolith.VARIANT_END) {
+            return Celestisynth.prefix("textures/entity/mob/star_monolith/star_monolith_end.png");
+        }
+        if (animatable.getVariant() == StarMonolith.VARIANT_NETHER) {
+            return Celestisynth.prefix("textures/entity/mob/star_monolith/star_monolith_nether.png");
+        }
+        return Celestisynth.prefix("textures/entity/mob/star_monolith/star_monolith_overworld.png");
     }
 
     @Override
