@@ -1,0 +1,27 @@
+{
+  "type": "celestisynth:shaped_celestial_crafting",
+  "category": "equipment",
+  "key": {
+    "i": {
+      "item": "celestisynth:celestial_core_heated"
+    },
+    "l": {
+      "item": "celestisynth:supernal_netherite_ingot"
+    },
+    "n": {
+      "item": "celestisynth:celestial_netherite_ingot"
+    },
+    "s": {
+      "item": "celestisynth:crimson_piece"
+    }
+  },
+  "pattern": [
+    " sl",
+    " is",
+    "n  "
+  ],
+  "result": {
+    "item": "celestisynth:keres"
+  },
+  "show_notification": true
+}
