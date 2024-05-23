@@ -10,11 +10,15 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import software.bernie.geckolib.core.object.Color;
 
+import java.util.ArrayList;
+
 public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactoryMenu> {
-    private static final ResourceLocation FACTORY_GUI = Celestisynth.prefix("textures/gui/starlit_factory.png");
+    public static final ResourceLocation FACTORY_GUI = Celestisynth.prefix("textures/gui/starlit_factory.png");
+    private final ArrayList<FactoryStar> stars = new ArrayList<>();
 
     public StarlitFactoryScreen(StarlitFactoryMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -31,6 +35,12 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+
+        assert minecraft.level != null;
+        RandomSource random = minecraft.level.random;
+        if (random.nextInt(50) == 0) {
+            stars.add(new FactoryStar(-50 - random.nextInt(700), -50 - random.nextInt(700), 0.5 + random.nextDouble(), 0.5 + random.nextDouble()));
+        }
     }
 
     @Override
@@ -43,8 +53,14 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        assert Minecraft.getInstance().player != null;
         float motion = Mth.sin((float) (Minecraft.getInstance().player.tickCount * 0.05)) * 1;
         float motion2 = Mth.cos((float) (Minecraft.getInstance().player.tickCount * 0.05)) * 1;
+
+        for (FactoryStar star : this.stars) {
+            star.render(pGuiGraphics);
+        }
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(0.95F + (motion * 0.05F), 0.95F + (motion2 * 0.05F), 1.0F, 1.0F);
 
@@ -69,6 +85,37 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
 
         if (isHoldingValidRecipe) {
             pGuiGraphics.blit(FACTORY_GUI, super.leftPos + 26, super.topPos + 34, 192, 0, 16, 15);
+        }
+    }
+
+    public static class FactoryStar {
+        private final int centerX;
+        private final int centerY;
+        private final double speedX;
+        private final double speedY;
+
+        public float scale;
+        public int tickCount;
+
+        public FactoryStar(int centerX, int centerY, double speedX, double speedY) {
+            this.centerX = centerX;
+            this.centerY = centerY;
+            this.speedX = speedX;
+            this.speedY = speedY;
+            this.scale = 1F + Minecraft.getInstance().player.getRandom().nextFloat() * 0.5F;
+        }
+
+        public void render(GuiGraphics pGuiGraphics) {
+            tickCount++;
+            assert Minecraft.getInstance().player != null;
+
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F + Mth.sin(tickCount * 0.005F) * 0.5F);
+            pGuiGraphics.pose().pushPose();
+            pGuiGraphics.pose().scale(scale, scale, scale);
+            pGuiGraphics.blit(FACTORY_GUI, (int) (centerX + (tickCount * speedX)), (int) (centerY + (tickCount * speedY)), 192, 32, 16, 16);
+            pGuiGraphics.pose().popPose();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
         }
     }
 }
