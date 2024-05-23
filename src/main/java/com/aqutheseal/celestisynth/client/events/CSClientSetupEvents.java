@@ -7,6 +7,7 @@ import com.aqutheseal.celestisynth.client.models.entity.projectile.RainfallLaser
 import com.aqutheseal.celestisynth.client.models.entity.projectile.SolarisBombModel;
 import com.aqutheseal.celestisynth.client.particles.*;
 import com.aqutheseal.celestisynth.client.renderers.blockentity.CelestialCraftingTableBlockEntityRenderer;
+import com.aqutheseal.celestisynth.client.renderers.blockentity.StarlitFactoryRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.boss.TempestBossRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.mob.StarMonolithRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.mob.TraverserRenderer;
@@ -55,6 +56,7 @@ public class CSClientSetupEvents {
         event.registerEntityRenderer(CSEntityTypes.KERES_SLASH_WAVE.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.AQUAFLORA_CAMERA.get(), NullRenderer::new);
         event.registerBlockEntityRenderer(CSBlockEntityTypes.CELESTIAL_CRAFTING_TABLE_TILE.get(), context -> new CelestialCraftingTableBlockEntityRenderer());
+        event.registerBlockEntityRenderer(CSBlockEntityTypes.STARLIT_FACTORY_TILE.get(), context -> new StarlitFactoryRenderer());
     }
 
     @SubscribeEvent

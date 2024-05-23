@@ -74,6 +74,10 @@ public class StarlitFactoryRecipe implements Recipe<Container> {
         return nonnulllist;
     }
 
+    public ItemStack getResult() {
+        return result;
+    }
+
     public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return this.result;
     }

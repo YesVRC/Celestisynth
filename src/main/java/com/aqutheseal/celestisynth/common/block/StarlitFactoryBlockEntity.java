@@ -30,6 +30,7 @@ import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -38,11 +39,18 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class StarlitFactoryBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible {
+public class StarlitFactoryBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible, GeoBlockEntity {
     private final RecipeType<StarlitFactoryRecipe> recipeType;
     protected NonNullList<ItemStack> containedItems = NonNullList.withSize(8, ItemStack.EMPTY);
     int energyBurnTime;
@@ -80,10 +88,28 @@ public class StarlitFactoryBlockEntity extends BaseContainerBlockEntity implemen
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
     private final RecipeManager.CachedCheck<Container, StarlitFactoryRecipe> quickCheck;
 
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public StarlitFactoryBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(CSBlockEntityTypes.STARLIT_FACTORY_TILE.get(), pPos, pBlockState);
         this.recipeType = CSRecipeTypes.STARLIT_FACTORY_TYPE.get();
         this.quickCheck = RecipeManager.createCheck(this.recipeType);
+    }
+
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "starlit_controller", 5, state -> PlayState.STOP)
+                .triggerableAnim("forging", RawAnimation.begin().thenPlay("animation.starlit_factory.forging"))
+        );
+//        controllers.add(new AnimationController<>(this, 5, (state) -> {
+//            if (state.getAnimatable().factoryForgeTime > 0) {
+//                return state.setAndContinue(RawAnimation.begin().thenLoop("animation.starlit_factory.forging"));
+//            }
+//            return state.setAndContinue(RawAnimation.begin().thenLoop("animation.starlit_factory.idle"));
+//        }));
+    }
+
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
     @Override
@@ -98,6 +124,7 @@ public class StarlitFactoryBlockEntity extends BaseContainerBlockEntity implemen
 
     public static Map<Item, Integer> getFuelMap() {
         Map<Item, Integer> map = Maps.newLinkedHashMap();
+        map.put(Items.AMETHYST_SHARD, 5);
         map.put(CSItems.CELESTIAL_CORE.get(), 105);
         map.put(CSItems.CELESTIAL_CORE_HEATED.get(), 120);
         map.put(CSItems.CELESTIAL_DEBUGGER.get(), 1000);
@@ -144,6 +171,9 @@ public class StarlitFactoryBlockEntity extends BaseContainerBlockEntity implemen
                     }
                     ++factoryForgeTime;
                     this.addEnergy(-1);
+
+                    this.triggerAnim("starlit_controller", "forging");
+
                 } else if (factoryForgeTime == recipe.getForgeTime()) {
                     this.factoryForgeTime = 0;
                     this.playSound(pLevel, pPos, SoundEvents.ENCHANTMENT_TABLE_USE, 1.2F, 0.85F);

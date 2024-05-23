@@ -7,6 +7,7 @@ import com.aqutheseal.celestisynth.common.recipe.celestialcrafting.CelestialShap
 import com.aqutheseal.celestisynth.common.registry.CSBlocks;
 import com.aqutheseal.celestisynth.common.registry.CSItems;
 import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
+import io.redspace.ironsspellbooks.block.inscription_table.InscriptionTableBlock;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
@@ -93,21 +94,33 @@ public class CSRecipeProvider extends RecipeProvider {
 
         this.armorSetWithGold(consumer, CSBlocks.LUNAR_STONE, CSItems.LUNAR_STONE_HELMET, CSItems.LUNAR_STONE_CHESTPLATE,  CSItems.LUNAR_STONE_LEGGINGS,  CSItems.LUNAR_STONE_BOOTS);
 
-        CelestialShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, CSItems.SOLARIS.get())
-                .pattern("sns").pattern("sis").pattern(" n ")
-                .define('s', Ingredient.of(CSBlocks.SOLAR_CRYSTAL.get()))
-                .define('n', Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()))
-                .define('i', Ingredient.of(CSItems.CELESTIAL_CORE_HEATED.get()))
-                .unlockedBy("has_item", has(CSBlocks.SOLAR_CRYSTAL.get()))
-                .save(consumer, modLoc("solaris"));
+//        CelestialShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, CSItems.SOLARIS.get())
+//                .pattern("sns").pattern("sis").pattern(" n ")
+//                .define('s', Ingredient.of(CSBlocks.SOLAR_CRYSTAL.get()))
+//                .define('n', Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()))
+//                .define('i', Ingredient.of(CSItems.CELESTIAL_CORE_HEATED.get()))
+//                .unlockedBy("has_item", has(CSBlocks.SOLAR_CRYSTAL.get()))
+//                .save(consumer, modLoc("solaris"));
 
-        CelestialShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, CSItems.CRESCENTIA.get())
-                .pattern("lll").pattern("l l").pattern("nni")
-                .define('l', Ingredient.of(CSItems.LUNAR_SCRAP.get()))
-                .define('n', Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()))
-                .define('i', Ingredient.of(CSItems.CELESTIAL_CORE_HEATED.get()))
-                .unlockedBy("has_item", has(CSBlocks.LUNAR_STONE.get()))
-                .save(consumer, modLoc("crescentia"));
+        StarlitFactoryRecipeBuilder.starlitFactory(
+                Ingredient.of(CSBlocks.SOLAR_CRYSTAL.get()), Ingredient.of(CSBlocks.SOLAR_CRYSTAL.get()), Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()),
+                Ingredient.of(Items.IRON_SWORD), Ingredient.of(Items.FIRE_CHARGE), Ingredient.of(Items.BLAZE_ROD),
+                CSItems.SOLARIS.get(), 500
+        ).save(consumer, modLoc("solaris"));
+
+//        CelestialShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, CSItems.CRESCENTIA.get())
+//                .pattern("lll").pattern("l l").pattern("nni")
+//                .define('l', Ingredient.of(CSItems.LUNAR_SCRAP.get()))
+//                .define('n', Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()))
+//                .define('i', Ingredient.of(CSItems.CELESTIAL_CORE_HEATED.get()))
+//                .unlockedBy("has_item", has(CSBlocks.LUNAR_STONE.get()))
+//                .save(consumer, modLoc("crescentia"));
+
+        StarlitFactoryRecipeBuilder.starlitFactory(
+                Ingredient.of(CSItems.LUNAR_SCRAP.get()), Ingredient.of(CSItems.LUNAR_SCRAP.get()), Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()),
+                Ingredient.of(Items.TRIDENT), Ingredient.of(Items.IRON_INGOT), Ingredient.of(Items.IRON_INGOT),
+                CSItems.CRESCENTIA.get(), 500
+        ).save(consumer, modLoc("crescentia"));
 
         CelestialShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, CSItems.BREEZEBREAKER.get())
                 .pattern(" nz").pattern("znn").pattern("iz ")
@@ -165,18 +178,18 @@ public class CSRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_item", has(CSItems.CRISMSON_PIECE.get()))
                 .save(consumer, modLoc("keres"));
 
-        StarlitFactoryRecipeBuilder.starlitFactory(
-                Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK),
-                Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK),
-                CSItems.CELESTIAL_DEBUGGER.get(), 200
-        ).save(consumer, modLoc("test"));
-
-
-        StarlitFactoryRecipeBuilder.starlitFactory(
-                Ingredient.of(Items.BARRIER), Ingredient.EMPTY, Ingredient.of(Items.BARRIER),
-                Ingredient.EMPTY, Ingredient.of(Items.BEDROCK), Ingredient.EMPTY,
-                CSItems.CELESTIAL_DEBUGGER.get(), 50
-        ).save(consumer, modLoc("test_two"));
+//        StarlitFactoryRecipeBuilder.starlitFactory(
+//                Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK),
+//                Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK),
+//                CSItems.CELESTIAL_DEBUGGER.get(), 200
+//        ).save(consumer, modLoc("test"));
+//
+//
+//        StarlitFactoryRecipeBuilder.starlitFactory(
+//                Ingredient.of(Items.BARRIER), Ingredient.EMPTY, Ingredient.of(Items.BARRIER),
+//                Ingredient.EMPTY, Ingredient.of(Items.BEDROCK), Ingredient.EMPTY,
+//                CSItems.CELESTIAL_DEBUGGER.get(), 50
+//        ).save(consumer, modLoc("test_two"));
 
         if (CSIntegrationManager.checkIronsSpellbooks()) {
             ISSItemUtil.manageRecipeCompatibility(consumer, this);
