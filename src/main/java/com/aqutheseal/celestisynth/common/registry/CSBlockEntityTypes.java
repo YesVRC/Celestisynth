@@ -2,6 +2,7 @@ package com.aqutheseal.celestisynth.common.registry;
 
 import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.common.block.CelestialCraftingTableBlockEntity;
+import com.aqutheseal.celestisynth.common.block.StarlitFactoryBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -12,4 +13,7 @@ public class CSBlockEntityTypes {
 
     public static final RegistryObject<BlockEntityType<CelestialCraftingTableBlockEntity>> CELESTIAL_CRAFTING_TABLE_TILE = BLOCK_ENTITY_TYPES.register("celestial_crafting_table",
             () -> BlockEntityType.Builder.of(CelestialCraftingTableBlockEntity::new, CSBlocks.CELESTIAL_CRAFTING_TABLE.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<StarlitFactoryBlockEntity>> STARLIT_FACTORY_TILE = BLOCK_ENTITY_TYPES.register("starlit_factory",
+            () -> BlockEntityType.Builder.of(StarlitFactoryBlockEntity::new, CSBlocks.STARLIT_FACTORY.get()).build(null));
 }

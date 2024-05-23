@@ -3,6 +3,7 @@ package com.aqutheseal.celestisynth.common.registry;
 import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.common.block.CelestialCraftingTable;
 import com.aqutheseal.celestisynth.common.block.SolarCrystalBlock;
+import com.aqutheseal.celestisynth.common.block.StarlitFactoryBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -42,6 +43,12 @@ public class CSBlocks {
 
     public static final RegistryObject<Block> CELESTIAL_CRAFTING_TABLE = registerBlock("celestial_crafting_table",
             () -> new CelestialCraftingTable(BlockBehaviour.Properties.copy(Blocks.ANVIL).mapColor(MapColor.TERRACOTTA_BLUE).sound(SoundType.NETHERITE_BLOCK)
+                    .noOcclusion().requiresCorrectToolForDrops().strength(60.5F, 9.0F).lightLevel((a) -> 7)
+            )
+    );
+
+    public static final RegistryObject<Block> STARLIT_FACTORY = registerBlock("starlit_factory",
+            () -> new StarlitFactoryBlock(BlockBehaviour.Properties.copy(Blocks.ANVIL).mapColor(MapColor.TERRACOTTA_BLUE).sound(SoundType.NETHERITE_BLOCK)
                     .noOcclusion().requiresCorrectToolForDrops().strength(60.5F, 9.0F).lightLevel((a) -> 7)
             )
     );

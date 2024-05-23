@@ -2,6 +2,7 @@ package com.aqutheseal.celestisynth.common.entity.projectile;
 
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
+import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastRainfallRain;
 import com.aqutheseal.celestisynth.common.item.weapons.RainfallSerenityItem;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
@@ -39,6 +40,8 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
     private static final EntityDataAccessor<Boolean> SHOULD_IMBUE_QUASAR = SynchedEntityData.defineId(RainfallArrow.class, EntityDataSerializers.BOOLEAN);
 
     private final RainfallSerenityItem rawRainfallItem = (RainfallSerenityItem) CSItems.RAINFALL_SERENITY.get();
+    public boolean isMultishot = false;
+    public RainfallTurret turretSource = null;
 
     public RainfallArrow(EntityType<? extends RainfallArrow> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -64,8 +67,8 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
 //            }
 //        }
 
-        if (tickCount > 1) {
-            markForLaser();
+        if (tickCount > 5) {
+            //markForLaser();
             remove(RemovalReason.DISCARDED);
         }
     }
@@ -76,124 +79,135 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
         setDeltaMovement(getDeltaMovement().scale(30));
     }
 
+    @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
     public void hitEffect(HitResult pResult, BlockPos hitPos) {
-        if (getOwner() instanceof Player) {
-            if (isStrong()) {
-                if (pResult instanceof BlockHitResult || (pResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof LivingEntity)) {
-                    for (Entity potentialTarget : rawRainfallItem.iterateEntities(level(), rawRainfallItem.createAABB(hitPos, 4))) {
-                        if (potentialTarget instanceof LivingEntity target && potentialTarget != getOwner()) {
-                            if (isFlaming()) target.setSecondsOnFire(2);
-                            target.hurt(damageSources().indirectMagic(this, getOwner() != null ? getOwner() : null), 2);
-                            target.invulnerableTime = 0;
+        if (isStrong()) {
+            if (pResult instanceof BlockHitResult || (pResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof LivingEntity)) {
+                for (Entity potentialTarget : rawRainfallItem.iterateEntities(level(), rawRainfallItem.createAABB(hitPos, 4))) {
+                    if (potentialTarget instanceof LivingEntity target && potentialTarget != getOwner()) {
+                        if (isFlaming()) target.setSecondsOnFire(2);
+                        target.hurt(damageSources().indirectMagic(this, getOwner() != null ? getOwner() : null), 2);
+                        target.invulnerableTime = 0;
+                    }
+                }
+            }
+
+            if (pResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof LivingEntity target) {
+                setPierceLevel((byte) (getPierceLevel() + 1));
+
+                if (turretSource != null) {
+                    target.setLastHurtByMob(turretSource);
+                }
+
+                CSEntityCapabilityProvider.get(target).ifPresent(data -> {
+                    if (getOwner() instanceof Player player && data.getQuasarImbueSource() == player) {
+                        SkillCastRainfallRain projectile = CSEntityTypes.RAINFALL_RAIN.get().create(player.level());
+                        projectile.targetPos = new BlockPos(ehr.getEntity().blockPosition());
+                        projectile.setOwnerUUID(player.getUUID());
+                        projectile.moveTo(ehr.getEntity().getX(), ehr.getEntity().getY() + 15, ehr.getEntity().getZ());
+                        projectile.baseDamage = this.getBaseDamage() * 0.25;
+                        projectile.isMultishot = this.isMultishot;
+                        player.level().addFreshEntity(projectile);
+                    }
+                });
+
+                if (random.nextInt(3) == 1) {
+                    for (Entity imbueSource : rawRainfallItem.iterateEntities(level(), rawRainfallItem.createAABB(hitPos, 24))) {
+                        if (imbueSource instanceof LivingEntity livingSource) {
+                            CSEntityCapabilityProvider.get(livingSource).ifPresent(data -> {
+                                if (imbueSource != ehr.getEntity() && getOwner() instanceof Player player && data.getQuasarImbueSource() == player) {
+                                    ehr.getEntity().invulnerableTime = 0;
+
+                                    if (!level().isClientSide()) {
+                                        RainfallArrow rainfallArrow = new RainfallArrow(level(), player);
+                                        rainfallArrow.setOwner(player);
+                                        rainfallArrow.moveTo(imbueSource.position());
+                                        rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                                        rainfallArrow.setOrigin(imbueSource.getEyePosition());
+                                        rainfallArrow.setPierceLevel((byte) 3);
+                                        rainfallArrow.setBaseDamage(this.getBaseDamage() * 0.35);
+                                        rainfallArrow.setImbueQuasar(false);
+                                        double offsetHitResultY = ehr.getEntity().getY() + 1.5D;
+                                        double finalDistX = ehr.getEntity().getX() - imbueSource.getX();
+                                        double offsetDistY = offsetHitResultY - imbueSource.getY() + 1.5F;
+                                        double finalDistZ = ehr.getEntity().getZ() - imbueSource.getZ();
+
+                                        rainfallArrow.shoot(finalDistX, offsetDistY, finalDistZ, 3.0F, 0);
+                                        level().addFreshEntity(rainfallArrow);
+                                    }
+
+                                    level().playSound(null, player.getX(), player.getY(), player.getZ(), CSSoundEvents.LASER_SHOOT.get(), SoundSource.PLAYERS, 0.7f, 2.0F);
+                                    data.clearQuasarImbue();
+                                }
+                            });
                         }
                     }
                 }
 
-                if (pResult instanceof EntityHitResult ehr && ehr.getEntity() instanceof LivingEntity target) {
-                    setPierceLevel((byte) (getPierceLevel() + 1));
 
-                    CSEntityCapabilityProvider.get(target).ifPresent(data -> {
-                        if (getOwner() instanceof Player player && data.getQuasarImbueSource() == player) {
-                            SkillCastRainfallRain projectile = CSEntityTypes.RAINFALL_RAIN.get().create(player.level());
-                            projectile.targetPos = new BlockPos(ehr.getEntity().blockPosition());
-                            projectile.setOwnerUUID(player.getUUID());
-                            projectile.moveTo(ehr.getEntity().getX(), ehr.getEntity().getY() + 15, ehr.getEntity().getZ());
-                            projectile.baseDamage = this.getBaseDamage() * 0.25;
-                            player.level().addFreshEntity(projectile);
+                if (ehr.getEntity() instanceof LivingEntity lt) {
+                    CSEntityCapabilityProvider.get(lt).ifPresent(data -> {
+                        if (isImbueQuasar() && getOwner() instanceof LivingEntity living) {
+                            data.setQuasarImbue(living, 200);
                         }
                     });
-
-                    if (random.nextInt(3) == 1) {
-                        for (Entity imbueSource : rawRainfallItem.iterateEntities(level(), rawRainfallItem.createAABB(hitPos, 24))) {
-                            if (imbueSource instanceof LivingEntity livingSource) {
-                                CSEntityCapabilityProvider.get(livingSource).ifPresent(data -> {
-                                    if (imbueSource != ehr.getEntity() && getOwner() instanceof Player player && data.getQuasarImbueSource() == player) {
-                                        ehr.getEntity().invulnerableTime = 0;
-
-                                        if (!level().isClientSide()) {
-                                            RainfallArrow rainfallArrow = new RainfallArrow(level(), player);
-                                            rainfallArrow.setOwner(player);
-                                            rainfallArrow.moveTo(imbueSource.position());
-                                            rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                                            rainfallArrow.setOrigin(imbueSource.getEyePosition());
-                                            rainfallArrow.setPierceLevel((byte) 3);
-                                            rainfallArrow.setBaseDamage(this.getBaseDamage() * 0.35);
-                                            rainfallArrow.setImbueQuasar(false);
-                                            double offsetHitResultY = ehr.getEntity().getY() + 1.5D;
-                                            double finalDistX = ehr.getEntity().getX() - imbueSource.getX();
-                                            double offsetDistY = offsetHitResultY - imbueSource.getY() + 1.5F;
-                                            double finalDistZ = ehr.getEntity().getZ() - imbueSource.getZ();
-
-                                            rainfallArrow.shoot(finalDistX, offsetDistY, finalDistZ, 3.0F, 0);
-                                            level().addFreshEntity(rainfallArrow);
-                                        }
-
-                                        level().playSound(null, player.getX(), player.getY(), player.getZ(), CSSoundEvents.LASER_SHOOT.get(), SoundSource.PLAYERS, 0.7f, 2.0F);
-                                        data.clearQuasarImbue();
-                                    }
-                                });
-                            }
-                        }
-                    }
-
-
-                    if (ehr.getEntity() instanceof LivingEntity lt) {
-                        CSEntityCapabilityProvider.get(lt).ifPresent(data -> {
-                            if (isImbueQuasar() && getOwner() instanceof LivingEntity living) {
-                                data.setQuasarImbue(living, 200);
-                            }
-                        });
-                    }
-                }
-
-                playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F + random.nextFloat());
-
-                int amount = 60;
-                float expansionMultiplier = 0.65F;
-
-                for (int e = 0; e < amount; e++) {
-                    double targetAngle = random.nextDouble() * 2 * Math.PI;
-                    double offsetPi = random.nextDouble() * Math.PI;
-                    double offX = (Math.sin(offsetPi) * Math.cos(targetAngle)) * expansionMultiplier;
-                    double offY = (Math.sin(offsetPi) * Math.sin(targetAngle)) * expansionMultiplier;
-                    double offZ = Math.cos(offsetPi) * expansionMultiplier;
-
-                    ParticleUtil.sendParticles(level(), CSParticleTypes.RAINFALL_ENERGY.get(), hitPos.getX(), hitPos.getY(), hitPos.getZ(), 0, offX, offY, offZ);
                 }
             }
         }
+
+        playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F + random.nextFloat());
+
+        int amount = 60;
+        for (int e = 0; e < amount; e++) {
+            ParticleUtil.sendParticle(level(), CSParticleTypes.RAINFALL_ENERGY_SMALL.get(), Vec3.atCenterOf(hitPos), Vec3.ZERO.add(random.nextGaussian() * 0.2, random.nextGaussian() * 0.2, random.nextGaussian() * 0.2));
+        }
+
+        //this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
     public void remove(RemovalReason pReason) {
-        this.markForLaser();
+        //this.markForLaser();
         super.remove(pReason);
     }
 
     public void markForLaser() {
-        if (!level().isClientSide) {
-            RainfallLaserMarker marker = CSEntityTypes.RAINFALL_LASER_MARKER.get().create(level());
-            marker.moveTo(this.position().add(0, -3, 0));
-            marker.setYRot(getYRot());
-            marker.setXRot(getXRot());
-            marker.yRotO = yRotO;
-            marker.xRotO = xRotO;
-            marker.setOrigin(getOrigin());
-            marker.setQuasar(this.isImbueQuasar());
-            level().addFreshEntity(marker);
-        }
+//        if (!level().isClientSide) {
+//            RainfallLaserMarker marker = CSEntityTypes.RAINFALL_LASER_MARKER.get().create(level());
+//            marker.moveTo(this.position().add(0, -3, 0));
+//            marker.setYRot(getYRot());
+//            marker.setXRot(getXRot());
+//            marker.yRotO = yRotO;
+//            marker.xRotO = xRotO;
+//            marker.setOrigin(getOrigin());
+//            marker.setQuasar(this.isImbueQuasar());
+//            level().addFreshEntity(marker);
+//        }
     }
 
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
         super.onHitBlock(pResult);
-        hitEffect(pResult, pResult.getBlockPos());
+        if (level().getBlockState(pResult.getBlockPos()).isCollisionShapeFullBlock(level(), pResult.getBlockPos())) {
+            hitEffect(pResult, pResult.getBlockPos());
+        }
+        this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
-        hitEffect(pResult, pResult.getEntity().blockPosition());
+        if (pResult.getEntity() instanceof RainfallTurret turret) {
+            if (turret.getOwner() != this.getOwner()) {
+                hitEffect(pResult, pResult.getEntity().blockPosition());
+            }
+        } else {
+            hitEffect(pResult, pResult.getEntity().blockPosition());
+        }
         pResult.getEntity().invulnerableTime = 0;
     }
 

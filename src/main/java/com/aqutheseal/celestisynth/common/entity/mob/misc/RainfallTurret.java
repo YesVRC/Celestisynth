@@ -73,6 +73,11 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
             //System.out.println("XRot: " + this.getXRot());
             this.setXSyncedRot(this.getXRot());
         }
+        if (this.getTarget() != null) {
+            if (!EntityUtil.isValidTargetForOwnable(this, this.getTarget())) {
+                this.setTarget(null);
+            }
+        }
         this.setYBodyRot(0);
         this.yBodyRotO = 0;
         this.tickShooting();
@@ -100,27 +105,34 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
                 double finalDistX = this.getTarget().getX() - this.getX();
                 double finalDistY = this.getTarget().getY() - this.getY();
                 double finalDistZ = this.getTarget().getZ() - this.getZ();
+
+                int multishotEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, createBowFromData());
+
                 ArrayList<Vec3> angles = new ArrayList<>();
                 angles.add(Vec3.ZERO);
-                if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, createBowFromData()) > 0) {
-                    double factor = 0.75;
-                    angles.add(getLookAngle().multiply(factor, 0, -factor));
-                    angles.add(getLookAngle().multiply(-factor, 0, factor));
+
+                if (multishotEnchLvl > 0) {
+                    for (int i = 0; i < multishotEnchLvl + 1; i++) {
+                        double factor = i;
+                        angles.add(getLookAngle().multiply(factor, 0, -factor));
+                        angles.add(getLookAngle().multiply(-factor, 0, factor));
+                    }
                 }
                 for (Vec3 angle : angles) {
                     if (!level().isClientSide) {
                         RainfallArrow rainfallArrow = new RainfallArrow(level(), player);
                         rainfallArrow.setOwner(player);
-                        rainfallArrow.moveTo(this.position().add(0, 0.5, 0).add(angle));
+                        rainfallArrow.turretSource = this;
+                        rainfallArrow.moveTo(this.position().add(0, 1, 0).add(getLookAngle()).add(angle));
                         rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                         rainfallArrow.setOrigin(rainfallArrow.position().add(0, 0.5, 0));
                         rainfallArrow.setPierceLevel((byte) 3);
 
                         RainfallSerenityItem.installLaserProperties(rainfallArrow, this.createBowFromData());
-                        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage());
+                        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() * 0.25);
 
                         rainfallArrow.setImbueQuasar(true);
-                        rainfallArrow.shoot(finalDistX, finalDistY, finalDistZ, 1.0F, 0);
+                        rainfallArrow.shoot(finalDistX, finalDistY, finalDistZ, 1F, 0);
                         level().addFreshEntity(rainfallArrow);
                     }
                 }
@@ -216,6 +228,11 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
                     25, this.getBbWidth(), this.getBbHeight(), this.getBbWidth(), 0.05
             );
         }
+        if (pSource.getDirectEntity() instanceof RainfallArrow arrow) {
+            if (arrow.getOwner() == this.getOwner()) {
+                return false;
+            }
+        }
         if (pSource.getEntity() instanceof Player entity) {
             this.setOwner(entity);
         }
@@ -233,7 +250,7 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 50.0)
-                .add(Attributes.FOLLOW_RANGE, 32.0)
+                .add(Attributes.FOLLOW_RANGE, 64.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.0)
                 .add(Attributes.ARMOR, 0.0)
                 .add(Attributes.ATTACK_DAMAGE, 0.0)
@@ -253,6 +270,7 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
     }
 
     public void setDeltaMovement(Vec3 motionIn) {
+        super.setDeltaMovement(Vec3.ZERO.add(0, -0.2, 0));
     }
 
     public void knockback(double strength, double x, double z) {

@@ -35,6 +35,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -215,16 +216,19 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
                     ParticleUtil.sendParticles(pLevel, CSParticleTypes.RAINFALL_ENERGY_SMALL.get(), player.getX(), player.getY(), player.getZ(), 0, offX, offY, offZ);
                 }
 
+                int multishotEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, pStack);
                 FloatArrayList angles = new FloatArrayList();
                 angles.add(0.0F);
 
-                if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, pStack) > 0) {
-                    if (pLevel.random.nextBoolean()) {
-                        angles.add(-15.0F);
-                        angles.add(15.0F);
-                    } else {
-                        angles.add(-30.0F);
-                        angles.add(30.0F);
+                if (multishotEnchLvl > 0) {
+                    for (int i = 0; i < multishotEnchLvl + 1; i++) {
+                        if (pLevel.random.nextBoolean()) {
+                            angles.add(i * -15.0F);
+                            angles.add(i * 15.0F);
+                        } else {
+                            angles.add(i * -30.0F);
+                            angles.add(i * 30.0F);
+                        }
                     }
 
                     if (pLevel.random.nextInt(3) == 0) angles.add(-30 + (pLevel.random.nextFloat() * 60.0F));
@@ -245,19 +249,15 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
                         Vec3 vec3 =  pEntityLiving.getViewVector(1.0F);
                         Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
 
-                        rainfallArrow.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 3.0F, 0);
-
-                        int multishotEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, pStack);
+                        rainfallArrow.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 1F, 0);
 
                         if (curPowerFromUse == 1.0F) rainfallArrow.setStrong(true);
-                        installLaserProperties(rainfallArrow, pStack);
+                        RainfallSerenityItem.installLaserProperties(rainfallArrow, pStack);
 
-                        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + CSCompatAP.apothRainfallSerenityDamage(pEntityLiving));
-                        if (pLevel.random.nextFloat() < CSCompatAP.apothRainfallSerenityCritChance(pEntityLiving)) {
-                            rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + CSCompatAP.apothRainfallSerenityCritDamage(pEntityLiving));
-                        }
+                        CSCompatAP.installApothRainfallDamage(rainfallArrow, pEntityLiving);
 
-                        if (multishotEnchLvl > 0) rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() * 0.75F);
+                        if (multishotEnchLvl > 0) rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() * 0.8F);
+                        rainfallArrow.isMultishot = multishotEnchLvl > 0;
 
                         pLevel.addFreshEntity(rainfallArrow);
                     }
@@ -285,14 +285,17 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
 
     @Override
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-        if (entity.onGround() && stack.getDamageValue() < stack.getMaxDamage() - 1) {
+        Entity owner = entity.level().getEntity(attackExtras(stack).getInt("ownerRF"));
+        if (entity.onGround() && owner != null && stack.getDamageValue() < stack.getMaxDamage() - 1) {
             entity.playSound(SoundEvents.ENDER_EYE_DEATH);
             if (!entity.level().isClientSide) {
-                Entity owner = entity.level().getEntity(attackExtras(stack).getInt("ownerRF"));
                 if (owner instanceof Player player) {
                     RainfallTurret turret = CSEntityTypes.RAINFALL_TURRET.get().create(entity.level());
                     turret.moveTo(entity.position());
                     turret.setOwner(player);
+                    double healthAdd = turret.getMaxHealth() + ((EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, stack)) * 50);
+                    turret.getAttribute(Attributes.MAX_HEALTH).setBaseValue(healthAdd);
+                    turret.setHealth(turret.getMaxHealth());
                     entity.level().addFreshEntity(turret);
                     turret.setItemData(stack.serializeNBT());
                     for (int i = 0; i < 16; i++) {
@@ -321,6 +324,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
         enchantments.add(Enchantments.FLAMING_ARROWS);
         enchantments.add(Enchantments.MULTISHOT);
         enchantments.add(Enchantments.PIERCING);
+        enchantments.add(Enchantments.QUICK_CHARGE);
 
         if (enchantment == Enchantments.MULTISHOT || enchantment == Enchantments.QUICK_CHARGE) {
             if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, stack) > 0) {

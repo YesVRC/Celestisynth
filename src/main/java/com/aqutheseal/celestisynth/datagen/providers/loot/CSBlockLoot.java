@@ -26,6 +26,7 @@ public class CSBlockLoot extends BlockLootSubProvider {
     @Override
     protected void generate() {
         this.dropSelf(CSBlocks.CELESTIAL_CRAFTING_TABLE.get());
+        this.dropSelf(CSBlocks.STARLIT_FACTORY.get());
         this.dropSelf(CSBlocks.LUNAR_STONE.get());
         this.dropSelf(CSBlocks.SOLAR_CRYSTAL.get());
         this.dropSelf(CSBlocks.ZEPHYR_DEPOSIT.get());

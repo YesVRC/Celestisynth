@@ -18,7 +18,14 @@ public abstract class AbstractArrowMixin extends Projectile {
     }
 
     @Redirect(method = "onHitEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;length()D"))
-    private double celestisynth$onHitEntity(Vec3 instance) {
+    private double onHitModifyDelta(Vec3 instance) {
         return getClass().isAssignableFrom(RainfallArrow.class) ? 1 : instance.length();
+    }
+
+    @Redirect(method = "onHitEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"))
+    protected void onHitEntity(AbstractArrow instance, Vec3 vec3) {
+        if (getClass().isAssignableFrom(RainfallArrow.class)) {
+            vec3 = instance.getDeltaMovement();
+        }
     }
 }

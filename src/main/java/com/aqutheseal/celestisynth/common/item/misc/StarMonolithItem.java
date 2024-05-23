@@ -23,6 +23,9 @@ public class StarMonolithItem extends Item {
             monolith.moveTo(pContext.getClickedPos().above(), 0, 0);
             pContext.getLevel().addFreshEntity(monolith);
         }
-        return super.useOn(pContext);
+        if (!pContext.getPlayer().isCreative()) {
+            pContext.getItemInHand().shrink(1);
+        }
+        return InteractionResult.SUCCESS;
     }
 }

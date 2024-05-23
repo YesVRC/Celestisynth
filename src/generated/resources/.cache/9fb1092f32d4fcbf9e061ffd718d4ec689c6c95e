@@ -1,4 +1,4 @@
-// 1.20.1	2024-05-17T21:31:38.9529958	Recipes
+// 1.20.1	2024-05-23T12:16:17.2320515	Recipes
 f80db3c334ac7531d040b2b81e03c72d94208060 data/celestisynth/advancements/recipes/combat/aquaflora.json
 e4a60005ca7a99de20076a20053e1fccfa247b71 data/celestisynth/advancements/recipes/combat/breezebreaker.json
 8f889e3d049e4e19fa4b780d92b40dfa5add47ef data/celestisynth/advancements/recipes/combat/celestial_spellbook.json
@@ -57,3 +57,5 @@ daac96d8f712c0a02dd43a3aa2e8800197486fcb data/celestisynth/recipes/solar_crystal
 43337f539f7101b6c94ed04fd092ce72e7e3e6f4 data/celestisynth/recipes/solar_crystal_leggings.json
 2faad6d6441282e31eb8065055d6f64bbde585fe data/celestisynth/recipes/supernal_netherite_ingot_smithing.json
 f323da0bfdec81c635ce2c432e7b1cf5a9927758 data/celestisynth/recipes/supernal_netherite_ingot_smithing_from_core.json
+dff7a695d928c1dbfd5feff91d3d1489d9d6ec39 data/celestisynth/recipes/test.json
+1662949d333eef143ba152a82c0e0d93466cdb98 data/celestisynth/recipes/test_two.json

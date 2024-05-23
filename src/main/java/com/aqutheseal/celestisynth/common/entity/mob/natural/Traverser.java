@@ -87,7 +87,7 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 60.0D)
-                .add(Attributes.FOLLOW_RANGE, 64.0D)
+                .add(Attributes.FOLLOW_RANGE, 128.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3F)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D)
                 .add(Attributes.ARMOR, 15.0D)
@@ -236,10 +236,10 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
             case ACTION_MELEE_2 -> nextAttack = ACTION_MELEE;
         }
     }
-
+   
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, (state) -> {
+        controllers.add(new AnimationController<>(this, 2, (state) -> {
             if (getAction() == ACTION_SPAWNED) {
                 state.setControllerSpeed(1);
                 return state.setAndContinue(RawAnimation.begin().thenLoop("animation.traverser.spawn"));

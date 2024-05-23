@@ -87,18 +87,30 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
         super.tick();
         this.getRune().ambientTick.accept(this, this.level());
         if (!this.level().isClientSide()) {
-            if (level().getDifficulty() != Difficulty.PEACEFUL && this.hasNearbyAlivePlayerWithFilter(getX(), getY(), getZ(), getRune().summonRange * 1.5)) {
-                if (tickCount % getRune().summonInterval == 0) {
-                    int summoned = StreamSupport.stream(((ServerLevel) level()).getAllEntities().spliterator(), false).filter(e -> e instanceof MonolithSummonedEntity summonedEntity && summonedEntity.getMonolith() == this).toList().size();
-                    if (summoned < getRune().summonLimit) {
-                        List<BlockPos> validSpawns = getValidSpawnPoints(getRune().summonRange);
-                        if (!validSpawns.isEmpty()) {
-                            this.getRune().summonAction.accept(this, validSpawns.get(random.nextInt(validSpawns.size())), (ServerLevel) this.level());
+            if (level().getDifficulty() != Difficulty.PEACEFUL && this.hasNearbyAlivePlayerWithFilter(getX(), getY(), getZ(), 128)) {
+                if (getRune().summonInterval > 0) {
+                    if (tickCount % getRune().summonInterval == 0) {
+                        int summoned = StreamSupport.stream(((ServerLevel) level()).getAllEntities().spliterator(), false).filter(e -> e instanceof MonolithSummonedEntity summonedEntity && summonedEntity.getMonolith() == this).toList().size();
+                        if (summoned < getRune().summonLimit) {
+                            List<BlockPos> validSpawns = getValidSpawnPoints(getRune().summonRange);
+                            if (!validSpawns.isEmpty()) {
+                                for (BlockPos targetPos : getRandomBlockPositionsWithinList(validSpawns, this.getRune().summonClusterSize)) {
+                                    this.getRune().summonAction.accept(this, targetPos, (ServerLevel) this.level());
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    public List<BlockPos> getRandomBlockPositionsWithinList(List<BlockPos> posList, int listSize) {
+        ArrayList<BlockPos> poses = new ArrayList<>();
+        for (int i = 0; i < listSize; i++) {
+            poses.add(posList.get(random.nextInt(posList.size())));
+        }
+        return poses.stream().toList();
     }
 
     public boolean hasNearbyAlivePlayerWithFilter(double pX, double pY, double pZ, double pDistance) {
@@ -189,10 +201,14 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
             }
         }
         if (stack.is(CSItems.CELESTIAL_DEBUGGER.get())) {
-            this.setRune(MonolithRunes.NO_RUNE);
+            this.setRune(MonolithRunes.APOCALYPTIC_RUNE);
+            this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1024);
+            this.setHealth(this.getMaxHealth());
+            this.getAttribute(Attributes.ARMOR).setBaseValue(1024);
             this.playSound(SoundEvents.WITHER_BREAK_BLOCK, 1.0F, 1.0F);
             return InteractionResult.SUCCESS;
         }
+
         return super.mobInteract(pPlayer, pHand);
     }
 

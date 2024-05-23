@@ -1,11 +1,12 @@
 package com.aqutheseal.celestisynth.datagen.providers;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSItemUtil;
+import com.aqutheseal.celestisynth.common.recipe.StarlitFactoryRecipeBuilder;
 import com.aqutheseal.celestisynth.common.recipe.celestialcrafting.CelestialShapedRecipeBuilder;
 import com.aqutheseal.celestisynth.common.registry.CSBlocks;
 import com.aqutheseal.celestisynth.common.registry.CSItems;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
@@ -163,6 +164,19 @@ public class CSRecipeProvider extends RecipeProvider {
                 .define('l', Ingredient.of(CSItems.SUPERNAL_NETHERITE_INGOT.get()))
                 .unlockedBy("has_item", has(CSItems.CRISMSON_PIECE.get()))
                 .save(consumer, modLoc("keres"));
+
+        StarlitFactoryRecipeBuilder.starlitFactory(
+                Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK),
+                Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK), Ingredient.of(Items.BEDROCK),
+                CSItems.CELESTIAL_DEBUGGER.get(), 200
+        ).save(consumer, modLoc("test"));
+
+
+        StarlitFactoryRecipeBuilder.starlitFactory(
+                Ingredient.of(Items.BARRIER), Ingredient.EMPTY, Ingredient.of(Items.BARRIER),
+                Ingredient.EMPTY, Ingredient.of(Items.BEDROCK), Ingredient.EMPTY,
+                CSItems.CELESTIAL_DEBUGGER.get(), 50
+        ).save(consumer, modLoc("test_two"));
 
         if (CSIntegrationManager.checkIronsSpellbooks()) {
             ISSItemUtil.manageRecipeCompatibility(consumer, this);

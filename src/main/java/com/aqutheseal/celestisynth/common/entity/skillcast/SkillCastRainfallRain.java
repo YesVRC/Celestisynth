@@ -6,6 +6,7 @@ import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 public class SkillCastRainfallRain extends EffectControllerEntity {
     public BlockPos targetPos = null;
+    public boolean isMultishot = false;
     public double baseDamage = 1;
 
     public SkillCastRainfallRain(EntityType<?> type, Level level) {
@@ -45,28 +47,37 @@ public class SkillCastRainfallRain extends EffectControllerEntity {
         if (tickCount >= 20 && tickCount <= 40 && tickCount % 2 == 0) {
             level().playSound(null, targetPos.getX(), targetPos.getY(), targetPos.getZ(), CSSoundEvents.LASER_SHOOT.get(), SoundSource.PLAYERS, 0.05f, 1.2F + random.nextFloat());
 
-            double rx = -5 + random.nextInt(10);
-            double rz = -5 + random.nextInt(10);
+            DoubleArrayList angles = new DoubleArrayList();
+            angles.add(1.0F);
+            if (isMultishot) {
+                angles.add(-5.0F);
+                angles.add(5.0F);
+            }
 
-            BlockPos floor = getFloor(targetPos.getX() + rx, targetPos.getZ() + rz);
+            for (double angle : angles) {
+                double rx = (-5 + random.nextInt(10)) * angle;
+                double rz = (-5 + random.nextInt(10)) * angle;
 
-            double finalDistX = floor.getX() - getX();
-            double finalDistZ = floor.getZ() - getZ();
-            double finalDistY = floor.getY() - getY();
+                BlockPos floor = getFloor(targetPos.getX() + rx, targetPos.getZ() + rz);
 
-            if (!level().isClientSide) {
-                RainfallArrow rainfallArrow = new RainfallArrow(level(), ownerPlayer);
+                double finalDistX = floor.getX() - getX();
+                double finalDistZ = floor.getZ() - getZ();
+                double finalDistY = floor.getY() - getY();
 
-                rainfallArrow.setOwner(ownerPlayer);
-                rainfallArrow.moveTo(position());
-                rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                rainfallArrow.setOrigin(this.position().add(0, 1.75, 0));
-                rainfallArrow.setPierceLevel((byte) 3);
-                rainfallArrow.setBaseDamage(this.baseDamage);
-                rainfallArrow.setImbueQuasar(false);
+                if (!level().isClientSide) {
+                    RainfallArrow rainfallArrow = new RainfallArrow(level(), ownerPlayer);
 
-                rainfallArrow.shoot(finalDistX, finalDistY, finalDistZ, 3.0F, 0);
-                level().addFreshEntity(rainfallArrow);
+                    rainfallArrow.setOwner(ownerPlayer);
+                    rainfallArrow.moveTo(position());
+                    rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+                    rainfallArrow.setOrigin(this.position().add(0, 1.75, 0));
+                    rainfallArrow.setPierceLevel((byte) 3);
+                    rainfallArrow.setBaseDamage(this.baseDamage);
+                    rainfallArrow.setImbueQuasar(false);
+
+                    rainfallArrow.shoot(finalDistX, finalDistY, finalDistZ, 3.0F, 0);
+                    level().addFreshEntity(rainfallArrow);
+                }
             }
         }
 

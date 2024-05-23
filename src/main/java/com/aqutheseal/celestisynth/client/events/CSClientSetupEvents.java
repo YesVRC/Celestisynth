@@ -1,6 +1,7 @@
 package com.aqutheseal.celestisynth.client.events;
 
 import com.aqutheseal.celestisynth.client.gui.celestialcrafting.CelestialCraftingScreen;
+import com.aqutheseal.celestisynth.client.gui.starlitfactory.StarlitFactoryScreen;
 import com.aqutheseal.celestisynth.client.models.entity.projectile.FrostboundShardModel;
 import com.aqutheseal.celestisynth.client.models.entity.projectile.RainfallLaserModel;
 import com.aqutheseal.celestisynth.client.models.entity.projectile.SolarisBombModel;
@@ -40,9 +41,9 @@ public class CSClientSetupEvents {
         event.registerEntityRenderer(CSEntityTypes.POLTERGEIST_WARD.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.RAINFALL_RAIN.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.FROSTBOUND_ICE_CAST.get(), NullRenderer::new);
-        event.registerEntityRenderer(CSEntityTypes.RAINFALL_LASER_MARKER.get(), RainfallLaserRenderer::new);
+        //event.registerEntityRenderer(CSEntityTypes.RAINFALL_LASER_MARKER.get(), RainfallLaserRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.KERES_SMASH.get(), NullRenderer::new);
-        event.registerEntityRenderer(CSEntityTypes.RAINFALL_ARROW.get(), NullRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.RAINFALL_ARROW.get(), RainfallLaserRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.FROSTBOUND_SHARD.get(), FrostboundShardRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.SOLARIS_BOMB.get(), SolarisBombRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.CRESCENTIA_DRAGON.get(), CrescentiaDragonRenderer::new);
@@ -67,6 +68,7 @@ public class CSClientSetupEvents {
     public static void onFMLClientSetupEvent(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             MenuScreens.register(CSMenuTypes.CELESTIAL_CRAFTING.get(), CelestialCraftingScreen::new);
+            MenuScreens.register(CSMenuTypes.STARLIT_FACTORY.get(), StarlitFactoryScreen::new);
         });
 
         if (CSIntegrationManager.checkIronsSpellbooks()) {
