@@ -14,6 +14,7 @@
   "item.celestisynth.passive_notice": "PASSIVES",
   "item.celestisynth.skill_notice": "SKILLS",
   "item.celestisynth.celestial_tier": "CELESTIAL GRADE",
+  "item.celestisynth.starlit_fuel_amount": "Starlit Fuel Amount: %s",
 
   "item.celestisynth.celestial_core": "Celestial Core",
   "item.celestisynth.celestial_core_heated": "Heated Celestial Core",
@@ -47,8 +48,15 @@
   "item.celestisynth.celestial_spell_book": "The Celestial Genesis",
 
   "block.celestisynth.celestial_crafting_table": "Celestial Workbench",
+  "block.celestisynth.starlit_factory": "Starlit Factory",
   "gui.celestisynth.celestial_crafting": "Celestial Workbench",
   "container.celestisynth.starlit_factory": "Starlit Factory",
+
+  "tip.celestisynth.starlit_factory_0": "Did you know? The Rainfall Serenity is enchantable with some crossbow enchantments like Multishot, Piercing, and Quick Charge?",
+  "tip.celestisynth.starlit_factory_1": "The Poltergeist is one extremely powerful heavy hitter, you just gotta use it right!",
+  "tip.celestisynth.starlit_factory_2": "Blood Monoliths naturally spawn on nether fortresses, so watch out for Traversers! They're quick, cautious, and versatile!",
+  "tip.celestisynth.starlit_factory_3": "Have you ever wondered what a PvP would look like with these weapons? Well, I do.",
+  "tip.celestisynth.starlit_factory_4": "The Keres is the most destructive weapon in the mod, use it with caution!",
 
   "effect.celestisynth.hellbane": "Hell Bane",
   "effect.celestisynth.cursebane": "Curse Bane",

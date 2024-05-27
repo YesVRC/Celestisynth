@@ -1,27 +1,23 @@
 {
-  "type": "celestisynth:shaped_celestial_crafting",
-  "category": "equipment",
-  "key": {
-    "i": {
-      "item": "celestisynth:celestial_core_heated"
-    },
-    "l": {
-      "item": "celestisynth:supernal_netherite_ingot"
-    },
-    "n": {
-      "item": "celestisynth:celestial_netherite_ingot"
-    },
-    "s": {
-      "item": "celestisynth:crimson_piece"
-    }
+  "type": "celestisynth:starlit_factory",
+  "core_material": {
+    "item": "celestisynth:crimson_piece"
   },
-  "pattern": [
-    " sl",
-    " is",
-    "n  "
-  ],
-  "result": {
-    "item": "celestisynth:keres"
+  "extra_core_material": {
+    "item": "celestisynth:celestial_netherite_ingot"
   },
-  "show_notification": true
+  "forging_time": 800,
+  "result": "celestisynth:keres",
+  "supporting_core_material": {
+    "item": "celestisynth:crimson_piece"
+  },
+  "supporting_material_bottom": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "supporting_material_middle": {
+    "item": "minecraft:nether_wart_block"
+  },
+  "supporting_material_top": {
+    "item": "minecraft:netherite_ingot"
+  }
 }

@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -21,8 +22,14 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class StarlitFactoryBlock extends BaseEntityBlock {
@@ -35,6 +42,11 @@ public class StarlitFactoryBlock extends BaseEntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRI_PART, TriPart.MIDDLE).setValue(FORGING, false));
     }
 
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return Shapes.box(0, 0, 0, 1, 0.95, 1);
+    }
+
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -45,6 +57,7 @@ public class StarlitFactoryBlock extends BaseEntityBlock {
                 case MIDDLE -> pLevel.getBlockEntity(pPos);
                 case RIGHT -> pLevel.getBlockEntity(pPos.relative(direction.getClockWise()));
             };
+
             if (blockentity instanceof StarlitFactoryBlockEntity) {
                 pPlayer.openMenu((MenuProvider) blockentity);
             }
@@ -83,7 +96,7 @@ public class StarlitFactoryBlock extends BaseEntityBlock {
         if (!(level.getBlockState(right).canBeReplaced(pContext) && level.getWorldBorder().isWithinBounds(right))) {
             return null;
         }
-        return this.defaultBlockState().setValue(FACING, direction.getOpposite());
+        return this.defaultBlockState().setValue(FACING, direction);
     }
 
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {

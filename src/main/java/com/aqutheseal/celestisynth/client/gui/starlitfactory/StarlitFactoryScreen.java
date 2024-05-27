@@ -1,6 +1,7 @@
 package com.aqutheseal.celestisynth.client.gui.starlitfactory;
 
 import com.aqutheseal.celestisynth.Celestisynth;
+import com.aqutheseal.celestisynth.common.registry.CSBlocks;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -9,10 +10,15 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 import software.bernie.geckolib.core.object.Color;
 
 import java.util.ArrayList;
@@ -20,6 +26,7 @@ import java.util.ArrayList;
 public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactoryMenu> {
     public static final ResourceLocation FACTORY_GUI = Celestisynth.prefix("textures/gui/starlit_factory.png");
     private final ArrayList<FactoryStar> stars = new ArrayList<>();
+    private int usedProTip;
 
     public StarlitFactoryScreen(StarlitFactoryMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -29,11 +36,23 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
     protected void init() {
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = (this.height - this.imageHeight) / 2;
+        this.usedProTip = Minecraft.getInstance().player.getRandom().nextInt(5);
     }
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
+
+        if (Minecraft.getInstance().player.tickCount % 200 == 0) {
+            this.usedProTip = this.usedProTip >= 4 ? 0 : this.usedProTip + 1;
+        }
+
+        MutableComponent text = Component.translatable("tip.celestisynth.starlit_factory_" + usedProTip);
+        int i = 0;
+        for(FormattedCharSequence formattedcharsequence : this.font.split(text, 180)) {
+            pGuiGraphics.drawCenteredString(this.font, formattedcharsequence, super.leftPos + 89, super.topPos + 170 + (i * 9), Color.WHITE.argbInt());
+            i++;
+        }
 
         pGuiGraphics.pose().pushPose();
         double xOff = (double) width / 2;
@@ -57,11 +76,25 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
     }
 
     @Override
+    public void renderBackground(GuiGraphics pGuiGraphics) {
+        int factoryForgeTime = menu.data.get(2);
+        if (factoryForgeTime > 0) {
+            float motion = Mth.sin((float) (Minecraft.getInstance().player.tickCount * 0.2));
+            Color color = Color.ofRGBA(0, 0, 0.1F + motion * 0.1F, 0.75F);
+            pGuiGraphics.fillGradient(0, 0, this.width, this.height, color.argbInt(), color.darker(15).argbInt());
+            MinecraftForge.EVENT_BUS.post(new ScreenEvent.BackgroundRendered(this, pGuiGraphics));
+        } else {
+            super.renderBackground(pGuiGraphics);
+        }
+    }
+
+    @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
         assert Minecraft.getInstance().player != null;
         float motion = Mth.sin((float) (Minecraft.getInstance().player.tickCount * 0.2)) * 1;
         Color color = Color.ofRGBA(0.75F + (motion * 0.25F), 0.75F + (motion * 0.25F), 1F, 1F);
-        this.font.drawInBatch8xOutline(this.title.getVisualOrderText(), this.titleLabelX - 5, this.titleLabelY - 15, color.argbInt(), color.darker(5F).getColor(), pGuiGraphics.pose().last().pose(), pGuiGraphics.bufferSource(), LightTexture.FULL_BRIGHT);
+        pGuiGraphics.renderItem(new ItemStack(CSBlocks.STARLIT_FACTORY.get()), this.titleLabelX - 5, this.titleLabelY - 22);
+        this.font.drawInBatch8xOutline(this.title.getVisualOrderText(), this.titleLabelX + 15, this.titleLabelY - 15, color.argbInt(), color.darker(5F).getColor(), pGuiGraphics.pose().last().pose(), pGuiGraphics.bufferSource(), LightTexture.FULL_BRIGHT);
     }
 
     @Override

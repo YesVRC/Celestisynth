@@ -1,6 +1,7 @@
 package com.aqutheseal.celestisynth.client.renderers.misc;
 
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
+import com.aqutheseal.celestisynth.common.block.StarlitFactoryBlockEntity;
 import com.aqutheseal.celestisynth.common.registry.CSRarityTypes;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.ChatFormatting;
@@ -27,6 +28,9 @@ public class CSTooltipRenderer {
         ItemStack stack = event.getItemStack();
         String name = ForgeRegistries.ITEMS.getKey(stack.getItem()).getPath();
 
+        List<Either<FormattedText, TooltipComponent>> elements = event.getTooltipElements();
+        List<Either<FormattedText, TooltipComponent>> elementsToAdd = new ArrayList<>();
+
         Style tierColor = Style.EMPTY.withColor(0x8BDEFF);
         Style navigationNoticeColor = Style.EMPTY.withColor(0x96D400);
         Style abilityNoticeColor = Style.EMPTY.withColor(16755200);
@@ -35,9 +39,11 @@ public class CSTooltipRenderer {
         Style abilityConditionColor = Style.EMPTY.withColor(0x8A89FF);
         Style descColor = Style.EMPTY.withColor(0xA9B8BB);
 
+        if (!stack.isEmpty() && StarlitFactoryBlockEntity.getFuelMap().containsKey(stack.getItem())) {
+            elementsToAdd.add(Either.left(Component.translatable("item.celestisynth.starlit_fuel_amount", StarlitFactoryBlockEntity.getFuelMap().get(stack.getItem())).withStyle(tierColor).withStyle(Style.EMPTY.withColor(4965839))));
+        }
+
         if (!stack.isEmpty() && stack.getItem() instanceof CSWeapon cs) {
-            List<Either<FormattedText, TooltipComponent>> elements = event.getTooltipElements();
-            List<Either<FormattedText, TooltipComponent>> elementsToAdd = new ArrayList<>();
             final Component empty = Component.literal(" ");
 
             elementsToAdd.add(Either.left(Component.translatable("item.celestisynth.celestial_tier").withStyle(tierColor).withStyle(ChatFormatting.BOLD)));
@@ -116,10 +122,10 @@ public class CSTooltipRenderer {
 
             elementsToAdd.add(Either.left(empty));
             addBorders(elementsToAdd);
-
-            ListIterator<Either<FormattedText, TooltipComponent>> iterator = elementsToAdd.listIterator(elementsToAdd.size());
-            while (iterator.hasPrevious()) elements.add(1, iterator.previous());
         }
+
+        ListIterator<Either<FormattedText, TooltipComponent>> iterator = elementsToAdd.listIterator(elementsToAdd.size());
+        while (iterator.hasPrevious()) elements.add(1, iterator.previous());
     }
 
     public static void manageTooltipScrolling(double delta) {

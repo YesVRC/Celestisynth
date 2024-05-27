@@ -3,25 +3,31 @@
   "category": "misc",
   "key": {
     "b": {
-      "item": "minecraft:netherite_ingot"
+      "item": "minecraft:blast_furnace"
     },
     "c": {
       "item": "minecraft:crafting_table"
     },
-    "n": {
+    "i": {
       "item": "celestisynth:celestial_netherite_ingot"
+    },
+    "n": {
+      "item": "minecraft:iron_block"
     },
     "o": {
       "item": "minecraft:obsidian"
+    },
+    "s": {
+      "item": "minecraft:smithing_table"
     }
   },
   "pattern": [
-    "bnb",
-    "ncn",
+    "ini",
+    "scb",
     "ooo"
   ],
   "result": {
-    "item": "celestisynth:celestial_crafting_table"
+    "item": "celestisynth:starlit_factory"
   },
   "show_notification": true
 }

@@ -17,6 +17,9 @@ public class CSCompatAP {
     public static void installApothRainfallDamage(RainfallArrow rainfallArrow, LivingEntity pEntityLiving) {
         if (!CSIntegrationManager.checkApothicAttributes()) return;
 
+        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + apothValue(ALObjects.Attributes.PROT_SHRED, pEntityLiving));
+        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + apothValue(ALObjects.Attributes.PROT_PIERCE, pEntityLiving));
+        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + apothValue(ALObjects.Attributes.ARROW_VELOCITY, pEntityLiving));
         rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + apothValue(ALObjects.Attributes.ARROW_DAMAGE, pEntityLiving));
         if (pEntityLiving.getRandom().nextFloat() < apothValue(ALObjects.Attributes.CRIT_CHANCE, pEntityLiving)) {
             rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + apothValue(ALObjects.Attributes.CRIT_DAMAGE, pEntityLiving));

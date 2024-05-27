@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "celestisynth:crimson_piece"
+              "minecraft:crafting_table"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "celestisynth:keres"
+        "recipe": "celestisynth:starlit_factory_update_fix"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,8 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "celestisynth:keres"
+      "celestisynth:starlit_factory_update_fix"
     ]
   },
-  "sends_telemetry_event": true
+  "sends_telemetry_event": false
 }

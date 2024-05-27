@@ -4,6 +4,7 @@ import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.common.block.CelestialCraftingTable;
 import com.aqutheseal.celestisynth.common.block.SolarCrystalBlock;
 import com.aqutheseal.celestisynth.common.block.StarlitFactoryBlock;
+import com.aqutheseal.celestisynth.common.item.misc.StarlitFactoryBlockItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -47,11 +48,17 @@ public class CSBlocks {
             )
     );
 
-    public static final RegistryObject<Block> STARLIT_FACTORY = registerBlock("starlit_factory",
+    public static final RegistryObject<Block> STARLIT_FACTORY = registerStarlitFactoryBlockItem("starlit_factory",
             () -> new StarlitFactoryBlock(BlockBehaviour.Properties.copy(Blocks.ANVIL).mapColor(MapColor.TERRACOTTA_BLUE).sound(SoundType.NETHERITE_BLOCK)
                     .noOcclusion().requiresCorrectToolForDrops().strength(60.5F, 9.0F).lightLevel((a) -> 7)
             )
     );
+
+    private static <T extends Block> RegistryObject<T> registerStarlitFactoryBlockItem(String name, Supplier<T> block) {
+        RegistryObject<T> toReturn = BLOCKS.register(name, block);
+        CSItems.ITEMS.register(name, () -> new StarlitFactoryBlockItem(toReturn.get(), new Item.Properties().fireResistant().rarity(CSRarityTypes.CELESTIAL)));
+        return toReturn;
+    }
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

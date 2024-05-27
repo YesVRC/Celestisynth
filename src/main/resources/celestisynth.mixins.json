@@ -11,6 +11,7 @@
     "LivingEntityInvoker",
     "LivingEntityMixin",
     "PlayerMixin",
+    "RarityMixin",
     "RecipeManagerAccessor",
     "ServerPlayerMixin"
   ],

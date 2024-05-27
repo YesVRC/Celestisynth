@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "celestisynth:celestial_crafting_table"
+        "recipe": "celestisynth:starlit_factory"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "celestisynth:celestial_crafting_table"
+      "celestisynth:starlit_factory"
     ]
   },
   "sends_telemetry_event": false

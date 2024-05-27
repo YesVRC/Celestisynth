@@ -77,6 +77,12 @@ public class CSNetworkManager {
                 .encoder(UpdateStatsPacket::toBytes)
                 .consumerMainThread(UpdateStatsPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(BlockEntitySetSlotPacket.class, PACKET_ID++, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(BlockEntitySetSlotPacket::new)
+                .encoder(BlockEntitySetSlotPacket::toBytes)
+                .consumerMainThread(BlockEntitySetSlotPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {
