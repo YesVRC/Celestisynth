@@ -64,8 +64,6 @@ public class CSTooltipRenderer {
                     elementsToAdd.add(Either.right(new AbilityComponent.Data(name, cs.getSkillsAmount(), (scroll % cs.getSkillsAmount()) + 1, AbilityComponent.Side.SKILL)));
                 }
             }
-
-            addBorders(elementsToAdd);
         }
 
         ListIterator<Either<FormattedText, TooltipComponent>> iterator = elementsToAdd.listIterator(elementsToAdd.size());
@@ -85,13 +83,6 @@ public class CSTooltipRenderer {
         if (keyCode == 340 || keyCode == 341) {
             menu = menu + 1 == Integer.MAX_VALUE ? 0 : menu + 1;
         }
-    }
-
-    private static void addBorders(List<Either<FormattedText, TooltipComponent>> list) {
-//        MutableComponent border = Component.literal("------------{ o }------------");
-//        list.add(Either.left(border.withStyle(ChatFormatting.GRAY)));
-
-        //list.add(Either.right(new BorderData()));
     }
 
     public static void manageTooltipColors(RenderTooltipEvent.Color event) {
