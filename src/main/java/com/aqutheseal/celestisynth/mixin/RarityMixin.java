@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.UnaryOperator;
 
+@SuppressWarnings("UnreachableCode")
 @Mixin(Rarity.class)
 public class RarityMixin {
     @Inject(method = "getStyleModifier", at = @At("HEAD"), cancellable = true, remap = false)
@@ -19,7 +20,7 @@ public class RarityMixin {
         if (Minecraft.getInstance().player != null) {
             int tickCount = Minecraft.getInstance().player.tickCount;
             if ((Object) this == CSRarityTypes.CELESTIAL) {
-                cir.setReturnValue(style -> style.withColor(ExtraUtil.getCelestialColor(tickCount).argbInt()));
+                cir.setReturnValue(style -> ExtraUtil.getCelestialStyle(style, tickCount));
             }
         }
     }

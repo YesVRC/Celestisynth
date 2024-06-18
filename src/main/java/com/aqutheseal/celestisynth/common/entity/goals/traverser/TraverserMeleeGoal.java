@@ -78,6 +78,6 @@ public class TraverserMeleeGoal extends Goal {
     public void stop() {
         this.tickCount = 0;
         this.hasHit = false;
-        mob.setActionToDefault();
+        mob.resetAction();
     }
 }

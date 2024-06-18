@@ -15,9 +15,6 @@ public class CSAttributes {
     public static final RegistryObject<Attribute> CELESTIAL_DAMAGE = createDefaultRangedAttribute("celestial_damage", 1);
     public static final RegistryObject<Attribute> CELESTIAL_DAMAGE_REDUCTION = createDefaultRangedAttribute("celestial_damage_reduction", 1);
 
-    public static final RegistryObject<Attribute> SOLAR_EXPLOSION_DAMAGE = createDefaultRangedAttribute("solar_explosion_damage", 0);
-    public static final RegistryObject<Attribute> LUNAR_BURST_REDUCTION = createDefaultRangedAttribute("lunar_burst_reduction", 0);
-
     @SubscribeEvent
     public static void modifyEntityAttributes(EntityAttributeModificationEvent event) {
         event.getTypes().forEach((entity) -> {

@@ -4,7 +4,7 @@ import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
 import com.aqutheseal.celestisynth.client.renderers.entity.layer.FrostboundGeoLayer;
 import com.aqutheseal.celestisynth.client.renderers.misc.CSGuiRenderer;
-import com.aqutheseal.celestisynth.client.renderers.misc.CSTooltipRenderer;
+import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.CSTooltipRenderer;
 import com.aqutheseal.celestisynth.common.attack.aquaflora.AquafloraSlashFrenzyAttack;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
 import com.aqutheseal.celestisynth.common.item.weapons.AquafloraItem;

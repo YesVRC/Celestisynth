@@ -16,6 +16,9 @@
   "item.celestisynth.celestial_tier": "CELESTIAL GRADE",
   "item.celestisynth.starlit_fuel_amount": "Starlit Fuel Amount: %s",
 
+  "item.celestisynth.solar_crystal_armor_bonus": "When receiving damage, the armor burst out a circle of flame, dealing damage and burning surrounding targets. Each piece increases the damage of the burst and the duration of the fire.",
+  "item.celestisynth.lunar_stone_armor_bonus": "When the wearer is hurt, the armor has a 1/5 chance to significantly reduce the damage received. Each piece increases the damage reduction value.",
+
   "item.celestisynth.celestial_core": "Celestial Core",
   "item.celestisynth.celestial_core_heated": "Heated Celestial Core",
   "item.celestisynth.supernal_netherite_ingot": "Supernal Netherite Ingot",
@@ -33,7 +36,8 @@
   "item.celestisynth.traverser_spawn_egg": "Traverser Spawn Egg",
   "item.celestisynth.star_monolith": "Blank Celestial Monolith",
   "item.celestisynth.star_monolith_blood": "Blood Rune Celestial Monolith",
-
+  "block.celestisynth.celestial_crafting_table": "Celestial Workbench",
+  "block.celestisynth.starlit_factory": "Starlit Factory",
   "item.celestisynth.solar_crystal_helmet": "Solar Crystal Helmet",
   "item.celestisynth.solar_crystal_chestplate": "Solar Crystal Chestplate",
   "item.celestisynth.solar_crystal_leggings": "Solar Crystal Leggings",
@@ -47,8 +51,6 @@
 
   "item.celestisynth.celestial_spell_book": "The Celestial Genesis",
 
-  "block.celestisynth.celestial_crafting_table": "Celestial Workbench",
-  "block.celestisynth.starlit_factory": "Starlit Factory",
   "gui.celestisynth.celestial_crafting": "Celestial Workbench",
   "container.celestisynth.starlit_factory": "Starlit Factory",
 
@@ -59,7 +61,9 @@
   "tip.celestisynth.starlit_factory_4": "The Keres is the most destructive weapon in the mod, use it with caution!",
 
   "effect.celestisynth.hellbane": "Hell Bane",
+  "effect.celestisynth.hellbane.description": "Increases any regeneration effects affecting the entity",
   "effect.celestisynth.cursebane": "Curse Bane",
+  "effect.celestisynth.cursebane.description": "Decreases any regeneration effects affecting the entity",
 
   "enchantment.celestisynth.pulsation": "Pulsation",
 
@@ -109,7 +113,7 @@
   "item.celestisynth.crescentia.condition_1": "Activate: Right-click",
   "item.celestisynth.crescentia.desc_1": "Unleash a dazzling barrage of strikes on nearby entities, accompanied by a mesmerizing firework display.",
 
-  "item.celestisynth.crescentia.skill_2": " Eye of the Dragon",
+  "item.celestisynth.crescentia.skill_2": "Eye of the Dragon",
   "item.celestisynth.crescentia.condition_2": "Activate: Right-click while holding SHIFT",
   "item.celestisynth.crescentia.desc_2": "Unleash a set of dragon-like projectiles, dragging enemies along with it whilst continuously slashing them.",
 
@@ -210,6 +214,10 @@
   "item.celestisynth.rainfall_serenity.skill_3": "True Serenity",
   "item.celestisynth.rainfall_serenity.condition_3": "Activate: Right-click while holding SHIFT",
   "item.celestisynth.rainfall_serenity.desc_3": "Increases speed massively and activates \"True Invisibility\" for 5 seconds.",
+
+  "item.celestisynth.rainfall_serenity.skill_4": "Deployment",
+  "item.celestisynth.rainfall_serenity.condition_4": "Activate: Drop item on solid platform",
+  "item.celestisynth.rainfall_serenity.desc_4": "Dropping this item on to a solid platform transforms this weapon into a turret that shoots anything nearby.",
 
   "------------------- FROSTBOUND ------------------":  "",
 

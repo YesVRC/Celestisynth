@@ -44,7 +44,7 @@ public class TraverserJumpGoal extends Goal {
             }
         }
         if (mob.onGround()) {
-            mob.setActionToDefault();
+            mob.resetAction();
         } else {
             for (int i = 0; i < 10; i++) {
                 ParticleUtil.sendParticle(mob.level(), CSParticleTypes.KERES_ASH.get(), mob.position().add(mob.getRandom().nextGaussian() * 0.1F, mob.getRandom().nextGaussian() * 0.1F, mob.getRandom().nextGaussian() * 0.1F), new Vec3(0, 0.2, 0));
@@ -55,6 +55,6 @@ public class TraverserJumpGoal extends Goal {
     @Override
     public void stop() {
         this.tickCount = 0;
-        mob.setActionToDefault();
+        mob.resetAction();
     }
 }

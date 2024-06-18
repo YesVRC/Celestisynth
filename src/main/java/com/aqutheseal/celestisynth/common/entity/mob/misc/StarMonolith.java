@@ -251,7 +251,7 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
     @Override
     protected void tickDeath() {
         ++this.deathTime;
-        this.setActionToDefault();
+        this.resetAction();
         if (this.deathTime >= 40 && !this.level().isClientSide() && !this.isRemoved()) {
             this.remove(Entity.RemovalReason.KILLED);
         }

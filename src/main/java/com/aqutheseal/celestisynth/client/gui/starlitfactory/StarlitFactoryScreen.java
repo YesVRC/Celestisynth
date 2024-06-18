@@ -105,7 +105,7 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
         float motion2 = Mth.cos((float) (Minecraft.getInstance().player.tickCount * 0.05)) * 1;
 
         for (FactoryStar star : this.stars) {
-            if (star.tickCount < 200) {
+            if (star.tickCount < 1000) {
                 star.render(pGuiGraphics);
             }
         }
@@ -160,21 +160,22 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
             tickCount++;
             assert Minecraft.getInstance().player != null;
 
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F - (tickCount / 200F));
+            RenderSystem.enableBlend();
+            pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 0.5F + Mth.sin(tickCount * 0.02F) + 0.5F);
             pGuiGraphics.pose().pushPose();
 
             double xOff = centerX + (tickCount * speedX);
             double yOff = centerY + (tickCount * speedY);
 
-            pGuiGraphics.pose().translate(xOff, yOff, 0);
+            //pGuiGraphics.pose().translate(xOff, yOff, 0);
             pGuiGraphics.pose().mulPose(Axis.ZP.rotationDegrees(tickCount * (isReverse ? -0.2F : 0.2F)));
-            pGuiGraphics.pose().translate(-xOff, -yOff, 0);
-
+            //pGuiGraphics.pose().translate(-xOff, -yOff, 0);
             pGuiGraphics.pose().scale(scale, scale, scale);
             pGuiGraphics.blit(FACTORY_GUI, (int) xOff, (int) yOff, 192, 32, 16, 16);
+
             pGuiGraphics.pose().popPose();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
+            pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.disableBlend();
         }
     }
 }

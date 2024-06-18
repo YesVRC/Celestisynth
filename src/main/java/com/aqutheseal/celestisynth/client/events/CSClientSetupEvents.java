@@ -11,19 +11,23 @@ import com.aqutheseal.celestisynth.client.renderers.blockentity.StarlitFactoryRe
 import com.aqutheseal.celestisynth.client.renderers.entity.boss.TempestBossRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.mob.StarMonolithRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.mob.TraverserRenderer;
+import com.aqutheseal.celestisynth.client.renderers.entity.mob.VeilguardRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.projectile.*;
 import com.aqutheseal.celestisynth.client.renderers.misc.CSEffectEntityRenderer;
+import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.CSTooltipRenderer;
 import com.aqutheseal.celestisynth.client.renderers.misc.NullRenderer;
-import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
+import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.SkillComponent;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSCompatItems;
 import com.aqutheseal.celestisynth.common.registry.CSBlockEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSMenuTypes;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import io.redspace.ironsspellbooks.item.SpellBook;
 import io.redspace.ironsspellbooks.render.SpellBookCurioRenderer;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -34,8 +38,8 @@ public class CSClientSetupEvents {
     @SubscribeEvent
     public static void onRegisterRenderersEvent(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(CSEntityTypes.TRAVERSER.get(), TraverserRenderer::new);
+        event.registerEntityRenderer(CSEntityTypes.VEILGUARD.get(), VeilguardRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.TEMPEST.get(), TempestBossRenderer::new);
-
         event.registerEntityRenderer(CSEntityTypes.CS_EFFECT.get(), CSEffectEntityRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.CRESCENTIA_RANGED.get(), NullRenderer::new);
         event.registerEntityRenderer(CSEntityTypes.BREEZEBREAKER_TORNADO.get(), NullRenderer::new);
@@ -64,6 +68,13 @@ public class CSClientSetupEvents {
         event.registerLayerDefinition(FrostboundShardModel.LAYER_LOCATION, FrostboundShardModel::createBodyLayer);
         event.registerLayerDefinition(RainfallLaserModel.LAYER_LOCATION, RainfallLaserModel::createBodyLayer);
         event.registerLayerDefinition(SolarisBombModel.LAYER_LOCATION, SolarisBombModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterTooltipComponent(final RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(CSTooltipRenderer.BorderData.class, (component) -> new CSTooltipRenderer.BorderRenderer());
+        event.register(CSTooltipRenderer.MenuData.class, (component) -> new CSTooltipRenderer.MenuRenderer(component.tab()));
+        event.register(SkillComponent.Data.class, SkillComponent.Renderer::new);
     }
 
     @SubscribeEvent

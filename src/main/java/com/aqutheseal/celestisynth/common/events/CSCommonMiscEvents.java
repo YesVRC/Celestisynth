@@ -20,7 +20,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.*;
@@ -120,11 +119,7 @@ public class CSCommonMiscEvents {
             cs.onPlayerHurt(event, itemR);
         }
 
-        for (ArmorItem.Type armorType : ArmorItem.Type.values()) {
-            if (entity.getItemBySlot(armorType.getSlot()).getItem() instanceof CSArmorItem armor) {
-                armor.hurtWearer(event);
-            }
-        }
+        CSArmorItem.hurtWearer(event);
 
 //        if (event.getSource().getEntity() instanceof LivingEntity source) {
 //            source.getHandSlots().forEach(slot -> {

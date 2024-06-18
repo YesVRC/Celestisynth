@@ -5,6 +5,7 @@ import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.StarMonolith;
 import com.aqutheseal.celestisynth.common.entity.mob.natural.Traverser;
+import com.aqutheseal.celestisynth.common.entity.mob.natural.Veilguard;
 import com.aqutheseal.celestisynth.common.entity.projectile.*;
 import com.aqutheseal.celestisynth.common.entity.skillcast.*;
 import com.aqutheseal.celestisynth.common.entity.tempestboss_scrapped.TempestBoss;
@@ -24,6 +25,9 @@ public class CSEntityTypes {
     public static final RegistryObject<EntityType<Traverser>> TRAVERSER = ENTITY_TYPES.register("traverser", () -> EntityType.Builder.of(Traverser::new, MobCategory.MONSTER)
             .sized(1F, 2F).clientTrackingRange(64).build(Celestisynth.prefix("traverser").toString()));
 
+    public static final RegistryObject<EntityType<Veilguard>> VEILGUARD = ENTITY_TYPES.register("veilguard", () -> EntityType.Builder.of(Veilguard::new, MobCategory.MONSTER)
+            .sized(1.8F, 4F).clientTrackingRange(64).build(Celestisynth.prefix("veilguard").toString()));
+
     public static final RegistryObject<EntityType<CSEffectEntity>> CS_EFFECT = ENTITY_TYPES.register("cs_effect", () -> EntityType.Builder.of(CSEffectEntity::new, MobCategory.MISC)
             .sized(0.5F, 0.5F).clientTrackingRange(64).build(Celestisynth.prefix("cs_effect").toString())
     );
@@ -33,12 +37,8 @@ public class CSEntityTypes {
     public static final RegistryObject<EntityType<SkillCastBreezebreakerTornado>> BREEZEBREAKER_TORNADO = ENTITY_TYPES.register("breezebreaker_tornado", () -> EntityType.Builder.of(SkillCastBreezebreakerTornado::new, MobCategory.MISC)
             .sized(0.5F, 0.5F).clientTrackingRange(16).build(Celestisynth.prefix("breezebreaker_tornado").toString())
     );
-    public static final RegistryObject<EntityType<SkillCastPoltergeistWard>> POLTERGEIST_WARD = ENTITY_TYPES.register("poltergeist_ward", () -> EntityType.Builder.of(SkillCastPoltergeistWard::new, MobCategory.MISC)
-            .sized(0.5F, 0.5F).clientTrackingRange(16).build(Celestisynth.prefix("poltergeist_ward").toString())
-    );
-    public static final RegistryObject<EntityType<SkillCastRainfallRain>> RAINFALL_RAIN = ENTITY_TYPES.register("rainfall_rain", () -> EntityType.Builder.of(SkillCastRainfallRain::new, MobCategory.MISC)
-            .sized(0.5F, 0.5F).clientTrackingRange(16).build(Celestisynth.prefix("rainfall_rain").toString())
-    );
+    public static final RegistryObject<EntityType<SkillCastPoltergeistWard>> POLTERGEIST_WARD = createBasicEntity("poltergeist_ward", SkillCastPoltergeistWard::new);
+    public static final RegistryObject<EntityType<SkillCastRainfallRain>> RAINFALL_RAIN = createBasicEntity("rainfall_rain", SkillCastRainfallRain::new);
     public static final RegistryObject<EntityType<SkillCastFrostboundIceCast>> FROSTBOUND_ICE_CAST = createBasicEntity("frostbound_ice_cast", SkillCastFrostboundIceCast::new);
     public static final RegistryObject<EntityType<RainfallLaserMarker>> RAINFALL_LASER_MARKER = createBasicEntity("rainfall_laser_marker", RainfallLaserMarker::new);
     public static final RegistryObject<EntityType<SkillCastKeresSmash>> KERES_SMASH = createBasicEntity("keres_smash", SkillCastKeresSmash::new);

@@ -1,11 +1,12 @@
 package com.aqutheseal.celestisynth.common.entity.base;
 
 public interface FixedMovesetEntity {
+
     void setAction(int action);
 
     int getAction();
 
-    default void setActionToDefault() {
+    default void resetAction() {
         this.setAction(0);
     }
 

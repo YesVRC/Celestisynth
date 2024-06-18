@@ -70,6 +70,6 @@ public class StarMonolithSpikeGoal extends Goal {
     @Override
     public void stop() {
         mob.resetAnimationTick();
-        mob.setActionToDefault();
+        mob.resetAction();
     }
 }

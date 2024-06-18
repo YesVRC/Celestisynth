@@ -94,7 +94,7 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
     }
 
     public void tickShooting() {
-        double enchantmentAdjustment = (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, createBowFromData()) * 4.5) - (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, createBowFromData()) * 6);
+        double enchantmentAdjustment = (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.QUICK_CHARGE, createBowFromData()) * 3.25) - (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, createBowFromData()) * 3.5);
         int shootInterval = (int) (20 - Math.min(19, enchantmentAdjustment));
         if (this.getTarget() != null && !this.isRemoved() && this.getOwner() instanceof Player player) {
             this.shootTime++;
@@ -113,9 +113,8 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
 
                 if (multishotEnchLvl > 0) {
                     for (int i = 0; i < multishotEnchLvl + 1; i++) {
-                        double factor = i;
-                        angles.add(getLookAngle().multiply(factor, 0, -factor));
-                        angles.add(getLookAngle().multiply(-factor, 0, factor));
+                        angles.add(getLookAngle().multiply(i, 0, -(double) i));
+                        angles.add(getLookAngle().multiply(-(double) i, 0, i));
                     }
                 }
                 for (Vec3 angle : angles) {

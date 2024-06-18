@@ -25,21 +25,8 @@ public final class CSConfigManager {
         CLIENT = clientSpecPair.getLeft();
     }
 
-    protected static void registerConfigs() {
-        registerClientConfig();
-        registerCommonConfig();
-        registerServerConfig();
-    }
-
-    private static void registerClientConfig() {
+    public static void registerConfigs() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC, Celestisynth.MODID + "/celestisynth-client.toml");
-    }
-
-    private static void registerCommonConfig() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_SPEC, Celestisynth.MODID + "/celestisynth-common.toml");
-    }
-
-    private static void registerServerConfig() {
-    //    ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, MAIN_SERVER_SPEC);
     }
 }

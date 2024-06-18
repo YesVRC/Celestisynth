@@ -4,43 +4,44 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.StringUtils;
 
 public class CSCommonConfig {
-    public final ForgeConfigSpec.ConfigValue<Integer> solarisDmg, crescentiaDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> solarisSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> solarisShiftSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Integer> solarisSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> solarisShiftSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Double> crescentiaSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> crescentiaShiftSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Integer> crescentiaSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> crescentiaShiftSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Double> breezebreakerSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> breezebreakerShiftSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> breezebreakerSprintSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> breezebreakerMidairSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Integer> breezebreakerSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> breezebreakerShiftSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> breezebreakerSprintSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> breezebreakerMidairSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Double> poltergeistSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> poltergeistShiftSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Integer> poltergeistSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> poltergeistShiftSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Double> aquafloraSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> aquafloraShiftSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> aquafloraBloomSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> aquafloraBloomShiftSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Integer> aquafloraSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> aquafloraShiftSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> aquafloraBloomSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> aquafloraBloomShiftSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Double> frostboundSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> frostboundShiftSkillDmg;
-    public final ForgeConfigSpec.ConfigValue<Integer> frostboundSkillCD;
-    public final ForgeConfigSpec.ConfigValue<Integer> frostboundShiftSkillCD;
+    public final ForgeConfigSpec.IntValue solarisDmg, crescentiaDmg;
+    
+    public final ForgeConfigSpec.DoubleValue solarisSkillDmg;
+    public final ForgeConfigSpec.DoubleValue solarisShiftSkillDmg;
+    public final ForgeConfigSpec.IntValue solarisSkillCD;
+    public final ForgeConfigSpec.IntValue solarisShiftSkillCD;
+    public final ForgeConfigSpec.DoubleValue crescentiaSkillDmg;
+    public final ForgeConfigSpec.DoubleValue crescentiaShiftSkillDmg;
+    public final ForgeConfigSpec.IntValue crescentiaSkillCD;
+    public final ForgeConfigSpec.IntValue crescentiaShiftSkillCD;
+    public final ForgeConfigSpec.DoubleValue breezebreakerSkillDmg;
+    public final ForgeConfigSpec.DoubleValue breezebreakerShiftSkillDmg;
+    public final ForgeConfigSpec.DoubleValue breezebreakerSprintSkillDmg;
+    public final ForgeConfigSpec.DoubleValue breezebreakerMidairSkillDmg;
+    public final ForgeConfigSpec.IntValue breezebreakerSkillCD;
+    public final ForgeConfigSpec.IntValue breezebreakerShiftSkillCD;
+    public final ForgeConfigSpec.IntValue breezebreakerSprintSkillCD;
+    public final ForgeConfigSpec.IntValue breezebreakerMidairSkillCD;
+    public final ForgeConfigSpec.DoubleValue poltergeistSkillDmg;
+    public final ForgeConfigSpec.DoubleValue poltergeistShiftSkillDmg;
+    public final ForgeConfigSpec.IntValue poltergeistSkillCD;
+    public final ForgeConfigSpec.IntValue poltergeistShiftSkillCD;
+    public final ForgeConfigSpec.DoubleValue aquafloraSkillDmg;
+    public final ForgeConfigSpec.DoubleValue aquafloraShiftSkillDmg;
+    public final ForgeConfigSpec.DoubleValue aquafloraBloomSkillDmg;
+    public final ForgeConfigSpec.DoubleValue aquafloraBloomShiftSkillDmg;
+    public final ForgeConfigSpec.IntValue aquafloraSkillCD;
+    public final ForgeConfigSpec.IntValue aquafloraShiftSkillCD;
+    public final ForgeConfigSpec.IntValue aquafloraBloomSkillCD;
+    public final ForgeConfigSpec.IntValue aquafloraBloomShiftSkillCD;
+    public final ForgeConfigSpec.DoubleValue frostboundSkillDmg;
+    public final ForgeConfigSpec.DoubleValue frostboundShiftSkillDmg;
+    public final ForgeConfigSpec.IntValue frostboundSkillCD;
+    public final ForgeConfigSpec.IntValue frostboundShiftSkillCD;
 
-    public final ForgeConfigSpec.ConfigValue<Boolean> enablePoltergeistHeightDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> rainfallSerenityArrowDmg;
-    public final ForgeConfigSpec.ConfigValue<Double> rainfallSerenityDrawSpeed;
+    public final ForgeConfigSpec.BooleanValue enablePoltergeistHeightDmg;
+    public final ForgeConfigSpec.DoubleValue rainfallSerenityArrowDmg;
+    public final ForgeConfigSpec.DoubleValue rainfallSerenityDrawSpeed;
 
     public CSCommonConfig(ForgeConfigSpec.Builder builder) {
         builder.push("Base Damage Modifications (Temporarily Unusable)");
@@ -106,20 +107,20 @@ public class CSCommonConfig {
         builder.push("Value Modifiers - Rainfall Serenity");
         rainfallSerenityArrowDmg = builder.comment("Define how much damage does the Rainfall Serenity's Arrow deal.")
                 .defineInRange("Damage: Rainfall Serenity Arrow", 4.0, 0, 1000);
-        rainfallSerenityDrawSpeed = builder.comment("Define how much damage does the Rainfall Serenity's Arrow from Quasar Link deal.")
+        rainfallSerenityDrawSpeed = builder.comment("Tweak the draw speed of the Rainfall Serenity.")
                 .defineInRange("Extra: Rainfall Serenity Draw Speed", 7.5, 0, 1000);
         builder.pop();
     }
 
-    public ForgeConfigSpec.ConfigValue<Double> skillDamage(ForgeConfigSpec.Builder builder, String weapon, String skillName, Double dmg) {
+    public ForgeConfigSpec.DoubleValue skillDamage(ForgeConfigSpec.Builder builder, String weapon, String skillName, Double dmg) {
         return builder.comment("Define how much damage does the " + StringUtils.capitalize(weapon) + " deal in a specified attack skill.").defineInRange("Damage: " + skillName, dmg, 0, 1000);
     }
 
-    public ForgeConfigSpec.ConfigValue<Integer> skillCooldown(ForgeConfigSpec.Builder builder, String weapon, String skillName, int cooldown) {
+    public ForgeConfigSpec.IntValue skillCooldown(ForgeConfigSpec.Builder builder, String weapon, String skillName, int cooldown) {
         return builder.comment("Define the duration of the cooldown provided by the " + StringUtils.capitalize(weapon) + " in a particular attack skill, measured in ticks.").defineInRange("Cooldown: " + skillName, cooldown, 0, 1000);
     }
 
-    public ForgeConfigSpec.ConfigValue<Integer> baseDamage(ForgeConfigSpec.Builder builder, String weapon, int dmg) {
+    public ForgeConfigSpec.IntValue baseDamage(ForgeConfigSpec.Builder builder, String weapon, int dmg) {
         return builder.comment("Define the base attack damage of the " + StringUtils.capitalize(weapon) + ".").defineInRange("Base Damage: " + StringUtils.capitalize(weapon), dmg, 0, 1000);
     }
 }

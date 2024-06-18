@@ -5,6 +5,7 @@ import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.StarMonolith;
 import com.aqutheseal.celestisynth.common.entity.mob.natural.Traverser;
+import com.aqutheseal.celestisynth.common.entity.mob.natural.Veilguard;
 import com.aqutheseal.celestisynth.common.entity.tempestboss_scrapped.TempestBoss;
 import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.datagen.providers.*;
@@ -85,6 +86,7 @@ public class CSCommonSetupEvents {
             event.put(CSEntityTypes.RAINFALL_TURRET.get(), RainfallTurret.createAttributes().build());
             event.put(CSEntityTypes.STAR_MONOLITH.get(), StarMonolith.createAttributes().build());
             event.put(CSEntityTypes.TRAVERSER.get(), Traverser.createAttributes().build());
+            event.put(CSEntityTypes.VEILGUARD.get(), Veilguard.createAttributes().build());
             event.put(CSEntityTypes.TEMPEST.get(), TempestBoss.createAttributes().build());
         }
 

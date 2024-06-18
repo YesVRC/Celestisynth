@@ -36,6 +36,6 @@ public class TraverserStunnedGoal extends Goal {
     @Override
     public void stop() {
         this.tickCount = 0;
-        mob.setActionToDefault();
+        mob.resetAction();
     }
 }

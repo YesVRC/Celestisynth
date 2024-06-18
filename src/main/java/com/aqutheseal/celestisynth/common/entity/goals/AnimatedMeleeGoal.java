@@ -1,6 +1,5 @@
 package com.aqutheseal.celestisynth.common.entity.goals;
 
-import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.common.entity.base.FixedMovesetEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -47,7 +46,6 @@ public class AnimatedMeleeGoal<T extends Mob & FixedMovesetEntity> extends Goal 
     @Override
     public void start() {
         mob.resetAnimationTick();
-        Celestisynth.LOGGER.info("Executed Start Action");
         mob.setAction(animationAction);
     }
 
@@ -58,7 +56,6 @@ public class AnimatedMeleeGoal<T extends Mob & FixedMovesetEntity> extends Goal 
 
     @Override
     public void tick() {
-        super.tick();
         mob.incrementAnimationTick();
         if (mob.getTarget() != null) {
             mob.lookAt(mob.getTarget(), 180, 180);
@@ -75,7 +72,7 @@ public class AnimatedMeleeGoal<T extends Mob & FixedMovesetEntity> extends Goal 
     public void stop() {
         mob.resetAnimationTick();
         if (resetActionCondition.test(mob)) {
-            mob.setActionToDefault();
+            mob.resetAction();
         }
     }
 }

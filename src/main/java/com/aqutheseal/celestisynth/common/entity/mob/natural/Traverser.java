@@ -4,7 +4,7 @@ import com.aqutheseal.celestisynth.common.entity.base.FixedMovesetEntity;
 import com.aqutheseal.celestisynth.common.entity.base.MonolithSummonedEntity;
 import com.aqutheseal.celestisynth.common.entity.goals.AnimatedMeleeGoal;
 import com.aqutheseal.celestisynth.common.entity.goals.traverser.TraverserJumpGoal;
-import com.aqutheseal.celestisynth.common.entity.goals.traverser.TraverserMoveToTargetGoal;
+import com.aqutheseal.celestisynth.common.entity.goals.ActionStoppableMoveToTargetGoal;
 import com.aqutheseal.celestisynth.common.entity.goals.traverser.TraverserStunnedGoal;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.StarMonolith;
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresSlash;
@@ -78,7 +78,7 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
                 mob -> this.nextAttack == ACTION_MELEE_2 && mob.getAction() != ACTION_STUNNED, mob -> mob.getAction() != ACTION_STUNNED)
         );
         this.goalSelector.addGoal(3, new TraverserJumpGoal(this));
-        this.goalSelector.addGoal(4, new TraverserMoveToTargetGoal(this, 1.5, true, this.getBbWidth() + 1));
+        this.goalSelector.addGoal(4, new ActionStoppableMoveToTargetGoal<>(this, 1.5, true, this.getBbWidth() + 1));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, false, entity -> !(entity instanceof Traverser) && !(entity instanceof StarMonolith)));
         this.targetSelector.addGoal(2, (new HurtByTargetGoal(this)).setAlertOthers(Traverser.class));
@@ -103,7 +103,7 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
         super.tick();
         if (getAction() == ACTION_SPAWNED) {
             if (tickCount >= 40) {
-                this.setActionToDefault();
+                this.resetAction();
             } else {
                 if (tickCount % 5 == 0) {
                     for (int i = 0; i < 22.5; i++) {
@@ -170,7 +170,7 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
                     ParticleUtil.sendParticle(level(), CSParticleTypes.KERES_OMEN.get(), position().add(0, 0.75, 0).add(getLookAngle().scale(2)), rotated);
                 }
                 pAmount *= 0.5F;
-                this.setActionToDefault();
+                this.resetAction();
             }
         }
         boolean flag = super.hurt(pSource, pAmount);
@@ -295,13 +295,13 @@ public class Traverser extends Monster implements GeoEntity, FixedMovesetEntity,
     @Override
     public void die(DamageSource pDamageSource) {
         super.die(pDamageSource);
-        this.setActionToDefault();
+        this.resetAction();
     }
 
     @Override
     protected void tickDeath() {
         super.tickDeath();
-        this.setActionToDefault();
+        this.resetAction();
     }
 
     @Override
