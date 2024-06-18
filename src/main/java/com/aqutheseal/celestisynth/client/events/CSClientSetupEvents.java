@@ -14,9 +14,10 @@ import com.aqutheseal.celestisynth.client.renderers.entity.mob.TraverserRenderer
 import com.aqutheseal.celestisynth.client.renderers.entity.mob.VeilguardRenderer;
 import com.aqutheseal.celestisynth.client.renderers.entity.projectile.*;
 import com.aqutheseal.celestisynth.client.renderers.misc.CSEffectEntityRenderer;
-import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.CSTooltipRenderer;
 import com.aqutheseal.celestisynth.client.renderers.misc.NullRenderer;
-import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.SkillComponent;
+import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.AbilityComponent;
+import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.CSTooltipRenderer;
+import com.aqutheseal.celestisynth.client.renderers.misc.tooltips.PassiveComponent;
 import com.aqutheseal.celestisynth.common.compat.spellbooks.ISSCompatItems;
 import com.aqutheseal.celestisynth.common.registry.CSBlockEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
@@ -74,7 +75,8 @@ public class CSClientSetupEvents {
     public static void onRegisterTooltipComponent(final RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(CSTooltipRenderer.BorderData.class, (component) -> new CSTooltipRenderer.BorderRenderer());
         event.register(CSTooltipRenderer.MenuData.class, (component) -> new CSTooltipRenderer.MenuRenderer(component.tab()));
-        event.register(SkillComponent.Data.class, SkillComponent.Renderer::new);
+        event.register(AbilityComponent.Data.class, AbilityComponent.Renderer::new);
+        event.register(PassiveComponent.Data.class, PassiveComponent.Renderer::new);
     }
 
     @SubscribeEvent

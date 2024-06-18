@@ -15,20 +15,19 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.core.object.Color;
 
-public class SkillComponent {
+public class AbilityComponent {
 
-    public record Data(String itemName, int totalSkillAmount, int highlightedSkillIndex) implements TooltipComponent {
+    public record Data(String itemName, int totalAbilityAmount, int highlightedAbilityIndex, Side side) implements TooltipComponent {
     }
 
     public record Renderer(Data data) implements ClientTooltipComponent {
         public static final int DESC_WRAP_WIDTH = 320;
         public static final int ICON_HEIGHT = 16;
         public static final int ICON_OFFSETED_HEIGHT = ICON_HEIGHT + 8;
-        public static final int CONDITION_HEIGHT = 7;
 
         @Override
         public int getHeight() {
-            return this.descriptionWordWrapHeight() + CONDITION_HEIGHT + ICON_OFFSETED_HEIGHT + 20;
+            return this.descriptionWordWrapHeight() + this.getConditionHeight() + ICON_OFFSETED_HEIGHT + 20;
         }
 
         @Override
@@ -43,43 +42,50 @@ public class SkillComponent {
             copyMatrix.translate(pMouseX, pMouseY, 0);
             copyMatrix.scale(0.8F);
             copyMatrix.translate(-pMouseX, -pMouseY, 0);
-            pFont.drawInBatch(this.highlightedCondition(), pMouseX, pMouseY + ICON_OFFSETED_HEIGHT + 4, -1, true, copyMatrix, pBufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
 
-            pFont.drawInBatch(this.highlightedName(), pMouseX, pMouseY + CONDITION_HEIGHT + ICON_OFFSETED_HEIGHT, -1, true, pMatrix, pBufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
-            this.drawWordWrap(pFont, this.highlightedDescription(), pMouseX, pMouseY + CONDITION_HEIGHT + ICON_OFFSETED_HEIGHT + 10, DESC_WRAP_WIDTH, -1, pMatrix, pBufferSource);
+            if (data.side() == Side.SKILL) {
+                pFont.drawInBatch(this.highlightedCondition(), pMouseX, pMouseY + ICON_OFFSETED_HEIGHT + 4, -1, true, copyMatrix, pBufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
+            }
+
+            pFont.drawInBatch(this.highlightedName(), pMouseX, pMouseY + this.getConditionHeight() + ICON_OFFSETED_HEIGHT, -1, true, pMatrix, pBufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
+            this.drawWordWrap(pFont, this.highlightedDescription(), pMouseX, pMouseY + this.getConditionHeight() + ICON_OFFSETED_HEIGHT + 10, DESC_WRAP_WIDTH, -1, pMatrix, pBufferSource);
         }
 
         @Override
         public void renderImage(Font pFont, int pX, int pY, GuiGraphics pGuiGraphics) {
             int order = 0;
-            for (int i = 1; i < data.totalSkillAmount() + 1; i++) {
-                if (i != data.highlightedSkillIndex()) {
+            for (int i = 1; i < data.totalAbilityAmount() + 1; i++) {
+                if (i != data.highlightedAbilityIndex()) {
                     pGuiGraphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
                 }
                 pGuiGraphics.pose().pushPose();
                 pGuiGraphics.pose().translate(pX + order, pY, 0);
                 pGuiGraphics.pose().scale(0.65F, 0.65F, 0.65F);
                 pGuiGraphics.pose().translate(-pX + order, -pY, 0);
-                pGuiGraphics.blit(Celestisynth.prefix("textures/skillicon/" + data.itemName() + "_skill_icon_" + i + ".png"), pX + order, pY - 4, 0, 0, 32, 32, 32, 32);
+                pGuiGraphics.blit(Celestisynth.prefix("textures/" + data.side().getAsText() + "icon/" + data.itemName() + "_" + data.side().getAsText() + "_icon_" + i + ".png"), pX + order, pY - 4, 0, 0, 32, 32, 32, 32);
                 pGuiGraphics.pose().popPose();
 
                 pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
                 order += 12;
             }
-            pGuiGraphics.fill(pX - 10, pY + ICON_OFFSETED_HEIGHT - 3, pX + this.getWidth(pFont) + 10, pY + CONDITION_HEIGHT + ICON_OFFSETED_HEIGHT + this.descriptionWordWrapHeight() + 9, Color.BLACK.argbInt());
+            pGuiGraphics.fill(pX - 10, pY + ICON_OFFSETED_HEIGHT - 3, pX + this.getWidth(pFont) + 10, pY + this.getConditionHeight() + ICON_OFFSETED_HEIGHT + this.descriptionWordWrapHeight() + 9, Color.BLACK.argbInt());
+        }
+
+        public int getConditionHeight() {
+            return data.side() == Side.SKILL ? 7 : 0;
         }
 
         public Component highlightedName() {
             int tickCount = (int) (Minecraft.getInstance().player.tickCount * 0.5);
-            return Component.translatable("item.celestisynth." + data.itemName() + ".skill_" + data.highlightedSkillIndex()).withStyle(Style.EMPTY.withColor(ExtraUtil.getCelestialColor(tickCount).argbInt()));
+            return Component.translatable("item.celestisynth." + data.itemName() + "." + data.side().getAsText() + "_" + data.highlightedAbilityIndex()).withStyle(Style.EMPTY.withColor(ExtraUtil.getCelestialColor(tickCount).argbInt()));
         }
 
         public Component highlightedDescription() {
-            return Component.translatable("item.celestisynth." + data.itemName() + ".desc_" + data.highlightedSkillIndex()).withStyle(Style.EMPTY.withColor(Color.GRAY.argbInt()));
+            return Component.translatable("item.celestisynth." + data.itemName() + ".desc_" + data.highlightedAbilityIndex()).withStyle(Style.EMPTY.withColor(Color.GRAY.argbInt()));
         }
 
         public Component highlightedCondition() {
-            return Component.translatable("item.celestisynth." + data.itemName() + ".condition_" + data.highlightedSkillIndex()).withStyle(Style.EMPTY.withItalic(true).withColor(Color.DARK_GRAY.argbInt()));
+            return Component.translatable("item.celestisynth." + data.itemName() + ".condition_" + data.highlightedAbilityIndex()).withStyle(Style.EMPTY.withItalic(true).withColor(Color.DARK_GRAY.argbInt()));
         }
 
         public int descriptionWordWrapHeight() {
@@ -96,6 +102,21 @@ public class SkillComponent {
                 pY += 9;
             }
 
+        }
+    }
+
+    public enum Side {
+        SKILL("skill"),
+        PASSIVE("passive");
+
+        public final String asText;
+
+        Side(String asText) {
+            this.asText = asText;
+        }
+
+        public String getAsText() {
+            return asText;
         }
     }
 }

@@ -38,11 +38,6 @@ public class CSTooltipRenderer {
 
         Style tierColor = Style.EMPTY.withColor(0x8BDEFF);
         Style navigationNoticeColor = Style.EMPTY.withColor(0x96D400);
-        Style abilityNoticeColor = Style.EMPTY.withColor(16755200);
-        Style highlightedAbilityColor = Style.EMPTY.withColor(0x50ACFF);
-        Style defaultAbilityColor = Style.EMPTY.withColor(5592405);
-        Style abilityConditionColor = Style.EMPTY.withColor(0x8A89FF);
-        Style descColor = Style.EMPTY.withColor(0xA9B8BB);
 
         if (!stack.isEmpty() && StarlitFactoryBlockEntity.getFuelMap().containsKey(stack.getItem())) {
             elementsToAdd.add(Either.left(Component.translatable("item.celestisynth.starlit_fuel_amount", StarlitFactoryBlockEntity.getFuelMap().get(stack.getItem())).withStyle(tierColor).withStyle(Style.EMPTY.withColor(4965839))));
@@ -62,52 +57,11 @@ public class CSTooltipRenderer {
 
             if (menu % 2 == 0) {
                 if (cs.getPassiveAmount() > 0) {
-                    for (int v = 1; v < cs.getPassiveAmount() + 1; v++) {
-                        int i = (scroll % cs.getPassiveAmount()) + 1;
-                        boolean shouldHighlight = v == i;
-                        if (shouldHighlight && i != 1) {
-                            elementsToAdd.add(Either.left(empty));
-                        }
-                        elementsToAdd.add(Either.left(Component.translatable("item.celestisynth." + name + ".passive_" + v)
-                                .withStyle(shouldHighlight ? ChatFormatting.UNDERLINE : ChatFormatting.RESET)
-                                .withStyle(shouldHighlight ? highlightedAbilityColor : defaultAbilityColor))
-                        );
-                        if (shouldHighlight) {
-                            elementsToAdd.add(Either.left(Component.literal(" - ")
-                                    .append(Component.translatable("item.celestisynth." + name + ".passive_desc_" + v))
-                                    .withStyle(descColor).withStyle(ChatFormatting.ITALIC))
-                            );
-                        }
-                        if (shouldHighlight) {
-                            elementsToAdd.add(Either.left(empty));
-                        }
-                    }
+                    elementsToAdd.add(Either.right(new AbilityComponent.Data(name, cs.getPassiveAmount(), (scroll % cs.getPassiveAmount()) + 1, AbilityComponent.Side.PASSIVE)));
                 }
             } else if (menu % 2 == 1) {
                 if (cs.getSkillsAmount() > 0) {
-                    elementsToAdd.add(Either.right(new SkillComponent.Data(name, cs.getSkillsAmount(), (scroll % cs.getSkillsAmount()) + 1)));
-
-//                    for (int v = 1; v < cs.getSkillsAmount() + 1; v++) {
-//                        int i = (scroll % cs.getSkillsAmount()) + 1;
-//                        boolean shouldHighlight = v == i;
-//                        if (shouldHighlight && i != 1) {
-//                            elementsToAdd.add(Either.left(empty));
-//                        }
-//                        elementsToAdd.add(Either.left(Component.translatable("item.celestisynth." + name + ".skill_" + v)
-//                                .withStyle(shouldHighlight ? ChatFormatting.UNDERLINE : ChatFormatting.RESET)
-//                                .withStyle(shouldHighlight ? highlightedAbilityColor : defaultAbilityColor))
-//                        );
-//                        if (shouldHighlight) {
-//                            elementsToAdd.add(Either.left(Component.translatable("item.celestisynth." + name + ".condition_" + v).withStyle(abilityConditionColor)));
-//                            elementsToAdd.add(Either.left(Component.literal(" - ")
-//                                    .append(Component.translatable("item.celestisynth." + name + ".desc_" + v))
-//                                    .withStyle(descColor).withStyle(ChatFormatting.ITALIC))
-//                            );
-//                        }
-//                        if (shouldHighlight) {
-//                            elementsToAdd.add(Either.left(empty));
-//                        }
-//                    }
+                    elementsToAdd.add(Either.right(new AbilityComponent.Data(name, cs.getSkillsAmount(), (scroll % cs.getSkillsAmount()) + 1, AbilityComponent.Side.SKILL)));
                 }
             }
 
@@ -166,7 +120,8 @@ public class CSTooltipRenderer {
 
         @Override
         public void renderImage(Font pFont, int pX, int pY, GuiGraphics pGuiGraphics) {
-            int moveToCenter = 90;
+            int moveToCenter = 0;
+            int otherOffset = 60;
             if (tab == 0) {
                 pGuiGraphics.blit(TOOLTIP_EXTRAS, pX + moveToCenter, pY, 0, 5, 49, 10);
             } else {
@@ -174,9 +129,9 @@ public class CSTooltipRenderer {
             }
 
             if (tab == 1) {
-                pGuiGraphics.blit(TOOLTIP_EXTRAS, pX + moveToCenter + 60, pY, 0, 16, 41, 11);
+                pGuiGraphics.blit(TOOLTIP_EXTRAS, pX + moveToCenter + otherOffset, pY, 0, 16, 41, 11);
             } else {
-                pGuiGraphics.blit(TOOLTIP_EXTRAS, pX + moveToCenter + 60, pY, 41, 16, 41, 11);
+                pGuiGraphics.blit(TOOLTIP_EXTRAS, pX + moveToCenter + otherOffset, pY, 41, 16, 41, 11);
             }
         }
     }
