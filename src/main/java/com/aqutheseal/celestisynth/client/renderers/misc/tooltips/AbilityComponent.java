@@ -2,6 +2,7 @@ package com.aqutheseal.celestisynth.client.renderers.misc.tooltips;
 
 import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.util.ExtraUtil;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,10 +11,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.core.object.Color;
+
+import java.util.Optional;
 
 public class AbilityComponent {
 
@@ -61,14 +68,32 @@ public class AbilityComponent {
                 pGuiGraphics.pose().pushPose();
                 pGuiGraphics.pose().translate(pX + order, pY, 0);
                 pGuiGraphics.pose().scale(0.65F, 0.65F, 0.65F);
+
+                if (i == data.highlightedAbilityIndex()) {
+                    int tickCount = Minecraft.getInstance().player.tickCount;
+                    pGuiGraphics.pose().mulPose(Axis.ZP.rotationDegrees(Mth.sin(tickCount * 0.075F) * 2));
+                }
+
                 pGuiGraphics.pose().translate(-pX + order, -pY, 0);
-                pGuiGraphics.blit(Celestisynth.prefix("textures/" + data.side().getAsText() + "icon/" + data.itemName() + "_" + data.side().getAsText() + "_icon_" + i + ".png"), pX + order, pY - 4, 0, 0, 32, 32, 32, 32);
+
+                ResourceLocation icon = Celestisynth.prefix("textures/abilityicon/" + data.side().getAsText() + "/" + data.itemName() + "_" + data.side().getAsText() + "_icon_" + i + ".png");
+                ResourceLocation substituteIcon = Celestisynth.prefix("textures/abilityicon/default_ability_icon.png");
+
+                pGuiGraphics.blit(this.checkIcon(icon) ? icon : substituteIcon, pX + order, pY - 4, 0, 0, 32, 32, 32, 32);
+
                 pGuiGraphics.pose().popPose();
 
                 pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
                 order += 12;
             }
             pGuiGraphics.fill(pX - 10, pY + ICON_OFFSETED_HEIGHT - 3, pX + this.getWidth(pFont) + 10, pY + this.getConditionHeight() + ICON_OFFSETED_HEIGHT + this.descriptionWordWrapHeight() + 9, Color.BLACK.argbInt());
+            pGuiGraphics.renderOutline(pX - 10, pY + ICON_OFFSETED_HEIGHT - 4, getWidth(pFont) + 20, this.getConditionHeight() + this.descriptionWordWrapHeight() + 13, Color.WHITE.argbInt());
+        }
+
+        public boolean checkIcon(ResourceLocation icon) {
+            ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+            Optional<Resource> resource = resourceManager.getResource(icon);
+            return resource.isPresent();
         }
 
         public int getConditionHeight() {
