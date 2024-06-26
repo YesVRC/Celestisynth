@@ -8,6 +8,7 @@
   "entity.celestisynth.traverser": "Traverser",
   "entity.celestisynth.rainfall_turret": "Rainfall Turret",
 
+  "block.celestisynth.no_more_celestial_workbench": "This item is no longer usable. Please convert this block into the Starlit Factory in the crafting grid!",
   "item.celestisynth.test": "SCROLL: %s",
   "item.celestisynth.scroll_notice": "[Scroll to navigate through abilities]",
   "item.celestisynth.shift_notice": "[Press Shift or Ctrl to switch pages]",
@@ -51,7 +52,6 @@
 
   "item.celestisynth.celestial_spell_book": "The Celestial Genesis",
 
-  "gui.celestisynth.celestial_crafting": "Celestial Workbench",
   "container.celestisynth.starlit_factory": "Starlit Factory",
 
   "tip.celestisynth.starlit_factory_0": "Did you know? The Rainfall Serenity is enchantable with some crossbow enchantments like Multishot, Piercing, and Quick Charge?",
@@ -165,7 +165,7 @@
 
   "item.celestisynth.poltergeist.skill_1": "Cosmic Steel Annihilation",
   "item.celestisynth.poltergeist.condition_1": "Activate: Right-click",
-  "item.celestisynth.poltergeist.desc_1": "Executes a mighty strike that inflicts significant harm over a broad range, devastating multiple adversaries. Delivering another crushing blow following a sequence of ten consecutive strikes generates an immense impact, summoning an Aberrant entity. The cooldown for this ability instantly resets when casted while airborne.",
+  "item.celestisynth.poltergeist.desc_1": "Executes a smash to the ground, dealing massive burst damage on surrounding entities. After 10 consecutive strikes, the weapon enables it's \"Aberrant Form\", allowing the next strike to enlarge and mutate a sucking aberrant from the ground. Killing an entity during \"Aberrant Form\" or jumping midair while striking instantly resets the cooldown of this ability.",
 
   "item.celestisynth.poltergeist.skill_2": "Barrier Call",
   "item.celestisynth.poltergeist.condition_2": "Activate: Right-click while holding SHIFT",

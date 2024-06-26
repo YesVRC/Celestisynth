@@ -106,7 +106,8 @@ public class AbilityComponent {
         }
 
         public Component highlightedDescription() {
-            return Component.translatable("item.celestisynth." + data.itemName() + ".desc_" + data.highlightedAbilityIndex()).withStyle(Style.EMPTY.withColor(Color.GRAY.argbInt()));
+            String extension = data.side() == Side.PASSIVE ? ".passive_desc_" : ".desc_";
+            return Component.translatable("item.celestisynth." + data.itemName() + extension + data.highlightedAbilityIndex()).withStyle(Style.EMPTY.withColor(Color.GRAY.argbInt()));
         }
 
         public Component highlightedCondition() {

@@ -1,6 +1,5 @@
 package com.aqutheseal.celestisynth.client.events;
 
-import com.aqutheseal.celestisynth.client.gui.celestialcrafting.CelestialCraftingScreen;
 import com.aqutheseal.celestisynth.client.gui.starlitfactory.StarlitFactoryScreen;
 import com.aqutheseal.celestisynth.client.models.entity.projectile.FrostboundShardModel;
 import com.aqutheseal.celestisynth.client.models.entity.projectile.RainfallLaserModel;
@@ -82,7 +81,6 @@ public class CSClientSetupEvents {
     @SubscribeEvent
     public static void onFMLClientSetupEvent(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(CSMenuTypes.CELESTIAL_CRAFTING.get(), CelestialCraftingScreen::new);
             MenuScreens.register(CSMenuTypes.STARLIT_FACTORY.get(), StarlitFactoryScreen::new);
         });
 

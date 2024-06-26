@@ -4,8 +4,8 @@ import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.common.block.StarlitFactoryBlockEntity;
 import com.aqutheseal.celestisynth.common.registry.CSRarityTypes;
+import com.aqutheseal.celestisynth.util.ExtraUtil;
 import com.mojang.datafixers.util.Either;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -36,7 +36,7 @@ public class CSTooltipRenderer {
         List<Either<FormattedText, TooltipComponent>> elements = event.getTooltipElements();
         List<Either<FormattedText, TooltipComponent>> elementsToAdd = new ArrayList<>();
 
-        Style tierColor = Style.EMPTY.withColor(0x8BDEFF);
+        Style tierColor = Style.EMPTY.withColor(ExtraUtil.getCelestialColor(scroll * 4).argbInt());
         Style navigationNoticeColor = Style.EMPTY.withColor(0x96D400);
 
         if (!stack.isEmpty() && StarlitFactoryBlockEntity.getFuelMap().containsKey(stack.getItem())) {
@@ -46,7 +46,7 @@ public class CSTooltipRenderer {
         if (!stack.isEmpty() && stack.getItem() instanceof CSWeapon cs) {
             final Component empty = Component.literal(" ");
 
-            elementsToAdd.add(Either.left(Component.translatable("item.celestisynth.celestial_tier").withStyle(tierColor).withStyle(ChatFormatting.BOLD)));
+            elementsToAdd.add(Either.left(Component.translatable("item.celestisynth.celestial_tier").withStyle(tierColor)));
             elementsToAdd.add(Either.left(Component.translatable("item.celestisynth.shift_notice").withStyle(navigationNoticeColor)));
             elementsToAdd.add(Either.left(empty));
 

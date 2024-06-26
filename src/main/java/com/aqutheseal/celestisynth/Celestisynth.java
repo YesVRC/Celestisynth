@@ -1,6 +1,5 @@
 package com.aqutheseal.celestisynth;
 
-import com.aqutheseal.celestisynth.common.events.CSRecipeBookSetupEvents;
 import com.aqutheseal.celestisynth.common.network.s2c.UpdateStatsPacket;
 import com.aqutheseal.celestisynth.common.registry.CSDataLoaders;
 import com.aqutheseal.celestisynth.common.registry.CSTags;
@@ -30,8 +29,6 @@ public class Celestisynth {
 
         // Don't change
         CSTags.init();
-        CSRecipeBookSetupEvents.init();
-        modEventBus.addListener(CSRecipeBookSetupEvents::registerEvent);
 
         if (modEventBus != null && forgeEventBus != null)  CSModManager.registerAll(modEventBus, forgeEventBus);
 

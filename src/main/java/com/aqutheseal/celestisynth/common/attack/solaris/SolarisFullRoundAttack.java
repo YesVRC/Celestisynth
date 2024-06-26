@@ -104,7 +104,7 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
 
             BlockPos playerPos = player.blockPosition();
             double radius = 3;
-            double particleCount = 50;
+            double particleCount = 30;
             double angleIncrement = (2 * Math.PI) / particleCount;
 
             for (int i = 0; i < particleCount; i++) {

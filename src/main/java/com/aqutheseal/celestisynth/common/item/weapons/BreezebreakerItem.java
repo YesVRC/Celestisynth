@@ -110,7 +110,7 @@ public class BreezebreakerItem extends SkilledSwordItem implements CSGeoItem {
         if (event.getSource() == event.getEntity().damageSources().fall()) {
             event.setCanceled(true);
         } else {
-            event.setAmount(event.getAmount() * 2.3F);
+            event.setAmount(event.getAmount() * 1.65F);
         }
     }
 

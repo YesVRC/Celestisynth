@@ -69,7 +69,7 @@ public class SolarisSoulDashAttack extends WeaponAttackInstance {
         if (getTimerProgress() == 13) {
             player.playSound(CSSoundEvents.STEP.get());
             for (int i = 0; i < 15; i++) {
-                if (!level.isClientSide()) ParticleUtil.sendParticles((ServerLevel) level, ParticleTypes.LARGE_SMOKE, player.getX(), player.getY(), player.getZ(), 0, (-1 + rand.nextFloat() * 2) * 0.5, 0.1, (-1 + rand.nextFloat() * 2) * 0.5);
+                ParticleUtil.sendParticles(level, ParticleTypes.LARGE_SMOKE, player.getX(), player.getY(), player.getZ(), 0, (-1 + rand.nextFloat() * 2) * 0.5, 0.1, (-1 + rand.nextFloat() * 2) * 0.5);
             }
         }
 
@@ -78,9 +78,7 @@ public class SolarisSoulDashAttack extends WeaponAttackInstance {
         }
 
         if (getTimerProgress() > 0 && getTimerProgress() < 24) {
-            if (!level.isClientSide()) {
-                for (int i = 0; i < 10; i++) ParticleUtil.sendParticles((ServerLevel) level, ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY(), player.getZ(), 0, -1 + rand.nextFloat() * 2, 0.1, -1 + rand.nextFloat() * 2);
-            }
+            ParticleUtil.sendParticles(level, ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY(), player.getZ(), 0, -1 + rand.nextFloat() * 2, 0.1, -1 + rand.nextFloat() * 2);
 
             player.setDeltaMovement(0, 0, 0);
             player.hurtMarked = true;

@@ -108,9 +108,12 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
 
         int durThreshold = dur >= 200 ? 15 : 30;
         if (dur % durThreshold == 0) {
-            float sacrificeThreshold = 1.5f;
+            float sacrificeThreshold = 1f;
             if ((pEntity.getHealth() - sacrificeThreshold) > 0 && !isCreativeOrSpectator(pEntity)) {
                 pEntity.setHealth(pEntity.getHealth() - sacrificeThreshold);
+                if (pEntity instanceof Player player) {
+                    player.getFoodData().setSaturation(player.getFoodData().getSaturationLevel() + 1);
+                }
                 this.sacrificeEffect(pLevel, pEntity, dur);
             } else {
                 if (!isCreativeOrSpectator(pEntity)) {
