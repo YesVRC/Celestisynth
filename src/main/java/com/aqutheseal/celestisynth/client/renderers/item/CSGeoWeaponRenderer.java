@@ -62,6 +62,7 @@ public class CSGeoWeaponRenderer<T extends Item & CSGeoItem> extends GeoItemRend
             if (pLivingEntity instanceof Player player && player.getUUID() == Minecraft.getInstance().player.getUUID() && pItemStack.getItem() instanceof CSGeoItem item) {
                 if (item.getSwingContainer(pLivingEntity, pItemStack) != null && Minecraft.getInstance() instanceof MinecraftClient_BetterCombat bcPlayer) {
                     if (bcPlayer.isWeaponSwingInProgress()) {
+
                         SwingParticleContainer swingContainer = item.getSwingContainer(pLivingEntity, pItemStack);
                         CameraType cameraType = Minecraft.getInstance().options.getCameraType();
                         Matrix4f localMatrix = new Matrix4f(pPoseStack.last().pose());
@@ -72,17 +73,20 @@ public class CSGeoWeaponRenderer<T extends Item & CSGeoItem> extends GeoItemRend
                         double y = pLivingEntity.getY() + relativePosition.y() + 2 + ((swingContainer.sizeMult() - 1.5) * 0.3333);
                         double z = pLivingEntity.getZ() + relativePosition.z();
                         Vec3 lookAngle;
+
                         if (cameraType == CameraType.THIRD_PERSON_BACK) {
                             lookAngle = pLivingEntity.getLookAngle().scale(swingContainer.sizeMult() * 4);
                             x -= lookAngle.x();
                             y -= lookAngle.y();
                             z -= lookAngle.z();
+
                         } else if (cameraType == CameraType.THIRD_PERSON_FRONT) {
                             lookAngle = pLivingEntity.getLookAngle().scale((swingContainer.sizeMult() * 4.3333) - (swingContainer.sizeMult() - 3));
                             x += lookAngle.x();
                             y += lookAngle.y();
                             z += lookAngle.z();
                         }
+
                         Vector3d positions = new Vector3d(x, y, z);
                         CSNetworkManager.sendToServer(new UpdateParticlePacket(swingContainer.particleType(), positions.x(), positions.y(), positions.z(), 0, 0, 0));
                     }

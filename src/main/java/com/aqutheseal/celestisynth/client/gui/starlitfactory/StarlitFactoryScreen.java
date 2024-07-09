@@ -72,6 +72,8 @@ public class StarlitFactoryScreen extends AbstractContainerScreen<StarlitFactory
             stars.add(new FactoryStar(-50 + offset, -20, 0.5 + random.nextDouble(), 0.5 + random.nextDouble()));
         }
 
+
+
         pGuiGraphics.pose().popPose();
     }
 

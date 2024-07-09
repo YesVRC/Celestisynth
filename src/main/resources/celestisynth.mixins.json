@@ -25,7 +25,7 @@
     "InventoryScreenMixin",
     "LivingEntityRendererMixin",
     "MinecraftMixin",
-    "PlayerRendererMixin",
+    "ItemInHandLayerMixin",
     "RenderLayerMixin"
   ]
 }
