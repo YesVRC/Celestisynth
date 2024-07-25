@@ -8,9 +8,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 
-public record TieredItemStats(String itemRegistryName, Map<Attribute, AttributeModifierCodecHolder> modifiers) {
+public record TieredItemStats(Map<Attribute, AttributeModifierCodecHolder> modifiers) {
     public static final Codec<TieredItemStats> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            Codec.STRING.fieldOf("itemRegistryName").forGetter(TieredItemStats::itemRegistryName),
             Codec.unboundedMap(ForgeRegistries.ATTRIBUTES.getCodec(), AttributeModifierCodecHolder.CODEC).fieldOf("modifiers").forGetter(TieredItemStats::modifiers))
             .apply(inst, TieredItemStats::new));
 

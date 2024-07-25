@@ -1,4 +1,4 @@
-package com.aqutheseal.celestisynth.common.item.base;
+package com.aqutheseal.celestisynth.common.enchantments;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;

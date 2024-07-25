@@ -36,7 +36,7 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener {
 
     public CodecJsonDataManager(String folderName, Codec<T> codec, Gson gson) {
         super(gson, folderName);
-        this.data = new HashMap();
+        this.data = new HashMap<>();
         this.folderName = folderName;
         this.codec = codec;
     }
@@ -49,9 +49,10 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener {
         this.data = data;
     }
 
+    @Override
     protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
         LOGGER.info("Beginning loading of data for data loader: {}", this.folderName);
-        Map<ResourceLocation, T> updatedData = new HashMap();
+        Map<ResourceLocation, T> updatedData = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, JsonElement> resourceLocationJsonElementEntry : jsons.entrySet()) {
             Map.Entry<ResourceLocation, JsonElement> entry = resourceLocationJsonElementEntry;

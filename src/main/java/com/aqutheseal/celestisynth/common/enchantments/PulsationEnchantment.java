@@ -1,6 +1,5 @@
-package com.aqutheseal.celestisynth.common.item.enchantments;
+package com.aqutheseal.celestisynth.common.enchantments;
 
-import com.aqutheseal.celestisynth.common.item.base.BaseEnchantment;
 import com.aqutheseal.celestisynth.common.registry.CSDamageSources;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;

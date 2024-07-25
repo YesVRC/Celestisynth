@@ -1,9 +1,12 @@
 package com.aqutheseal.celestisynth.common.item.base;
 
+import com.aqutheseal.celestisynth.api.item.CSDataPackableStatItem;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
+import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -11,22 +14,36 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.util.Lazy;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class SkilledAxeItem extends AxeItem implements CSWeapon {
+import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
+
+public abstract class SkilledAxeItem extends AxeItem implements CSWeapon, CSDataPackableStatItem {
     public static final String ATTACK_INDEX_KEY = "cs.AttackIndex";
+    private Lazy<? extends Multimap<Attribute, AttributeModifier>> attributeModMapLazy = Lazy.of(() -> {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> attrModMapBuilder = ImmutableMultimap.builder();
+
+        attrModMapBuilder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", getAttackDamage() - 1, AttributeModifier.Operation.ADDITION));
+        attrModMapBuilder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", getAttackSpeed().getAsDouble(), AttributeModifier.Operation.ADDITION));
+        attrModMapBuilder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(CSDataPackableStatItem.getKBUUIDMod(), "Weapon modifier", getAttackKnockback().getAsDouble(), AttributeModifier.Operation.ADDITION));
+
+        if (ForgeMod.BLOCK_REACH.isPresent()) attrModMapBuilder.put(ForgeMod.BLOCK_REACH.get(), new AttributeModifier(CSDataPackableStatItem.getBlockReachUUIDMod(), "Weapon modifier", getBlockReach().getAsDouble(), AttributeModifier.Operation.ADDITION));
+        if (ForgeMod.ENTITY_REACH.isPresent()) attrModMapBuilder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(CSDataPackableStatItem.getEntityReachUUIDMod(), "Weapon modifier", getAttackReach().getAsDouble(), AttributeModifier.Operation.ADDITION));
+
+        return attrModMapBuilder.build();
+    });
 
     public SkilledAxeItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> additional = ImmutableMultimap.builder();
-        additional.putAll(this.defaultModifiers);
-        this.addExtraAttributes(additional);
-        this.defaultModifiers = additional.build();
     }
 
     public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
@@ -106,5 +123,40 @@ public abstract class SkilledAxeItem extends AxeItem implements CSWeapon {
 
     public void setAttackIndex(ItemStack stack, int value) {
         attackController(stack).putInt(ATTACK_INDEX_KEY, value);
+    }
+
+    @Override
+    public IntSupplier getActualAttackDamage() {
+        return null;
+    }
+
+    @Override
+    public DoubleSupplier getAttackSpeed() {
+        return null;
+    }
+
+    @Override
+    public DoubleSupplier getAttackKnockback() {
+        return null;
+    }
+
+    @Override
+    public DoubleSupplier getAttackReach() {
+        return null;
+    }
+
+    @Override
+    public DoubleSupplier getBlockReach() {
+        return null;
+    }
+
+    @Override
+    public Lazy<? extends Multimap<Attribute, AttributeModifier>> getAttributes() {
+        return attributeModMapLazy;
+    }
+
+    @Override
+    public void setAttributes(Lazy<? extends Multimap<Attribute, AttributeModifier>> attributes) {
+        this.attributeModMapLazy = attributes;
     }
 }
