@@ -53,6 +53,7 @@ public class KeresSlashAttack extends WeaponAttackInstance {
             SkillCastKeresSlashWave wave = CSEntityTypes.KERES_SLASH_WAVE.get().create(level);
             wave.setOwner(player);
             wave.moveTo(player.position());
+            wave.damage = this.calculateAttributeDependentDamage(player, stack, 0.2F);
             wave.lifespan = (heldDuration / 8) + level.random.nextInt(3);
             if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack) > 0) {
                 wave.hasMultishot = true;

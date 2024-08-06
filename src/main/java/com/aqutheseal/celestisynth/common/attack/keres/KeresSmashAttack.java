@@ -73,6 +73,7 @@ public class KeresSmashAttack extends WeaponAttackInstance {
                 SkillCastKeresSmash smash = CSEntityTypes.KERES_SMASH.get().create(level);
                 smash.setOwnerUUID(player.getUUID());
                 smash.moveTo(player.position());
+                smash.damage = this.calculateAttributeDependentDamage(player, stack, 1.5F);
                 level.addFreshEntity(smash);
             }
             this.baseStop();

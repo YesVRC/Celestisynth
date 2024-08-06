@@ -46,6 +46,7 @@ public class FrostboundCryogenesisAttack extends FrostboundAttack {
             frostboundIceCast.setAngleX((float) (calculateXLook(player) * 3));
             frostboundIceCast.setAngleZ((float) (calculateZLook(player) * 3));
             frostboundIceCast.moveTo(player.getX() + offX,  floorPos + 2, player.getZ() + offZ);
+            frostboundIceCast.damage = this.calculateAttributeDependentDamage(player, stack, 1.2F);
             level.addFreshEntity(frostboundIceCast);
         }
     }

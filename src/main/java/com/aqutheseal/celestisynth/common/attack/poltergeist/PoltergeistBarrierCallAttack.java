@@ -48,9 +48,8 @@ public class PoltergeistBarrierCallAttack extends WeaponAttackInstance {
 
         for (Entity entityBatch : iterateEntities(level, createAABB(player.blockPosition().offset((int) (calculateXLook(player) * 2), 0, (int) (calculateZLook(player) * 2)), range))) {
             if (entityBatch instanceof LivingEntity target && target != player && target.isAlive() && !player.isAlliedTo(target)) {
-                initiateAbilityAttack(player, target, (float) (double) CSConfigManager.COMMON.poltergeistShiftSkillDmg.get() + getSharpnessValue(getStack(), 1.2F), AttackHurtTypes.REGULAR);
+                this.attributeDependentAttack(player, target, stack, 0.8F, AttackHurtTypes.REGULAR);
                 target.playSound(CSSoundEvents.SWORD_CLASH.get(), 0.25F, 0.5F);
-
                 CSEntityCapabilityProvider.get(target).ifPresent(data -> {
                     data.setPhantomTag(player, 200);
                 });
@@ -62,7 +61,7 @@ public class PoltergeistBarrierCallAttack extends WeaponAttackInstance {
         sendExpandingParticles(level, ParticleTypes.SOUL, player.blockPosition(), 45, 0.5F);
 
         double deltaY = player.onGround() ? 3 : 0.9;
-        player.setDeltaMovement(calculateXLook(player) * -0.5, deltaY, calculateZLook(player) * -0.5);
+        player.setDeltaMovement(calculateXLook(player) * -0.7, deltaY, calculateZLook(player) * -0.7);
         player.hurtMarked = true;
         player.playSound(SoundEvents.ENDER_CHEST_OPEN, 1.0F, 1.5F);
         player.playSound(SoundEvents.BLAZE_SHOOT, 1.0F, 1.5F);

@@ -5,8 +5,10 @@ import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvide
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
-import com.aqutheseal.celestisynth.common.registry.*;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
+import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
+import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
+import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
+import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.aqutheseal.celestisynth.util.SkinUtil;
 import com.mojang.datafixers.util.Pair;
@@ -72,6 +74,7 @@ public class SkillCastFrostboundIceCast extends EffectControllerEntity {
                     frostboundIceCast.setAngleX(aX);
                     frostboundIceCast.setAngleZ(aZ);
                     frostboundIceCast.moveTo(getX() + aX, floorPos + 2, getZ() + aZ);
+                    frostboundIceCast.damage = this.damage;
                     level().addFreshEntity(frostboundIceCast);
                 }
             }
@@ -88,7 +91,7 @@ public class SkillCastFrostboundIceCast extends EffectControllerEntity {
             for (Entity entityBatch : entities) {
                 if (entityBatch instanceof LivingEntity target) {
                     if (target != ownerPlayer && target.isAlive()) {
-                        initiateAbilityAttack(ownerPlayer, target, (float) (double) CSConfigManager.COMMON.frostboundShiftSkillDmg.get(), AttackHurtTypes.NO_KB);
+                        this.initiateAbilityAttack(ownerPlayer, target, damage, AttackHurtTypes.NO_KB);
                         target.setDeltaMovement(0, 0.05, 0);
                         CSEntityCapabilityProvider.get(target).ifPresent(data -> {
                             data.setFrostbound(100);

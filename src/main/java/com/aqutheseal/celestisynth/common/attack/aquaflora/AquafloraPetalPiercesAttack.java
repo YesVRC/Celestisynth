@@ -58,7 +58,7 @@ public class AquafloraPetalPiercesAttack extends AquafloraAttack {
             player.playSound(CSSoundEvents.AIR_SWING.get(), 0.25F, 1.3F + level.random.nextFloat());
             CSEffectEntity.createInstance(player, null, CSVisualTypes.AQUAFLORA_STAB.get(), -0.5 + level.random.nextDouble() + calculateXLook(player) * 3, (-0.5 + level.random.nextDouble()) + (2 + calculateYLook(player) * 3), -0.5 + level.random.nextDouble() + calculateZLook(player) * 3);
 
-            List<Entity> entities = iterateEntities(level, createAABB(player.blockPosition().offset((int) (calculateXLook(player) * 4.5), (int) (1 + (calculateYLook(player) * 4.5)), (int) (calculateZLook(player) * 4.5)), 2));
+            List<Entity> entities = this.iterateEntities(level, createAABB(player.blockPosition().offset((int) (calculateXLook(player) * 4.5), (int) (1 + (calculateYLook(player) * 4.5)), (int) (calculateZLook(player) * 4.5)), 2));
             entities.addAll(iterateEntities(level, createAABB(player.blockPosition().offset((int) (calculateXLook(player) * 3), (int) (1 + (calculateYLook(player) * 3)), (int) (calculateZLook(player) * 3)), 2)));
             entities.addAll(iterateEntities(level, createAABB(player.blockPosition().offset((int) (calculateXLook(player) * 1.5), (int) (1 + (calculateYLook(player) * 1.5)), (int) (calculateZLook(player) * 1.5)), 2)));
 
@@ -67,8 +67,8 @@ public class AquafloraPetalPiercesAttack extends AquafloraAttack {
             for (Entity entityBatch : entities) {
                 if (entityBatch instanceof LivingEntity target) {
                     if (target != player && target.isAlive() && !player.isAlliedTo(target)) {
-                        initiateAbilityAttack(player, target, (float) (double) CSConfigManager.COMMON.aquafloraSkillDmg.get() + getSharpnessValue(getStack(), 0.15F), AttackHurtTypes.RAPID_NO_KB);
-                        createHitEffect(getStack(), level, player, target);
+                        this.attributeDependentAttack(player, target, stack, 0.1F, AttackHurtTypes.RAPID_NO_KB);
+                        this.createHitEffect(getStack(), level, player, target);
                     }
                 }
             }

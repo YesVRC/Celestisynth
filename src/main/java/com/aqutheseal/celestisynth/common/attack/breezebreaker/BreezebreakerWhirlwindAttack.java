@@ -66,6 +66,7 @@ public class BreezebreakerWhirlwindAttack extends BreezebreakerAttack {
                 tornadoSkillCast.setAddAngleY((float) calculateYLook(player));
                 tornadoSkillCast.setAddAngleZ((float) calculateZLook(player));
                 tornadoSkillCast.moveTo(player.getX(), player.getY() + 1, player.getZ());
+                tornadoSkillCast.damage = this.calculateAttributeDependentDamage(player, stack, 0.1F);
 
                 level.addFreshEntity(tornadoSkillCast);
             }

@@ -66,6 +66,7 @@ public class KeresRendAttack extends WeaponAttackInstance {
                 Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(0, vec31.x, vec31.y, vec31.z);
                 Vec3 vec3 = player.getViewVector(1.0F);
                 Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
+                rend.baseDamage = this.calculateAttributeDependentDamage(player, stack, 1.5F);
                 rend.shoot(shootAngle.x, 0, shootAngle.z, 1F, 0);
                 level.addFreshEntity(rend);
             }

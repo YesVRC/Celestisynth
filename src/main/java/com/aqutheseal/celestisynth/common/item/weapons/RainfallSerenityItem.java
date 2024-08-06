@@ -18,13 +18,13 @@ import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import dev.shadowsoffire.attributeslib.api.ALObjects;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
-import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -39,6 +39,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -52,6 +53,8 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -187,100 +190,98 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
         }
     }
 
-    @Override
-    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
-        if (pEntityLiving instanceof Player player) {
-            CompoundTag elementData = pStack.getOrCreateTagElement(CS_CONTROLLER_TAG_ELEMENT);
-            int useDuration = getUseDuration(pStack) - pTimeLeft;
-            double curPowerFromUse = getPowerForTime(pEntityLiving, pStack, useDuration);
-
-            AnimationManager.playAnimation(pLevel, CSPlayerAnimations.CLEAR.get());
-            elementData.putBoolean(ANIMATION_BEGUN_KEY, false);
-
-            if (curPowerFromUse >= 1.0D) {
-                if (curPowerFromUse == 1.0F) {
-                    CSEffectEntity.createInstance(player, null, CSVisualTypes.RAINFALL_SHOOT.get(), calculateXLook(player) * 2, 0.5 + (calculateYLook(player, 5) * 1), calculateZLook(player) * 2);
-                    player.setDeltaMovement(player.getDeltaMovement().subtract(calculateXLook(player) * 0.5, 0, calculateZLook(player) * 0.5));
-                }
-
-                int amount = 50;
-                float expansionMultiplier = 0.5F;
-
-                for (int e = 0; e < amount; e++) {
-                    RandomSource random = player.getRandom();
-                    double angle = random.nextDouble() * 2 * Math.PI;
-                    float offX = (float) Math.cos(angle) * expansionMultiplier;
-                    float offY = (-0.5f + random.nextFloat()) * expansionMultiplier;
-                    float offZ = (float) Math.sin(angle) * expansionMultiplier;
-
-                    ParticleUtil.sendParticles(pLevel, CSParticleTypes.RAINFALL_ENERGY_SMALL.get(), player.getX(), player.getY(), player.getZ(), 0, offX, offY, offZ);
-                }
-
-                int multishotEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, pStack);
-                FloatArrayList angles = new FloatArrayList();
-                angles.add(0.0F);
-
-                if (multishotEnchLvl > 0) {
-                    for (int i = 0; i < multishotEnchLvl + 1; i++) {
-                        if (pLevel.random.nextBoolean()) {
-                            angles.add(i * -15.0F);
-                            angles.add(i * 15.0F);
-                        } else {
-                            angles.add(i * -30.0F);
-                            angles.add(i * 30.0F);
-                        }
-                    }
-
-                    if (pLevel.random.nextInt(3) == 0) angles.add(-30 + (pLevel.random.nextFloat() * 60.0F));
-                }
-                for (float angle : angles) {
-                    if (!pLevel.isClientSide) {
-                        RainfallArrow rainfallArrow = new RainfallArrow(pLevel, player);
-
-                        rainfallArrow = (RainfallArrow) customArrow(rainfallArrow);
-                        rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                        rainfallArrow.setOrigin(player.position());
-                        rainfallArrow.setPierceLevel((byte) 3);
-                        rainfallArrow.setBaseDamage(CSConfigManager.COMMON.rainfallSerenityArrowDmg.get() + (pLevel.random.nextDouble() * 3));
-                        rainfallArrow.setImbueQuasar(true);
-
-                        Vec3 vec31 = pEntityLiving.getUpVector(1.0F);
-                        Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(angle * ((float)Math.PI / 180F), vec31.x, vec31.y, vec31.z);
-                        Vec3 vec3 =  pEntityLiving.getViewVector(1.0F);
-                        Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
-
-                        rainfallArrow.shoot(vector3f.x(), vector3f.y(), vector3f.z(), 1F, 0);
-
-                        if (curPowerFromUse == 1.0F) rainfallArrow.setStrong(true);
-                        RainfallSerenityItem.installLaserProperties(rainfallArrow, pStack);
-
-                        CSCompatAP.installApothRainfallDamage(rainfallArrow, pEntityLiving);
-
-                        if (multishotEnchLvl > 0) rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() * 0.8F);
-                        rainfallArrow.isMultishot = multishotEnchLvl > 0;
-
-                        pLevel.addFreshEntity(rainfallArrow);
-                    }
-
-                    pStack.hurtAndBreak(1, player, (livingOwner) -> livingOwner.broadcastBreakEvent(player.getUsedItemHand()));
-                }
-
-                pLevel.playSound(null, player.getX(), player.getY(), player.getZ(), CSSoundEvents.LASER_SHOOT.get(), SoundSource.PLAYERS, (float) (0.7F * curPowerFromUse), (float) (1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + curPowerFromUse * 0.5F));
-                player.awardStat(Stats.ITEM_USED.get(this));
+    public void release(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft, Player player, float charge, ArrowItem arrowitem, ItemStack projectileStack, AbstractArrow existingArrow) {
+        int mult = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, pStack);
+        if (mult > 0) {
+            for (int i = 1; i < mult + 1; i++) {
+                createAndShootArrow(pLevel, player, charge, existingArrow, arrowitem, projectileStack, 15F * i);
+                createAndShootArrow(pLevel, player, charge, existingArrow, arrowitem, projectileStack, -15F * i);
             }
         }
     }
 
-    public static void installLaserProperties(RainfallArrow rainfallArrow, ItemStack pStack) {
-        int powerEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, pStack);
-        int piercingEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, pStack);
-        int punchEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, pStack);
-        int flameEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, pStack);
+    private void createAndShootArrow(Level pLevel, Player player, float charge, AbstractArrow existingArrow, ArrowItem arrowitem, ItemStack projectileStack, float yOffset) {
+        AbstractArrow clone = arrowitem.createArrow(pLevel, projectileStack, player);
+        clone = this.customArrow(clone);
+        this.transferPropertiesToClone(existingArrow, clone);
 
-        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + powerEnchLvl);
-        rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + (piercingEnchLvl * 4));
-        if (punchEnchLvl > 0) rainfallArrow.setKnockback(punchEnchLvl);
-        if (flameEnchLvl > 0) rainfallArrow.setFlaming(true);
+        Vec3 vec31 = player.getUpVector(1.0F);
+        Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(yOffset * Mth.DEG_TO_RAD, vec31.x, vec31.y, vec31.z);
+        Vec3 vec3 = player.getViewVector(1.0F);
+        Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
+        clone.shoot(vector3f.x(), vector3f.y(), vector3f.z(), charge * 3.0F, 1.0F);
+
+        clone.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+        pLevel.addFreshEntity(clone);
+    }
+
+    public void transferPropertiesToClone(AbstractArrow existingArrow, AbstractArrow clone) {
+        Class<?> existingArrowClass = existingArrow.getClass();
+        while (existingArrowClass != null) {
+            for (Field field : existingArrowClass.getDeclaredFields()) {
+                field.setAccessible(true);
+                try {
+                    if (Modifier.isPublic(field.getModifiers()) || field.getName().equals("remainingFireTicks")) {
+                        field.set(clone, field.get(existingArrow));
+                    }
+                } catch (IllegalAccessException ignored) {
+                }
+            }
+            existingArrowClass = existingArrowClass.getSuperclass();
+        }
+        CompoundTag compoundTag = new CompoundTag();
+        existingArrow.addAdditionalSaveData(compoundTag);
+        clone.readAdditionalSaveData(compoundTag);
+    }
+
+    public void releaseUsingEffect(ItemStack pStack, Level pLevel, LivingEntity player, int pTimeLeft) {
+        CompoundTag elementData = pStack.getOrCreateTagElement(CS_CONTROLLER_TAG_ELEMENT);
+        int useDuration = getUseDuration(pStack) - pTimeLeft;
+        double curPowerFromUse = getPowerForTime(player, pStack, useDuration);
+        AnimationManager.playAnimation(pLevel, CSPlayerAnimations.CLEAR.get());
+        elementData.putBoolean(ANIMATION_BEGUN_KEY, false);
+        if (curPowerFromUse >= 1.0D) {
+            if (curPowerFromUse == 1.0F) {
+                CSEffectEntity.createInstance(player, null, CSVisualTypes.RAINFALL_SHOOT.get(), calculateXLook(player) * 2, 0.5 + (calculateYLook(player, 5) * 1), calculateZLook(player) * 2);
+                player.setDeltaMovement(player.getDeltaMovement().subtract(calculateXLook(player) * 0.5, 0, calculateZLook(player) * 0.5));
+            }
+            int amount = 50;
+            float expansionMultiplier = 0.5F;
+
+            for (int e = 0; e < amount; e++) {
+                RandomSource random = player.getRandom();
+                double angle = random.nextDouble() * 2 * Math.PI;
+                float offX = (float) Math.cos(angle) * expansionMultiplier;
+                float offY = (-0.5f + random.nextFloat()) * expansionMultiplier;
+                float offZ = (float) Math.sin(angle) * expansionMultiplier;
+
+                ParticleUtil.sendParticles(pLevel, CSParticleTypes.RAINFALL_ENERGY_SMALL.get(), player.getX(), player.getY(), player.getZ(), 0, offX, offY, offZ);
+            }
+        }
+        pLevel.playSound(null, player.getX(), player.getY(), player.getZ(), CSSoundEvents.LASER_SHOOT.get(), SoundSource.PLAYERS, (float) (0.7F * curPowerFromUse), (float) (1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + curPowerFromUse * 0.5F));
+
+    }
+
+    @Override
+    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
+        this.releaseUsingEffect(pStack, pLevel, pEntityLiving, pTimeLeft);
+        super.releaseUsing(pStack, pLevel, pEntityLiving, pTimeLeft);
+    }
+
+    @Override
+    public AbstractArrow customArrow(AbstractArrow arrow) {
+        RainfallArrow rainfallArrow = new RainfallArrow(arrow);
+
+        rainfallArrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+        rainfallArrow.setOrigin(arrow.getOwner().position());
+        rainfallArrow.setPierceLevel((byte) 3);
+        rainfallArrow.setImbueQuasar(true);
+
+        if (CSIntegrationManager.checkApothicAttributes() && arrow.getOwner() instanceof LivingEntity owner) {
+            rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + CSCompatAP.apothValue(ALObjects.Attributes.ARROW_VELOCITY, owner));
+        }
+
+        return rainfallArrow;
     }
 
     @Override

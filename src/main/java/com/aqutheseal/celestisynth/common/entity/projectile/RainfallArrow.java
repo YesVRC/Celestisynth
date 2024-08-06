@@ -55,6 +55,10 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
         super(CSEntityTypes.RAINFALL_ARROW.get(), pShooter, pLevel);
     }
 
+    public RainfallArrow(AbstractArrow arrow) {
+        this(arrow.level(), (LivingEntity) arrow.getOwner());
+    }
+
     @Override
     public void tick() {
         super.tick();

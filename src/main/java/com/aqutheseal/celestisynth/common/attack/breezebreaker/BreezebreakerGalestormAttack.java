@@ -59,7 +59,7 @@ public class BreezebreakerGalestormAttack extends BreezebreakerAttack {
             for (Entity entityBatch : entities) {
                 if (entityBatch instanceof LivingEntity target) {
                     if (target != player && target.isAlive() && !player.isAlliedTo(target)) {
-                        initiateAbilityAttack(player, target, (float) (CSConfigManager.COMMON.breezebreakerSkillDmg.get() + getSharpnessValue(stack, 1)), AttackHurtTypes.REGULAR);
+                        this.attributeDependentAttack(player, target, stack, 1.3F, AttackHurtTypes.REGULAR);
                         target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.WEAKNESS, 40, 1));
                         sendExpandingParticles(level, ParticleTypes.POOF, target.blockPosition().above(), 15, 0);
                     }

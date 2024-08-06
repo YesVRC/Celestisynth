@@ -26,12 +26,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
@@ -91,6 +89,11 @@ public class CSCommonSetupEvents {
     }
 
     public static class CSModSetupEvents {
+//
+//        @SubscribeEvent
+//        public static void onItemAttributeModifierSetup(ItemAttributeModifierEvent event) {
+//            event.
+//        }
 
         @SubscribeEvent
         public static void onEntityAttributeModification(EntityAttributeModificationEvent event) {

@@ -22,7 +22,7 @@ public abstract class AquafloraAttack extends WeaponAttackInstance {
 
     public void createHitEffect(ItemStack itemStack, Level level, Player player, LivingEntity target) {
         RandomSource random = level.getRandom();
-        sendExpandingParticles(level, ParticleTypes.END_ROD, target.getX(), target.getY(), target.getZ(), 25, 0.5F);
-        player.playSound(CSSoundEvents.BLING.get(), 0.2F, 1F + random.nextFloat());
+        sendExpandingParticles(level, ParticleTypes.END_ROD, target.getX(), target.getY(), target.getZ(), 10, 0.1F);
+        player.playSound(CSSoundEvents.BLING.get(), 0.1F, 1F + random.nextFloat());
     }
 }

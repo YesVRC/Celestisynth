@@ -101,8 +101,8 @@ public class FrostboundDanceAttack extends FrostboundAttack {
         if (level.isClientSide()) shakeScreens(player, 5, 4, 0.0015F);
         for (Entity entity : iterateEntities(level, createAABB(groundPos.offset((int) xOffset, 1, (int) zOffset), 6, 3))) {
             if (entity instanceof LivingEntity target && entity != player) {
-                initiateAbilityAttack(player, target, (float) (double) CSConfigManager.COMMON.frostboundSkillDmg.get() + getSharpnessValue(stack, 1.75F), AttackHurtTypes.NO_KB);
-                CSEntityCapabilityProvider.get(target).ifPresent(data -> {
+               this.attributeDependentAttack(player, target, stack, 1.5F, AttackHurtTypes.REGULAR);
+               CSEntityCapabilityProvider.get(target).ifPresent(data -> {
                     data.setFrostbound(100);
                 });
                 entity.playSound(sound.getSecond());
@@ -141,7 +141,7 @@ public class FrostboundDanceAttack extends FrostboundAttack {
         }
         for (Entity entity : iterateEntities(level, createAABB(player.blockPosition().offset((int) xOffset, 1, (int) zOffset), slashIndex == 2 ? 8 : 5, 3))) {
             if (entity instanceof LivingEntity target && entity != player) {
-                initiateAbilityAttack(player, target, 6 + getSharpnessValue(stack, 1.5F), AttackHurtTypes.REGULAR);
+                this.attributeDependentAttack(player, target, stack, 1.7F, AttackHurtTypes.REGULAR);
                 CSEntityCapabilityProvider.get(target).ifPresent(data -> {
                     data.setFrostbound(60);
                 });

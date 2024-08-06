@@ -74,7 +74,7 @@ public class CrescentiaBarrageAttack extends WeaponAttackInstance {
             for (Entity entityBatch : entities) {
                 if (entityBatch instanceof LivingEntity target) {
                     if (target != player && target.isAlive() && !player.isAlliedTo(target) && target.distanceToSqr(player) <= range * range) {
-                        initiateAbilityAttack(player, target, (float) (CSConfigManager.COMMON.crescentiaSkillDmg.get() + getSharpnessValue(getStack(), 0.25F)), AttackHurtTypes.RAPID);
+                        this.attributeDependentAttack(player, target, stack, 0.07F, AttackHurtTypes.RAPID);
                         target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 20, 2));
                     }
                 }

@@ -34,7 +34,7 @@ public class AbilityComponent {
 
         @Override
         public int getHeight() {
-            return this.descriptionWordWrapHeight() + this.getConditionHeight() + ICON_OFFSETED_HEIGHT + 5;
+            return this.descriptionWordWrapHeight() + this.getConditionHeight() + ICON_OFFSETED_HEIGHT + 13;
         }
 
         @Override

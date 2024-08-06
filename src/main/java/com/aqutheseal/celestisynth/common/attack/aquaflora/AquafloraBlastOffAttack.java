@@ -52,8 +52,8 @@ public class AquafloraBlastOffAttack extends AquafloraAttack {
             if (entityBatch instanceof LivingEntity target) {
                 if (target != player && target.isAlive() && !player.isAlliedTo(target)) {
                     target.setDeltaMovement((target.getX() - player.getX()) * 0.4,   1, (target.getZ() - player.getZ()) * 0.4);
-                    initiateAbilityAttack(player, target, (float) (double) CSConfigManager.COMMON.aquafloraShiftSkillDmg.get() + getSharpnessValue(getStack(), 1F), AttackHurtTypes.NO_KB);
-                    createHitEffect(getStack(), level, player, target);
+                    this.attributeDependentAttack(player, target, stack, 1.3F, AttackHurtTypes.NO_KB);
+                    this.createHitEffect(getStack(), level, player, target);
                     CSWeaponUtil.disableRunningWeapon(target);
                 }
             }

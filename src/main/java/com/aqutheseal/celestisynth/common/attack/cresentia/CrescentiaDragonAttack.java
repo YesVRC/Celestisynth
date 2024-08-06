@@ -66,18 +66,19 @@ public class CrescentiaDragonAttack extends WeaponAttackInstance {
                 angles.add(-15.0F);
                 angles.add(15.0F);
             }
-            if (!level.isClientSide()) {
-                for (float i : angles) {
-                    CrescentiaDragon dragon = new CrescentiaDragon(CSEntityTypes.CRESCENTIA_DRAGON.get(), player, level);
-                    dragon.moveTo(player.getX(), dragon.getY(), player.getZ());
-                    Vec3 vec31 = player.getUpVector(1.0F);
-                    Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(i * ((float) Math.PI / 180F), vec31.x, vec31.y, vec31.z);
-                    Vec3 vec3 = player.getViewVector(1.0F);
-                    Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
-                    dragon.shoot(shootAngle.x, shootAngle.y, shootAngle.z, 1.5F, 0);
-                    level.addFreshEntity(dragon);
-                }
+
+            for (float i : angles) {
+                CrescentiaDragon dragon = new CrescentiaDragon(CSEntityTypes.CRESCENTIA_DRAGON.get(), player, level);
+                dragon.moveTo(player.getX(), dragon.getY(), player.getZ());
+                Vec3 vec31 = player.getUpVector(1.0F);
+                Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(i * ((float) Math.PI / 180F), vec31.x, vec31.y, vec31.z);
+                Vec3 vec3 = player.getViewVector(1.0F);
+                Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
+                dragon.shoot(shootAngle.x, shootAngle.y, shootAngle.z, 1.5F, 0);
+                dragon.damage = this.calculateAttributeDependentDamage(player, stack, 0.08F);
+                level.addFreshEntity(dragon);
             }
+
             player.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1F, 2F + (float) (level.random.nextGaussian() * 0.25F));
             player.playSound(SoundEvents.ENDER_DRAGON_HURT, 1F, 0.5F + (float) (level.random.nextGaussian() * 0.25F));
             player.playSound(CSSoundEvents.WHIRLWIND.get(), 0.2F, 0.5F + (float) (level.random.nextGaussian() * 0.25F));

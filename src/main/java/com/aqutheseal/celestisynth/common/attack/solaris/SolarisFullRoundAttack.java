@@ -11,7 +11,6 @@ import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -83,24 +82,21 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
             BlockPos blockPosForAttack = player.blockPosition();
             int range = 4;
             List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, new AABB(blockPosForAttack.offset(-(range), -(range), -(range)), blockPosForAttack.offset(range, range, range)));
-
             for (LivingEntity target : entities) {
                 if (target != player && !player.isAlliedTo(target) && target.isAlive()) {
-                    initiateAbilityAttack(player, target, (float) ((CSConfigManager.COMMON.solarisSkillDmg.get()) + getSharpnessValue(getStack(), 0.5F)), AttackHurtTypes.RAPID);
+                    this.attributeDependentAttack(player, target, stack, 0.23F, AttackHurtTypes.RAPID_NO_KB);
                     target.setSecondsOnFire(5);
                 }
             }
             if (getTagController().getInt(DIRECTION_INDEX_KEY) == 0) {
                 movePlayerInCircularMotion(player, getTimerProgress(), false);
-                CSEffectEntity.createInstance(player, null, CSVisualTypes.SOLARIS_BLITZ.get(), 0, 2.5, 0);
-                CSEffectEntity.createInstance(player, null, CSVisualTypes.SOLARIS_AIR.get());
-                dashSound(1 + (player.getRandom().nextGaussian() / 2));
             } else if (getTagController().getInt(DIRECTION_INDEX_KEY) == 1) {
                 movePlayerInCircularMotion(player, getTimerProgress(), true);
-                CSEffectEntity.createInstance(player, null, CSVisualTypes.SOLARIS_BLITZ.get(), 0, 2.5, 0);
-                CSEffectEntity.createInstance(player, null, CSVisualTypes.SOLARIS_AIR.get());
-               dashSound(1 + (player.getRandom().nextGaussian() / 2));
             }
+
+            CSEffectEntity.createInstance(player, null, CSVisualTypes.SOLARIS_BLITZ.get(), 0, 2.5, 0);
+            CSEffectEntity.createInstance(player, null, CSVisualTypes.SOLARIS_AIR.get());
+            dashSound(1 + (player.getRandom().nextGaussian() / 2));
 
             BlockPos playerPos = player.blockPosition();
             double radius = 3;
@@ -117,7 +113,7 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
                 double motionX = Math.sin(Math.toRadians(rotationX)) * Math.cos(Math.toRadians(rotationZ));
                 double motionY = Math.sin(Math.toRadians(rotationZ));
                 double motionZ = Math.cos(Math.toRadians(rotationX)) * Math.cos(Math.toRadians(rotationZ));
-                if (!level.isClientSide()) ParticleUtil.sendParticles((ServerLevel) level, ParticleTypes.FLAME, x + 0.5, y, z + 0.5, 0, motionX, motionY, motionZ);
+                if (!level.isClientSide()) ParticleUtil.sendParticles(level, ParticleTypes.FLAME, x + 0.5, y, z + 0.5, 0, motionX, motionY, motionZ);
             }
         }
     }

@@ -5,7 +5,6 @@ import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -45,7 +44,7 @@ public class SkillCastBreezebreakerTornado extends EffectControllerEntity {
         for (Entity entityBatch : entities) {
             if (entityBatch instanceof LivingEntity target) {
                 if (target != ownerPlayer && target.isAlive()) {
-                    initiateAbilityAttack(ownerPlayer, target, (float) (double) CSConfigManager.COMMON.breezebreakerShiftSkillDmg.get(), AttackHurtTypes.RAPID_NO_KB);
+                    this.initiateAbilityAttack(ownerPlayer, target, damage, AttackHurtTypes.RAPID_NO_KB);
                     target.setDeltaMovement(0, 0.05, 0);
                 }
             }

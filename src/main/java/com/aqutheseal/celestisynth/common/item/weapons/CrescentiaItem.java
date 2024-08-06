@@ -105,26 +105,6 @@ public class CrescentiaItem extends SkilledSwordItem implements CSGeoItem {
         }
         ParticleUtil.sendParticle(level, ParticleTypes.FLASH, x, y, z);
         player.playSound(SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, 1.0F, 0.5F + random.nextFloat());
-
-//        RandomSource random = level.random;
-//        ItemStack star = new ItemStack(Items.FIREWORK_STAR);
-//        CompoundTag compoundtag = star.getOrCreateTagElement("Explosion");
-//        List<Integer> list = Lists.newArrayList();
-//        DyeColor[] allowedColors = new DyeColor[]{DyeColor.LIGHT_BLUE, DyeColor.WHITE, DyeColor.BLUE, DyeColor.MAGENTA, DyeColor.YELLOW, DyeColor.ORANGE};
-//        list.add(allowedColors[random.nextInt(allowedColors.length)].getFireworkColor());
-//        compoundtag.putIntArray("Colors", list);
-//        compoundtag.putByte("Type", (byte)(isBig ? FireworkRocketItem.Shape.LARGE_BALL.getId() : FireworkRocketItem.Shape.SMALL_BALL.getId()));
-//        CompoundTag itemCompound = itemStack.getOrCreateTagElement("Fireworks");
-//        ListTag listtag = new ListTag();
-//        CompoundTag starCompound = star.getTagElement("Explosion");
-//        if (starCompound != null) {
-//            listtag.add(starCompound);
-//        }
-//        if (!listtag.isEmpty()) {
-//            itemCompound.put("Explosions", listtag);
-//        }
-//        level.createFireworks(x, y, z, 0.01, 0.01, 0.01, itemCompound);
-//        player.playSound(SoundEvents.FIREWORK_ROCKET_LARGE_BLAST, 1.0F, 0.5F + random.nextFloat());
     }
 
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {

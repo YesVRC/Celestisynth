@@ -79,7 +79,7 @@ public class AquafloraSlashFrenzyAttack extends AquafloraAttack {
         //player.setXRot(90);
         setCameraAngle(player, 1);
 
-        if (getTimerProgress() >= 15 && getTimerProgress() % (checkDualWield(player, AquafloraItem.class) ? 2 : 5) == 0) {
+        if (getTimerProgress() >= 15 && getTimerProgress() % (checkDualWield(player, AquafloraItem.class) ? 4 : 7) == 0) {
             Predicate<Entity> filter = (e) -> e != player && e instanceof LivingEntity le && (player.hasLineOfSight(le) || le.hasLineOfSight(player)) && le.isAlive() && !player.isAlliedTo(le);
             List<LivingEntity> entities = iterateEntities(level, createAABB(player.blockPosition(), 12)).stream().filter(filter).map(LivingEntity.class::cast).toList();
             LivingEntity target = !entities.isEmpty() ? entities.get(level.random.nextInt(entities.size())) : null;
@@ -112,9 +112,9 @@ public class AquafloraSlashFrenzyAttack extends AquafloraAttack {
             CSEffectEntity.createInstance(player, target, CSVisualTypes.AQUAFLORA_ASSASSINATE.get(), 0, -0.2, 0);
             player.playSound(CSSoundEvents.WIND_STRIKE.get(), 0.15F, 0.5F);
 
-            double dualWieldMultiplier = checkDualWield(player, AquafloraItem.class) ? 0.6 : 1;
+            float dualWieldMultiplier = checkDualWield(player, AquafloraItem.class) ? 0.8F : 1;
 
-            this.initiateAbilityAttack(player, target, (float) (CSConfigManager.COMMON.aquafloraBloomSkillDmg.get() * dualWieldMultiplier) + getSharpnessValue(getStack(), (float) (0.65 * dualWieldMultiplier)), AttackHurtTypes.RAPID_NO_KB);
+            this.attributeDependentAttack(player, target, stack, dualWieldMultiplier, AttackHurtTypes.RAPID_NO_KB);
             createAquafloraFirework(getStack(), level, player, target.getX(), target.getY() + 1, target.getZ());
         }
     }

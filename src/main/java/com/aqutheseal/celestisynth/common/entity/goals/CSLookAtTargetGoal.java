@@ -27,8 +27,8 @@ public class CSLookAtTargetGoal extends Goal {
     @Override
     public void tick() {
         if (mob.getTarget() != null) {
-            this.mob.lookAt(mob.getTarget(), 30.0F, 30.0F);
-            this.mob.getLookControl().setLookAt(mob.getTarget().getX(), mob.getTarget().getEyeY(), mob.getTarget().getZ(), 30.0F, 30.0F);
+            this.mob.lookAt(mob.getTarget(), 180.0F, 180.0F);
+            this.mob.getLookControl().setLookAt(mob.getTarget().getX(), mob.getTarget().getEyeY(), mob.getTarget().getZ(), 180.0F, 180.0F);
         }
     }
 }

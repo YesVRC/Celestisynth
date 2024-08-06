@@ -74,6 +74,7 @@ public class CSEffectEntityRenderer extends SilencedRotationProjectileRenderer<C
             int lifespan = animatable.getVisualType().getAnimation().getLifespan();
             decreasingAlpha = 1.0F - ((float) animatable.tickCount / lifespan);
         }
+
         if (!CSConfigManager.CLIENT.visibilityOnFirstPerson.get()) {
             if (mc.level != null && animatable.getOwnerUuid() != null && mc.player != null) {
                 if (mc.options.getCameraType().isFirstPerson() && animatable.getOwnerUuid() == mc.player.getUUID()) {

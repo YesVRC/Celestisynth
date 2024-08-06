@@ -26,6 +26,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -38,6 +40,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -48,16 +51,34 @@ public interface CSWeaponUtil {
     String ANIMATION_TIMER_KEY = "cs.animationTimer";
     String ANIMATION_BEGUN_KEY = "cs.hasAnimationBegun";
 
+    default float calculateAttributeDependentDamage(LivingEntity holder, ItemStack stack, float attackAttributeMultiplier) {
+        float holderAttribute = (float) holder.getAttributeValue(Attributes.ATTACK_DAMAGE) + EnchantmentHelper.getDamageBonus(holder.getMainHandItem(), MobType.UNDEFINED);
+        float holderAttackDamage = (holderAttribute - this.getDamageOfItem(holder.getMainHandItem()) + this.getDamageOfItem(stack)) * attackAttributeMultiplier;
+
+        System.out.println("Base Attribute: " + holderAttribute);
+        System.out.println("Attack Damage of Mainhand: " + this.getDamageOfItem(holder.getMainHandItem()));
+        System.out.println("Attack Damage of Target Stack: " + this.getDamageOfItem(stack));
+        System.out.println("Attack Damage of Overall Calculated Damage: " + holderAttackDamage);
+
+        return holderAttackDamage;
+    }
+
+    default void attributeDependentAttack(LivingEntity holder, LivingEntity target, ItemStack stack, float attackAttributeMultiplier, AttackHurtTypes attackHurtType) {
+        this.initiateAbilityAttack(holder, target, this.calculateAttributeDependentDamage(holder, stack, attackAttributeMultiplier), attackHurtType);
+    }
+
+    private float getDamageOfItem(ItemStack stack) {
+        return (float) (stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE).stream().mapToDouble(AttributeModifier::getAmount).sum() + EnchantmentHelper.getDamageBonus(stack, MobType.UNDEFINED));
+    }
+
     default void initiateAbilityAttack(LivingEntity holder, LivingEntity target, float damage, DamageSource damageSource, AttackHurtTypes attackHurtType) {
         if (damage == 0) return;
-
-        DamageSource regularDamage = new CSDamageSources(target.level().registryAccess()).basicPlayerAttack(holder);
-        DamageSource rapidDamage = new CSDamageSources(target.level().registryAccess()).rapidPlayerAttack(holder);
-        DamageSource regularDamageNoKB = new CSDamageSources(target.level().registryAccess()).basicPlayerAttackWithoutKB(holder);
-        DamageSource rapidDamageNoKB = new CSDamageSources(target.level().registryAccess()).rapidPlayerAttackWithoutKB(holder);
-
+        CSDamageSources source = new CSDamageSources(target.level().registryAccess());
+        DamageSource regularDamage = source.basicPlayerAttack(holder);
+        DamageSource rapidDamage = source.rapidPlayerAttack(holder);
+        DamageSource regularDamageNoKB = source.basicPlayerAttackWithoutKB(holder);
+        DamageSource rapidDamageNoKB = source.rapidPlayerAttackWithoutKB(holder);
         DamageSource finalDamageSource;
-
         if (damageSource != null) {
             finalDamageSource = damageSource;
         } else {
@@ -68,16 +89,14 @@ public interface CSWeaponUtil {
                 case RAPID_NO_KB -> rapidDamageNoKB;
             };
         }
-
-        float finalDamage = (float) ((damage * holder.getAttributeValue(CSAttributes.CELESTIAL_DAMAGE.get())) / target.getAttributeValue(CSAttributes.CELESTIAL_DAMAGE_REDUCTION.get()));
-
+        double finalDamage = damage * holder.getAttributeValue(CSAttributes.CELESTIAL_DAMAGE.get()) / target.getAttributeValue(CSAttributes.CELESTIAL_DAMAGE_REDUCTION.get());
         if (!attackHurtType.doKnockback()) {
             double preAttribute = target.getAttribute(Attributes.KNOCKBACK_RESISTANCE).getValue();
             target.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1000);
-            attack(holder, target, finalDamage, finalDamageSource, attackHurtType);
+            attack(holder, target, (float) finalDamage, finalDamageSource, attackHurtType);
             target.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(preAttribute);
         } else {
-            attack(holder, target, finalDamage, finalDamageSource, attackHurtType);
+            attack(holder, target, (float) finalDamage, finalDamageSource, attackHurtType);
         }
     }
 
@@ -90,7 +109,7 @@ public interface CSWeaponUtil {
             target.invulnerableTime = 0;
         }
         target.hurt(damageSource, damage);
-        target.doEnchantDamageEffects(holder, target);
+        //target.doEnchantDamageEffects(holder, target);
     }
 
     default CompoundTag attackController(ItemStack stack) {
@@ -137,9 +156,9 @@ public interface CSWeaponUtil {
     default void sendExpandingParticles(Level level, ParticleType<?> particleType, double x, double y, double z, int amount, float expansionMultiplier) {
         for (int i = 0; i < amount; i++) {
             RandomSource random = level.getRandom();
-            float offX = (-0.5f + random.nextFloat()) * expansionMultiplier;
-            float offY = (-0.5f + random.nextFloat()) * expansionMultiplier;
-            float offZ = (-0.5f + random.nextFloat()) * expansionMultiplier;
+            float offX = (float) (random.nextGaussian() * expansionMultiplier);
+            float offY = (float) (random.nextGaussian() * expansionMultiplier);
+            float offZ = (float) (random.nextGaussian() * expansionMultiplier);
             ParticleUtil.sendParticles(level, particleType, x, y, z, 0, offX, offY, offZ);
         }
     }
@@ -172,16 +191,6 @@ public interface CSWeaponUtil {
         return weapon.isInstance(player.getMainHandItem().getItem()) && (weapon.isInstance(player.getOffhandItem().getItem()));
     }
 
-    default Entity getLookedAtEntity(LivingEntity holder, double range) {
-        double distance = range * range;
-        Vec3 eyePos = holder.getEyePosition(1);
-        Vec3 viewVec = holder.getViewVector(1);
-        Vec3 targetVec = eyePos.add(viewVec.x * range, viewVec.y * range, viewVec.z * range);
-        AABB aabb = holder.getBoundingBox().expandTowards(viewVec.scale(range)).inflate(4.0D, 4.0D, 4.0D);
-        EntityHitResult hitResult = expandedHitResult(holder, eyePos, targetVec, aabb, (entity) -> !entity.isSpectator(), distance);
-        return hitResult != null ? hitResult.getEntity() : null;
-    }
-
     default void shakeScreensForNearbyPlayers(Entity holder, Level level, double range, int maxDuration, int startFadingOut, float maxIntensity) {
         if (level.isClientSide()) {
             List<Player> entities = level.getEntitiesOfClass(Player.class, holder.getBoundingBox().inflate(range, range, range));
@@ -194,22 +203,22 @@ public interface CSWeaponUtil {
         if (target != null) CSNetworkManager.sendToServer(new ShakeScreenForAllPacket(target.getUUID(), duration, startFadingOut, intensity));
     }
 
-    default double calculateXLook(Player player) {
+    default double calculateXLook(LivingEntity player) {
         return player.getLookAngle().x();
     }
 
-    default double calculateYLook(Player player, double yMult) {
+    default double calculateYLook(LivingEntity player, double yMult) {
         double lookY = player.getLookAngle().y();
 
         if (lookY > 0) return lookY * yMult;
         else return lookY * 0.5;
     }
 
-    default double calculateYLook(Player player) {
+    default double calculateYLook(LivingEntity player) {
         return player.getLookAngle().y();
     }
 
-    default double calculateZLook(Player player) {
+    default double calculateZLook(LivingEntity player) {
         return player.getLookAngle().z();
     }
 
@@ -248,6 +257,40 @@ public interface CSWeaponUtil {
     default int getFloorPositionUnderPlayerYLevel(Level level, BlockPos pos) {
         return getFloorPositionUnderPlayer(level, pos).getY();
     }
+
+
+    default List<LivingEntity> getEntitiesInLine(Player player, double maxDistance) {
+        Vec3 originPosition = player.getEyePosition();
+        Vec3 lookDirection = player.getLookAngle().normalize().multiply(1, 0, 1);
+        Vec3 endPosition = originPosition.add(lookDirection.scale(maxDistance));
+        AABB rangeBox = new AABB(originPosition, endPosition);
+
+        List<Entity> possibleEntitiesInRange = player.level().getEntities(player, rangeBox, entity -> entity instanceof LivingEntity);
+        List<LivingEntity> livingEntitiesInLine = new ArrayList<>();
+
+        for (Entity entity : possibleEntitiesInRange) {
+            if (entity instanceof LivingEntity living) {
+                AABB entityBox = entity.getBoundingBox().inflate(0.5, 0.5, 0.5);
+                Optional<Vec3> optionalIntersection = entityBox.clip(originPosition, endPosition);
+                if (optionalIntersection.isPresent()) {
+                    livingEntitiesInLine.add(living);
+                }
+            }
+        }
+
+        return livingEntitiesInLine;
+    }
+
+    default Entity getLookedAtEntity(LivingEntity holder, double range) {
+        double distance = range * range;
+        Vec3 eyePos = holder.getEyePosition(1);
+        Vec3 viewVec = holder.getViewVector(1);
+        Vec3 targetVec = eyePos.add(viewVec.x * range, viewVec.y * range, viewVec.z * range);
+        AABB aabb = holder.getBoundingBox().expandTowards(viewVec.scale(range)).inflate(4.0D, 4.0D, 4.0D);
+        EntityHitResult hitResult = expandedHitResult(holder, eyePos, targetVec, aabb, (entity) -> !entity.isSpectator(), distance);
+        return hitResult != null ? hitResult.getEntity() : null;
+    }
+
 
     @Nullable
     static EntityHitResult expandedHitResult(Entity pShooter, Vec3 pStartVec, Vec3 pEndVec, AABB pBoundingBox, Predicate<Entity> pFilter, double pDistance) {

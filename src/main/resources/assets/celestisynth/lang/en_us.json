@@ -73,6 +73,7 @@
   "death.attack.rapid_player_attack": "%s was damaged by %s repeatedly until death.",
   "death.attack.basic_player_attack_nokb": "%s was slain by %s.",
   "death.attack.rapid_player_attack_nokb": "%s was damaged by %s repeatedly until death.",
+  "death.attack.erasure": "%s has been completely eradicated by %s.",
   "death.attack.pulsation": "%s gave %s a massive flash of power.",
 
   "------------------- SOLARIS ------------------":  "",

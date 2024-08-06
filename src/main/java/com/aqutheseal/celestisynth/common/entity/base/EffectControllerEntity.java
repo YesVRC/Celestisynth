@@ -40,6 +40,7 @@ public abstract class EffectControllerEntity extends Entity implements CSWeaponU
             CSSoundEvents.FIRE_SHOOT.get(),
             CSSoundEvents.IMPACT_HIT.get()
     };
+    public float damage;
 
     public EffectControllerEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

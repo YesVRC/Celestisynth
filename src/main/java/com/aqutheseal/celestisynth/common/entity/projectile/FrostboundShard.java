@@ -47,7 +47,7 @@ public class FrostboundShard extends ThrowableProjectile {
                 target.hurt(CSDamageSources.instance(level()).rapidPlayerAttack(), 2F);
             }
             for (int i = 1; i < 65; i++) {
-                playSound(SoundEvents.PLAYER_HURT_FREEZE);
+                playSound(SoundEvents.PLAYER_HURT_FREEZE, 0.15F, 0.7F + random.nextFloat());
                 double xx = random.nextGaussian() * 0.08;
                 double yy = random.nextGaussian() * 0.08;
                 double zz = random.nextGaussian() * 0.08;

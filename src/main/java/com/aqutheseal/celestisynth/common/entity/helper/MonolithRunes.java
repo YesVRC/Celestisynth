@@ -12,8 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -26,9 +28,9 @@ import java.util.function.BiConsumer;
 
 public enum MonolithRunes {
     NO_RUNE((ResourceLocation) null, 0, 0, 0, 0, MonolithRunes::noRuneTick, MonolithRunes::noRuneConsume),
-    BLOOD_RUNE("blood", 60, 1, 10, 3, MonolithRunes::bloodRuneTick, MonolithRunes::bloodRuneConsume),
+    BLOOD_RUNE("blood", 400, 1, 10, 3, MonolithRunes::bloodRuneTick, MonolithRunes::bloodRuneConsume),
     AQUA_RUNE("aqua", 0, 0, 0, 0, MonolithRunes::noRuneTick, MonolithRunes::noRuneConsume),
-    APOCALYPTIC_RUNE("aqua", 100, 20, 10, Integer.MAX_VALUE, MonolithRunes::noRuneTick, MonolithRunes::apocalypticRuneConsume);
+    APOCALYPTIC_RUNE("apocalyptic", 500, 20, 10, Integer.MAX_VALUE, MonolithRunes::noRuneTick, MonolithRunes::apocalypticRuneConsume);
 
     public static final HashMap<TagKey<Item>, MonolithRunes> ACTIVATORS_LIST = new HashMap<>();
 
@@ -88,13 +90,17 @@ public enum MonolithRunes {
 
     public static void apocalypticRuneConsume(StarMonolith monolith, BlockPos summonPosition, ServerLevel level) {
         List<EntityType<? extends Mob>> hostilesList = List.of(
-                EntityType.PILLAGER, EntityType.RAVAGER, EntityType.VINDICATOR, EntityType.EVOKER, EntityType.ILLUSIONER, EntityType.WITHER_SKELETON
+                EntityType.ZOMBIE, EntityType.RAVAGER, EntityType.VINDICATOR, EntityType.SKELETON, EntityType.WITHER_SKELETON
         );
         Mob chosenMob = hostilesList.get(level.random.nextInt(hostilesList.size())).create(level);
         chosenMob.moveTo(summonPosition, 0, 0);
         chosenMob.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1024);
         chosenMob.setHealth(chosenMob.getMaxHealth());
-        chosenMob.setTarget(level.getNearestPlayer(chosenMob, 128));
+
+        List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, monolith.getBoundingBox().inflate(128)).stream().filter(i -> i != monolith && !(i instanceof Player) && !hostilesList.contains(i.getType())).toList();
+        if (!entities.isEmpty()) {
+            chosenMob.setTarget(entities.get(monolith.getRandom().nextInt(entities.size())));
+        }
         level.addFreshEntity(chosenMob);
     }
 }

@@ -31,6 +31,10 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
     public static final String SMASH_HEIGHT = "cs.poltergeistSmashHeight";
     public static final String SMASH_COUNT_FOR_PASSIVE = "cs.smashCountForPassive";
 
+    // Experimental
+//    public static final ParticleEmitterInfo POLTER = new ParticleEmitterInfo(Celestisynth.prefix("poltereis"));
+//    public static final ParticleEmitterInfo POLTEREPIC = new ParticleEmitterInfo(Celestisynth.prefix("poltereisepic"));
+
     public PoltergeistCosmicSteelAttack(Player player, ItemStack stack) {
         super(player, stack);
     }
@@ -86,7 +90,13 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
             player.playSound(SoundEvents.END_GATEWAY_SPAWN, 1.0F, 1.75F);
             player.playSound(CSSoundEvents.LOUD_IMPACT.get(), 1.5F, 1.0F);
             CSEffectEntity.createInstance(player, null, crack, xx, isGiantImpact ? -1.3 : -0.5, zz);
-            doImpact(isGiantImpact, xx, zz, range);
+
+//            if (!level.isClientSide) {
+//                ParticleEmitterInfo particle2 = (isGiantImpact ? POLTEREPIC : POLTER).clone().position(player.position().add(xx, 0.01, zz)).scale(isGiantImpact ? 5F : 4F);
+//                AAALevel.addParticle(level, particle2);
+//            }
+
+            this.doImpact(isGiantImpact, xx, zz, range);
 
             if (isGiantImpact) {
                 if (!level.isClientSide()) {
@@ -118,7 +128,8 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
     public void doImpact(boolean isGiantImpact, double kbX, double kbZ, double range) {
         for (Entity entityBatch : iterateEntities(level, createAABB(player.blockPosition().offset((int) kbX, 1, (int) kbZ), range))) {
             if (entityBatch instanceof LivingEntity target && target != player && target.isAlive() && !player.isAlliedTo(target)) {
-                initiateAbilityAttack(player, target, (isGiantImpact ? (float) (double) CSConfigManager.COMMON.poltergeistSkillDmg.get() * 1.4F : (float) (double) (CSConfigManager.COMMON.poltergeistSkillDmg.get())) + getSharpnessValue(getStack(), 1.2F) + getTagController().getInt(SMASH_HEIGHT), AttackHurtTypes.NO_KB);
+                float dmgCalc = (isGiantImpact ? 1.5F : 1.2F) + (getTagController().getInt(SMASH_HEIGHT) * 0.2F);
+                this.attributeDependentAttack(player, target, stack, dmgCalc, AttackHurtTypes.NO_KB);
                 target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 20, 2));
                 target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.CONFUSION, 100, 0));
                 target.hurtMarked = true;

@@ -10,8 +10,8 @@ public class CSClientConfig {
     public CSClientConfig(ForgeConfigSpec.Builder builder) {
         builder.push("Client-side Configurations");
         visibilityOnFirstPerson = builder.comment("Should the weapon attack effects be visible on first person mode?").define("Is Visible?", true);
-        showLeftArmOnAnimate = builder.comment("Defines if your left arm must be shown during the ability casting process.").define("Show Left Arm", true);
-        showRightArmOnAnimate = builder.comment("Defines if your right arm must be shown during the ability casting process.").define("Show Right Arm", true);
+        showLeftArmOnAnimate = builder.comment("Defines if your left arm must be shown during the ability casting process.").define("Show Left Arm", false);
+        showRightArmOnAnimate = builder.comment("Defines if your right arm must be shown during the ability casting process.").define("Show Right Arm", false);
         builder.pop();
     }
 }

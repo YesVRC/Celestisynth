@@ -13,11 +13,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class BreezebreakerWindRoarAttack extends BreezebreakerAttack {
@@ -56,33 +54,27 @@ public class BreezebreakerWindRoarAttack extends BreezebreakerAttack {
     @Override
     public void tickAttack() {
         if (getTimerProgress() == 10) {
-            sendExpandingParticles(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, player.blockPosition(), 45, 0.2F);
+            sendExpandingParticles(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, player.blockPosition(), 45, 0.01F);
 
-            Entity lookAtTarget = getLookedAtEntity(player, 16);
-            LivingEntity observedLivingTarget = lookAtTarget instanceof LivingEntity entity ? entity : null;
-            
-            if (observedLivingTarget != null) {
-                double attackDamage = CSConfigManager.COMMON.breezebreakerSprintSkillDmg.get() + getSharpnessValue(stack, 1);
-
-                initiateAbilityAttack(player, observedLivingTarget, (float) attackDamage, AttackHurtTypes.NO_KB);
-                level.explode(player, observedLivingTarget.getX(), observedLivingTarget.getY(), observedLivingTarget.getZ(), 1.0F, Level.ExplosionInteraction.NONE);
-                observedLivingTarget.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.WEAKNESS, 60, 2));
-                observedLivingTarget.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 60, 2));
-                sendExpandingParticles(level, ParticleTypes.FIREWORK, player.blockPosition().above(), 45, 0.2F);
+            for (LivingEntity target : this.getEntitiesInLine(player, 10)) {
+                if (target != player) {
+                    double targetDist = target.distanceTo(player);
+                    this.attributeDependentAttack(player, target, stack, 2F + ((float) targetDist * 0.075F), AttackHurtTypes.NO_KB);
+                    target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.WEAKNESS, 60, 2));
+                    target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 60, 2));
+                    sendExpandingParticles(level, ParticleTypes.FIREWORK, player.blockPosition().above(), 45, 0.2F);
+                }
             }
 
             double speed = 7;
             Vec3 delta;
-
             for (float distii = 0; distii < speed; distii += 0.25F) {
                 BlockPos newPos = new BlockPos((int) (player.getX() + calculateXLook(player) * distii), (int) player.getY(), (int) (player.getZ() + calculateZLook(player) * distii));
-
                 if (!level.isEmptyBlock(newPos)) {
                     speed = distii;
                     break;
                 }
             }
-
             delta = new Vec3(calculateXLook(player) * speed, 0, calculateZLook(player) * speed);
             player.moveTo(player.getX() + calculateXLook(player) * speed, player.getY(), player.getZ() + calculateZLook(player) * speed);
 

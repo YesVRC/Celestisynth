@@ -130,18 +130,15 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
                 }
             }
         }
-//        if (pEntity instanceof Player player) {
-//            if (player.isShiftKeyDown() && dur < 200) {
-//                for (int i = 0; i < 360; i = i + 2) {
-//                    ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_OMEN.get(),
-//                            player.getX() + (calculateXLook(player) * ((double) dur / 3)) + (Mth.sin(i) * 5),
-//                            player.getY(),
-//                            player.getZ() + (calculateZLook(player) * ((double) dur / 3)) + (Mth.cos(i) * 5),
-//                            -Mth.sin(i) * 0.3 , 0.5, -Mth.cos(i) * 0.3
-//                    );
-//                }
-//            }
-//        }
+
+        if (pEntity instanceof Player player) {
+            if (player.isShiftKeyDown() && dur < 200) {
+                for (int i = 0; i < 22.5; i++) {
+                    ParticleUtil.sendParticle(pLevel, CSParticleTypes.KERES_OMEN.get(), player.getX() + (calculateXLook(player) * ((double) dur / 3)) + (Mth.sin(i) * 5), player.getY(), player.getZ() + (calculateZLook(player) * ((double) dur / 3)) + (Mth.cos(i) * 5), -Mth.sin(i) * 0.3 , 0.5, -Mth.cos(i) * 0.3);
+                }
+            }
+        }
+
         if (dur >= 200) {
             if (pEntity instanceof Player player) {
                 shakeScreensForNearbyPlayers(player, pLevel, 12, 30, 15,  0.01F);

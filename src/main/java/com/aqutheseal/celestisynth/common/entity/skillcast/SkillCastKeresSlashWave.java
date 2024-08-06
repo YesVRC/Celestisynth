@@ -57,6 +57,7 @@ public class SkillCastKeresSlashWave extends EffectControllerEntity {
                 Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
                 slash.setRoll((float) (random.nextGaussian() * 360));
                 slash.moveTo(player.getEyePosition().add(0, -1.25, 0));
+                slash.baseDamage = this.damage;
                 slash.shoot(shootAngle.x, shootAngle.y, shootAngle.z, 6F, 0);
                 level().addFreshEntity(slash);
             }

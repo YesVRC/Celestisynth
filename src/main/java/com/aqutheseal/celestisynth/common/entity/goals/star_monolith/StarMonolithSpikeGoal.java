@@ -49,7 +49,7 @@ public class StarMonolithSpikeGoal extends Goal {
         if (target != mob) {
             if (EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target)) {
                 if (!(target instanceof StarMonolith)) {
-                    return target instanceof MonolithSummonedEntity monolithSummon && monolithSummon.getMonolith() != mob;
+                    return !(target instanceof MonolithSummonedEntity monolithSummon && monolithSummon.getMonolith() == mob);
                 }
             }
         }

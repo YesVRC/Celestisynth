@@ -1,12 +1,11 @@
 package com.aqutheseal.celestisynth.common.entity.projectile;
 
-import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.item.weapons.CrescentiaItem;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffects;
@@ -35,6 +34,7 @@ import java.util.List;
 public class CrescentiaDragon extends ThrowableProjectile implements GeoEntity, CSWeaponUtil {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public LivingEntity chomped;
+    public float damage = 2;
     public int lifespan = 100;
 
     public CrescentiaDragon(EntityType<? extends ThrowableProjectile> pEntityType, Level pLevel) {
@@ -63,11 +63,15 @@ public class CrescentiaDragon extends ThrowableProjectile implements GeoEntity, 
         }
         List<Entity> entities = level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(4));
         ItemStack fireworkStack = new ItemStack(Items.FIREWORK_ROCKET);
+
         if (getOwner() instanceof Player playerOwner) {
+
+            this.chomped = playerOwner;
+
             for (Entity entityBatch : entities) {
                 if (entityBatch instanceof LivingEntity target) {
                     if (target != getOwner() && target.isAlive()) {
-                        initiateAbilityAttack(playerOwner, target, (float) (double) CSConfigManager.COMMON.crescentiaShiftSkillDmg.get(), AttackHurtTypes.RAPID_NO_KB);
+                        initiateAbilityAttack(playerOwner, target, damage, AttackHurtTypes.RAPID_NO_KB);
                         target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 20, 2));
                     }
                 }
@@ -80,7 +84,7 @@ public class CrescentiaDragon extends ThrowableProjectile implements GeoEntity, 
             if (chomped != null) {
                 Vec3 vector = this.position().add(0, -1, 0).add(offsetVector).subtract(chomped.position());
                 chomped.setDeltaMovement(vector.x(), vector.y(), vector.z());
-                this.lifespan -= (int) chomped.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) * 4;
+                this.lifespan -= (int) chomped.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) * 2;
             }
 
             if (tickCount % 5 == 0) {
@@ -104,6 +108,13 @@ public class CrescentiaDragon extends ThrowableProjectile implements GeoEntity, 
             }
         }
 
+        String side = level().isClientSide() ? "Client" : "Server";
+        if (chomped != null) {
+            System.out.println(side + ": " + chomped.getDisplayName().getString());
+        } else {
+            System.out.println(side + ": " + "Empty");
+        }
+
         if (tickCount > lifespan) {
             level().explode(getOwner(), getX(), getY(), getZ(), 1.0F, Level.ExplosionInteraction.MOB);
             this.remove(RemovalReason.DISCARDED);
@@ -122,9 +133,6 @@ public class CrescentiaDragon extends ThrowableProjectile implements GeoEntity, 
         super.onHitEntity(pResult);
         if (pResult.getEntity() instanceof LivingEntity target && pResult.getEntity() != this.getOwner()) {
             this.chomped = target;
-            if (getOwner() instanceof LivingEntity owner) {
-                initiateAbilityAttack(owner, target, 2F, AttackHurtTypes.RAPID_NO_KB);
-            }
         }
     }
 

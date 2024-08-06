@@ -97,7 +97,7 @@ public class FrostboundItem extends SkilledSwordItem implements CSGeoItem {
     public void onUseTick(Level pLevel, LivingEntity pLivingEntity, ItemStack pStack, int pRemainingUseDuration) {
         super.onUseTick(pLevel, pLivingEntity, pStack, pRemainingUseDuration);
         int dur = this.getUseDuration(pStack) - pRemainingUseDuration;
-        if (dur % 5 == 0) {
+        if (dur % 10 == 0) {
             for (int i = 0; i <= pLevel.random.nextInt(2); i++) {
                 if (pLivingEntity instanceof Player player) {
                     double xx = pLevel.random.nextGaussian() * 3;

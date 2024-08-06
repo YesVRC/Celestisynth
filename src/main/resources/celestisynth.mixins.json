@@ -5,6 +5,7 @@
   "refmap": "celestisynth.refmap.json",
   "mixins": [
     "AbstractArrowMixin",
+    "BowItemMixin",
     "EntityMixin",
     "InventoryMixin",
     "ItemMixin",
@@ -23,9 +24,9 @@
     "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
     "InventoryScreenMixin",
+    "ItemInHandLayerMixin",
     "LivingEntityRendererMixin",
     "MinecraftMixin",
-    "ItemInHandLayerMixin",
     "RenderLayerMixin"
   ]
 }

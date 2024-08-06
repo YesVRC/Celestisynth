@@ -90,7 +90,7 @@ public class SolarisSoulDashAttack extends WeaponAttackInstance {
 
             for (LivingEntity target : entities) {
                 if (target != player && !player.isAlliedTo(target) && target.isAlive()) {
-                    initiateAbilityAttack(player, target, (float) ((CSConfigManager.COMMON.solarisShiftSkillDmg.get()) + getSharpnessValue(getStack(), 0.5F)), AttackHurtTypes.RAPID_NO_KB);
+                    this.attributeDependentAttack(player, target, stack, 0.18F, AttackHurtTypes.RAPID_NO_KB);
                     target.setSecondsOnFire(5);
                 }
             }

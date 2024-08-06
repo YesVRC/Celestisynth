@@ -272,12 +272,8 @@ public class StarMonolith extends Mob implements GeoEntity, FixedMovesetEntity, 
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
-        if (pCompound.contains("variant")) {
-                pCompound.putInt("variant", this.getVariant());
-        }
-        if (pCompound.contains("rune")) {
-            pCompound.putInt("rune", this.getRune().ordinal());
-        }
+        pCompound.putInt("variant", this.getVariant());
+        pCompound.putInt("rune", this.getRune().ordinal());
     }
 
     public void setVariant(int variant) {

@@ -32,20 +32,20 @@ public class SkillCastKeresSmash extends EffectControllerEntity {
 
         if (tickCount == 1) {
             CSEffectEntity.createInstance(player, null, CSVisualTypes.KERES_PULSE.get(), 0, 0.35, 0);
-            this.doSmashAttack(player, 3, 0);
+            this.doSmashAttack(player, 3, 0, 1);
         }
         if (tickCount == 6) {
             CSEffectEntity.createInstance(player, null, CSVisualTypes.KERES_PULSE_1.get(), 0, -0.35, 0);
-            this.doSmashAttack(player, 5, 1.5);
+            this.doSmashAttack(player, 5, 1.5, 0.8F);
         }
         if (tickCount == 11) {
             CSEffectEntity.createInstance(player, null, CSVisualTypes.KERES_PULSE_2.get(), 0, -1.45, 0);
             this.remove(RemovalReason.DISCARDED);
-            this.doSmashAttack(player, 7, 3);
+            this.doSmashAttack(player, 7, 3, 0.6F);
         }
     }
 
-    public void doSmashAttack(Player owner, double radius, double out) {
+    public void doSmashAttack(Player owner, double radius, double out, float multiplier) {
         playSound(CSSoundEvents.STEP.get(), 0.4F, 0.5F);
         Predicate<LivingEntity> filter = target -> target != owner && this.distanceToSqr(target) >= out;
         this.shakeScreensForNearbyPlayers(owner, level(), radius, 5, 5,  0.015F);
@@ -55,8 +55,8 @@ public class SkillCastKeresSmash extends EffectControllerEntity {
         List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, new AABB(-radius, 0, -radius, radius, 4, radius).move(position())).stream().filter(filter).toList();
         for (LivingEntity target : targets) {
             target.addEffect(new MobEffectInstance(CSMobEffects.CURSEBANE.get(), 100, 1));
-            this.initiateAbilityAttack(owner, target, 5F, AttackHurtTypes.RAPID);
-            owner.heal(2F);
+            this.initiateAbilityAttack(owner, target, this.damage * multiplier, AttackHurtTypes.RAPID);
+            owner.heal((this.damage * multiplier) / 4);
         }
     }
 

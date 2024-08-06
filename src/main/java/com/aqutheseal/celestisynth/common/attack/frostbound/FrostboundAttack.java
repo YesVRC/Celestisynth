@@ -20,7 +20,7 @@ public abstract class FrostboundAttack extends WeaponAttackInstance {
             double xx = level.random.nextGaussian() * 1.5;
             double yy = level.random.nextGaussian() * 1.5;
             double zz = level.random.nextGaussian() * 1.5;
-            shootShard(xx, yy, zz);
+            this.shootShard(xx, yy, zz);
         }
         if (FrostboundItem.getShard(player) != ItemStack.EMPTY) {
             player.playSound(SoundEvents.BLAZE_SHOOT);
