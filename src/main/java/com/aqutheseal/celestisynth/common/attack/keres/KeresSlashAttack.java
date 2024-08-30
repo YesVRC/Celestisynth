@@ -54,7 +54,7 @@ public class KeresSlashAttack extends WeaponAttackInstance {
             wave.setOwner(player);
             wave.moveTo(player.position());
             wave.damage = this.calculateAttributeDependentDamage(player, stack, 0.2F);
-            wave.lifespan = (heldDuration / 8) + level.random.nextInt(3);
+            wave.lifespan = (heldDuration / 6) + level.random.nextInt(3);
             if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, stack) > 0) {
                 wave.hasMultishot = true;
             }

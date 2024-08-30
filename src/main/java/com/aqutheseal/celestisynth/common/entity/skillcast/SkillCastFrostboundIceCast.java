@@ -92,9 +92,9 @@ public class SkillCastFrostboundIceCast extends EffectControllerEntity {
                 if (entityBatch instanceof LivingEntity target) {
                     if (target != ownerPlayer && target.isAlive()) {
                         this.initiateAbilityAttack(ownerPlayer, target, damage, AttackHurtTypes.NO_KB);
-                        target.setDeltaMovement(0, 0.05, 0);
+                        target.setDeltaMovement(0, 0.5, 0);
                         CSEntityCapabilityProvider.get(target).ifPresent(data -> {
-                            data.setFrostbound(100);
+                            data.setFrostbound(200);
                         });
                         target.playSound(sound.getSecond());
                     }

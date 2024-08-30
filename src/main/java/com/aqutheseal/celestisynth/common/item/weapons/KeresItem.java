@@ -191,7 +191,10 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
                             if (observedLivingTarget != null) {
                                 shadow.setHomingTarget(observedLivingTarget);
                             }
+
+                            shadow.damage = this.calculateAttributeDependentDamage(source, itemStack, 0.2F);
                             shadow.shootFromRotation(source, (float) (source.getRandom().nextGaussian() * 180), -15 - (float) (source.getRandom().nextDouble() * 75), 0, 1F, 0);
+                            shadow.setDeltaMovement(level.random.nextGaussian() * 0.25, 0.4, level.random.nextGaussian() * 0.25);
                             level.addFreshEntity(shadow);
                         }
                         source.playSound(SoundEvents.WITHER_SHOOT, 0.1F, 1.5F + (source.getRandom().nextFloat() * 0.5F));

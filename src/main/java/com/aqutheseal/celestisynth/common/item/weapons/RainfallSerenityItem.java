@@ -276,6 +276,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
         rainfallArrow.setOrigin(arrow.getOwner().position());
         rainfallArrow.setPierceLevel((byte) 3);
         rainfallArrow.setImbueQuasar(true);
+        rainfallArrow.setStrong(true);
 
         if (CSIntegrationManager.checkApothicAttributes() && arrow.getOwner() instanceof LivingEntity owner) {
             rainfallArrow.setBaseDamage(rainfallArrow.getBaseDamage() + CSCompatAP.apothValue(ALObjects.Attributes.ARROW_VELOCITY, owner));

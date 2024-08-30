@@ -1,6 +1,7 @@
 package com.aqutheseal.celestisynth.common.entity.skillcast;
 
 import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
+import com.aqutheseal.celestisynth.common.entity.projectile.KeresShadow;
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresSlash;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
@@ -30,6 +31,11 @@ public class SkillCastKeresSlashWave extends EffectControllerEntity {
         super.tick();
         Player player = getOwnerUUID() == null ? null : level().getPlayerByUUID(getOwnerUUID());
 
+        if (player == null) {
+            this.remove(RemovalReason.DISCARDED);
+            return;
+        }
+
         this.moveTo(player.position());
 
         if (lifespan > 0) {
@@ -56,10 +62,19 @@ public class SkillCastKeresSlashWave extends EffectControllerEntity {
                 Vec3 vec3 = player.getViewVector(1.0F);
                 Vector3f shootAngle = vec3.toVector3f().rotate(quaternionf);
                 slash.setRoll((float) (random.nextGaussian() * 360));
-                slash.moveTo(player.getEyePosition().add(0, -1.25, 0));
+                slash.moveTo(this.position().add(0, 1, 0));
                 slash.baseDamage = this.damage;
                 slash.shoot(shootAngle.x, shootAngle.y, shootAngle.z, 6F, 0);
                 level().addFreshEntity(slash);
+            }
+
+            if (random.nextInt(3) == 0) {
+                KeresShadow shadow = new KeresShadow(CSEntityTypes.KERES_SHADOW.get(), player, level());
+                shadow.moveTo(player.getX(), shadow.getY() - 1, player.getZ());
+                shadow.shootFromRotation(player, (float) (level().random.nextGaussian() * 180), -15 - (float) (level().random.nextDouble() * 75), 0, 1F, 0);
+                shadow.setDeltaMovement(level().random.nextGaussian() * 0.25, 0.4, level().random.nextGaussian() * 0.25);
+                shadow.damage = this.damage * 2;
+                level().addFreshEntity(shadow);
             }
         }
 

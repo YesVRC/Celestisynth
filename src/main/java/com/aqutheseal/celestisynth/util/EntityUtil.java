@@ -1,5 +1,6 @@
 package com.aqutheseal.celestisynth.util;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -10,6 +11,15 @@ public class EntityUtil {
     public static final SpawnPlacements.Type MONOLITH_SPAWNING_CONDITION = SpawnPlacements.Type.create("any_with_solid_under", (levelReader, blockPos, entityType) ->
             SpawnPlacements.Type.ON_GROUND.canSpawnAt(levelReader, blockPos, entityType) || levelReader.getFluidState(blockPos).is(Fluids.WATER)
     );
+
+    public static boolean isNotAPetOf(Entity owner, LivingEntity target) {
+        if (target instanceof OwnableEntity ownable) {
+            if (ownable.getOwner() == owner) {
+                return false;
+            }
+        }
+        return !target.isDeadOrDying() && !target.isRemoved();
+    }
 
     private static <T extends LivingEntity & OwnableEntity> boolean isValidTargetForOwnableBase(T pet, LivingEntity potentialTarget) {
         if (potentialTarget == pet) {

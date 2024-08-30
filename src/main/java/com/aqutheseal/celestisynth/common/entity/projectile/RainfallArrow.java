@@ -108,7 +108,7 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
                 }
 
                 CSEntityCapabilityProvider.get(target).ifPresent(data -> {
-                    if (getOwner() instanceof Player player && data.getQuasarImbueSource() == player) {
+                    if (getOwner() instanceof LivingEntity player && data.getQuasarImbueSource() == player) {
                         SkillCastRainfallRain projectile = CSEntityTypes.RAINFALL_RAIN.get().create(player.level());
                         projectile.targetPos = new BlockPos(ehr.getEntity().blockPosition());
                         projectile.setOwnerUUID(player.getUUID());
@@ -169,8 +169,6 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
         for (int e = 0; e < amount; e++) {
             ParticleUtil.sendParticle(level(), CSParticleTypes.RAINFALL_ENERGY_SMALL.get(), Vec3.atCenterOf(hitPos), Vec3.ZERO.add(random.nextGaussian() * 0.2, random.nextGaussian() * 0.2, random.nextGaussian() * 0.2));
         }
-
-        //this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
@@ -241,7 +239,7 @@ public class RainfallArrow extends AbstractArrow implements CSWeaponUtil {
         this.entityData.define(IS_STRONG, false);
         this.entityData.define(IS_FLAMING, false);
         this.entityData.define(ORIGIN, new Vector3f(0, 0, 0));
-        this.entityData.define(SHOULD_IMBUE_QUASAR, false);
+        this.entityData.define(SHOULD_IMBUE_QUASAR, true);
     }
 
     public boolean isStrong() {

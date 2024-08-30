@@ -128,8 +128,12 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
     public void doImpact(boolean isGiantImpact, double kbX, double kbZ, double range) {
         for (Entity entityBatch : iterateEntities(level, createAABB(player.blockPosition().offset((int) kbX, 1, (int) kbZ), range))) {
             if (entityBatch instanceof LivingEntity target && target != player && target.isAlive() && !player.isAlliedTo(target)) {
-                float dmgCalc = (isGiantImpact ? 1.5F : 1.2F) + (getTagController().getInt(SMASH_HEIGHT) * 0.2F);
-                this.attributeDependentAttack(player, target, stack, dmgCalc, AttackHurtTypes.NO_KB);
+
+                float dmgCalc = (isGiantImpact ? 1.5F : 1.2F);
+                float attributedDmg = this.calculateAttributeDependentDamage(player, stack, dmgCalc);
+                float smashHeightAdd = this.getTagController().getInt(SMASH_HEIGHT);
+                this.initiateAbilityAttack(player, target, attributedDmg + smashHeightAdd, AttackHurtTypes.NO_KB);
+
                 target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 20, 2));
                 target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.CONFUSION, 100, 0));
                 target.hurtMarked = true;
