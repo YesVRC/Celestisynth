@@ -12,7 +12,6 @@ import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -46,7 +45,7 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.poltergeistSkillCD.get();
+        return 200;
     }
 
     @Override
@@ -167,9 +166,7 @@ public class PoltergeistCosmicSteelAttack extends WeaponAttackInstance {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
         do {
             mutablePos.move(Direction.DOWN);
-            if (CSConfigManager.COMMON.enablePoltergeistHeightDmg.get()) {
-                getTagController().putInt(SMASH_HEIGHT, getTagController().getInt(SMASH_HEIGHT) + 1);
-            }
+            getTagController().putInt(SMASH_HEIGHT, getTagController().getInt(SMASH_HEIGHT) + 1);
         } while (mutablePos.getY() > level.getMinBuildHeight() && level.getBlockState(mutablePos).isPathfindable(level, mutablePos, PathComputationType.LAND));
         return new BlockPos(mutablePos.getX(), mutablePos.getY(), mutablePos.getZ());
     }

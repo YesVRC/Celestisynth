@@ -56,17 +56,17 @@ public class KeresShadow extends ThrowableProjectile implements CSWeaponUtil {
                 this.onHitEntity(new EntityHitResult(this.getHomingTarget()));
             }
         } else {
-            if (tickCount > 0) {
-                TargetingConditions selectFreshTarget = TargetingConditions.forCombat().range(128.0D).ignoreLineOfSight().selector(living -> living != this.getOwner() && EntityUtil.isNotAPetOf(this.getOwner(), living));
-                List<LivingEntity> targetList = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(32), entity -> selectFreshTarget.test(null, entity));
-                if (!targetList.isEmpty()) {
-                    this.setHomingTarget(targetList.get(random.nextInt(targetList.size())));
-                } else {
-                    if (this.getOwner() instanceof LivingEntity owner) {
+            TargetingConditions selectFreshTarget = TargetingConditions.forCombat().range(128.0D).ignoreLineOfSight().selector(living -> living != this.getOwner() && EntityUtil.isNotAPetOf(this.getOwner(), living));
+            List<LivingEntity> targetList = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(32), entity -> selectFreshTarget.test(null, entity));
+            if (!targetList.isEmpty()) {
+                this.setHomingTarget(targetList.get(random.nextInt(targetList.size())));
+            } else {
+                if (this.getOwner() instanceof LivingEntity owner) {
+                    if (this.tickCount >= 20) {
                         this.setHomingTarget(owner);
-                    } else {
-                        this.remove(RemovalReason.DISCARDED);
                     }
+                } else {
+                    this.remove(RemovalReason.DISCARDED);
                 }
             }
         }

@@ -5,7 +5,6 @@ import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastBreezebreake
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -36,7 +35,7 @@ public class BreezebreakerWhirlwindAttack extends BreezebreakerAttack {
 
     @Override
     public int getCooldown() {
-        return buffStateModified(CSConfigManager.COMMON.breezebreakerShiftSkillCD.get());
+        return buffStateModified(35);
     }
 
     @Override

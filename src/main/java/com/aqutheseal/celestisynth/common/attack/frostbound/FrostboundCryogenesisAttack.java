@@ -20,7 +20,7 @@ public class FrostboundCryogenesisAttack extends FrostboundAttack {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.frostboundShiftSkillCD.get();
+        return 100;
     }
 
     @Override

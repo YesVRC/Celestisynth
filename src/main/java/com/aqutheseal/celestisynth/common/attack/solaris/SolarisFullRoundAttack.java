@@ -7,7 +7,6 @@ import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -34,7 +33,7 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.solarisSkillCD.get();
+        return 70;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class SolarisFullRoundAttack extends WeaponAttackInstance {
 
     @Override
     public boolean getCondition() {
-        return player.onGround() && !player.isShiftKeyDown();
+        return !player.isShiftKeyDown();
     }
 
     @Override

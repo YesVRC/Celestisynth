@@ -6,7 +6,6 @@ import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +30,7 @@ public class AquafloraPetalPiercesAttack extends AquafloraAttack {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.aquafloraSkillCD.get();
+        return 20;
     }
 
     @Override

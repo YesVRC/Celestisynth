@@ -37,6 +37,7 @@ public class CSEntityLoot extends EntityLootSubProvider {
                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                 )
         );
+        this.add(CSEntityTypes.VEILGUARD.get(), LootTable.lootTable());
     }
 
     @Override

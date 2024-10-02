@@ -68,7 +68,7 @@ public class SkillCastKeresSlashWave extends EffectControllerEntity {
                 level().addFreshEntity(slash);
             }
 
-            if (random.nextInt(3) == 0) {
+            if (random.nextInt(hasMultishot ? 2 : 3) == 0) {
                 KeresShadow shadow = new KeresShadow(CSEntityTypes.KERES_SHADOW.get(), player, level());
                 shadow.moveTo(player.getX(), shadow.getY() - 1, player.getZ());
                 shadow.shootFromRotation(player, (float) (level().random.nextGaussian() * 180), -15 - (float) (level().random.nextDouble() * 75), 0, 1F, 0);

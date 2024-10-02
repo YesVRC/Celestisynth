@@ -11,11 +11,8 @@ import com.aqutheseal.celestisynth.common.compat.bettercombat.SwingParticleConta
 import com.aqutheseal.celestisynth.common.entity.projectile.KeresShadow;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
 import com.aqutheseal.celestisynth.common.registry.*;
-import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -25,8 +22,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -38,8 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
-
-import java.util.UUID;
 
 public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     public static final String PASSIVE_STACK = "cs.keresStack";
@@ -57,14 +50,6 @@ public class KeresItem extends SkilledSwordItem implements CSGeoItem {
     @Override
     public GeoAnimatable cacheItem() {
         return this;
-    }
-
-    @Override
-    public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
-        if (CSIntegrationManager.checkIronsSpellbooks()) {
-            map.put(AttributeRegistry.BLOOD_SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Item blood spell power", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
-            map.put(AttributeRegistry.BLOOD_MAGIC_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Item blood resist", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
-        }
     }
 
     @Override

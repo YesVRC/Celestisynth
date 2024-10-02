@@ -57,11 +57,14 @@ public class CSTooltipRenderer {
 
             if (menu % 2 == 0) {
                 if (cs.getPassiveAmount() > 0) {
-                    elementsToAdd.add(Either.right(new AbilityComponent.Data(name, cs.getPassiveAmount(), (scroll % cs.getPassiveAmount()) + 1, AbilityComponent.Side.PASSIVE)));
+                    int highlightedIndex = Math.abs(scroll % cs.getPassiveAmount());
+                    elementsToAdd.add(Either.right(new AbilityComponent.Data(name, cs.getPassiveAmount(), highlightedIndex + 1, AbilityComponent.Side.PASSIVE)));
                 }
             } else if (menu % 2 == 1) {
                 if (cs.getSkillsAmount() > 0) {
-                    elementsToAdd.add(Either.right(new AbilityComponent.Data(name, cs.getSkillsAmount(), (scroll % cs.getSkillsAmount()) + 1, AbilityComponent.Side.SKILL)));
+                    int highlightedIndex = Math.abs(scroll % cs.getSkillsAmount());
+                    //System.out.println("Index: " + highlightedIndex + ", Scroll Value: " + scroll);
+                    elementsToAdd.add(Either.right(new AbilityComponent.Data(name, cs.getSkillsAmount(), highlightedIndex + 1, AbilityComponent.Side.SKILL)));
                 }
             }
         }

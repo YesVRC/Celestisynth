@@ -6,6 +6,7 @@ import com.aqutheseal.celestisynth.api.item.CSArmorItem;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.capabilities.CSEntityCapabilityProvider;
+import com.aqutheseal.celestisynth.common.compat.CompatRegistryManager;
 import com.aqutheseal.celestisynth.common.entity.mob.natural.Traverser;
 import com.aqutheseal.celestisynth.common.entity.projectile.SolarisBomb;
 import com.aqutheseal.celestisynth.common.entity.skillcast.SkillCastPoltergeistWard;
@@ -22,6 +23,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.ItemAttributeModifierEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.CriticalHitEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -93,6 +95,11 @@ public class CSCommonMiscEvents {
     @SubscribeEvent
     public static void onWeaponCrit(CriticalHitEvent event) {
 
+    }
+
+    @SubscribeEvent
+    public static void giveItemAttributes(ItemAttributeModifierEvent event) {
+        CompatRegistryManager.manageCompatAttributes(event);
     }
 
     @SubscribeEvent

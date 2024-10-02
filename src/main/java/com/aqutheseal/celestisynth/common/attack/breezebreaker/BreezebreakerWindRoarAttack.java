@@ -8,7 +8,6 @@ import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -31,7 +30,7 @@ public class BreezebreakerWindRoarAttack extends BreezebreakerAttack {
 
     @Override
     public int getCooldown() {
-        return buffStateModified(CSConfigManager.COMMON.breezebreakerSprintSkillCD.get());
+        return buffStateModified(15);
     }
 
     @Override

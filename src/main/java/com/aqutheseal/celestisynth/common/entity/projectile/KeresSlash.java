@@ -55,7 +55,7 @@ public class KeresSlash extends ThrowableProjectile implements GeoEntity, CSWeap
         if (this.getOwner() instanceof LivingEntity owner) {
             if (pResult.getEntity() instanceof LivingEntity target && target != owner) {
                 target.addEffect(new MobEffectInstance(CSMobEffects.CURSEBANE.get(), 100, 1));
-                float damageCalculation = baseDamage + (target.getMaxHealth() * (0.005F + (baseDamage * 0.0005F)));
+                float damageCalculation = baseDamage + (target.getMaxHealth() * (baseDamage * 0.0035F));
                 this.initiateAbilityAttack(owner, target, damageCalculation, damageSources().indirectMagic(this, this.getOwner()), AttackHurtTypes.RAPID_NO_KB);
                 owner.heal(damageCalculation * 0.5F);
                 for (int i = 0; i < 15; i++) {

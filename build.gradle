@@ -16,6 +16,7 @@ archivesBaseName = modid
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
 minecraft {
     mappings channel: mappings_channel, version: mappings_version
     
@@ -152,7 +153,7 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.caelus:caelus-forge:3.1.0+1.20")
 
     // Dependencies (Extras)
-    implementation fg.deobf("curse.maven:aaa-particles-979809:5517940")
+    //runtimeOnly fg.deobf("curse.maven:aaa-particles-979809:5517940")
     runtimeOnly fg.deobf("curse.maven:just-enough-resources-jer-240630:${jer_version}")
     runtimeOnly fg.deobf("curse.maven:just-enough-effect-descriptions-jeed-532286:${jeed_version}")
     runtimeOnly fg.deobf("curse.maven:config-menus-forge-544048:${config_menus_version}")
@@ -161,8 +162,8 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_version}")
     runtimeOnly fg.deobf("squeek.appleskin:appleskin-forge:${appleskin_version}")
 
-    //runtimeOnly fg.deobf("curse.maven:passive-skill-tree-850298:5367713")
-    //runtimeOnly fg.deobf("curse.maven:item-production-lib-950401:5114036")
+    runtimeOnly fg.deobf("curse.maven:passive-skill-tree-850298:5367713")
+    runtimeOnly fg.deobf("curse.maven:item-production-lib-950401:5114036")
     runtimeOnly fg.deobf("curse.maven:curios-309927:5367944")
     runtimeOnly fg.deobf("curse.maven:attributefix-280510:4911084")
     runtimeOnly fg.deobf("curse.maven:placebo-283644:5098182")

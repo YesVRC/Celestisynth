@@ -9,7 +9,6 @@ import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -46,7 +45,7 @@ public class AquafloraSlashFrenzyAttack extends AquafloraAttack {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.aquafloraBloomShiftSkillCD.get();
+        return 200;
     }
 
     @Override

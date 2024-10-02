@@ -5,7 +5,6 @@ import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.attack.solaris.SolarisFullRoundAttack;
 import com.aqutheseal.celestisynth.common.attack.solaris.SolarisSoulDashAttack;
-import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.compat.bettercombat.SwingParticleContainer;
 import com.aqutheseal.celestisynth.common.entity.projectile.SolarisBomb;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
@@ -14,8 +13,6 @@ import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -23,8 +20,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +32,6 @@ import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import java.util.List;
-import java.util.UUID;
 
 public class SolarisItem extends SkilledSwordItem implements CSGeoItem {
     public SolarisItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Item.Properties pProperties) {
@@ -62,14 +56,6 @@ public class SolarisItem extends SkilledSwordItem implements CSGeoItem {
     @Override
     public GeoAnimatable cacheItem() {
         return this;
-    }
-
-    @Override
-    public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
-        if (CSIntegrationManager.checkIronsSpellbooks()) {
-            map.put(AttributeRegistry.FIRE_SPELL_POWER.get(), new AttributeModifier(UUID.randomUUID(), "Item fire spell power", 0.1, AttributeModifier.Operation.MULTIPLY_BASE));
-            map.put(AttributeRegistry.FIRE_MAGIC_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Item fire resist", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
-        }
     }
 
     @Override

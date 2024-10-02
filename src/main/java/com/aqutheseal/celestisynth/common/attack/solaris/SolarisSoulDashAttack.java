@@ -7,7 +7,6 @@ import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,7 +35,7 @@ public class SolarisSoulDashAttack extends WeaponAttackInstance {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.solarisShiftSkillCD.get();
+        return 130;
     }
 
     @Override

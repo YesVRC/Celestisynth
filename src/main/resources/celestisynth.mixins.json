@@ -12,7 +12,6 @@
     "LivingEntityInvoker",
     "LivingEntityMixin",
     "PlayerMixin",
-    "RarityMixin",
     "RecipeManagerAccessor",
     "ServerPlayerMixin"
   ],
@@ -20,6 +19,7 @@
     "defaultRequire": 1
   },
   "client": [
+    "RarityMixin",
     "CreativeModeInventoryScreenMixin",
     "EntityRenderDispatcherMixin",
     "EntityRendererMixin",

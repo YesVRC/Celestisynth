@@ -66,7 +66,12 @@ public class CrescentiaDragon extends ThrowableProjectile implements GeoEntity, 
 
         if (getOwner() instanceof Player playerOwner) {
 
-            this.chomped = playerOwner;
+            List<LivingEntity> entitiesFiltered = entities.stream()
+                    .filter(ent -> ent instanceof LivingEntity && ent != playerOwner)
+                    .map(LivingEntity.class::cast).toList();
+            if (chomped == null && !entitiesFiltered.isEmpty()) {
+                this.chomped = entitiesFiltered.get(random.nextInt(entitiesFiltered.size()));
+            }
 
             for (Entity entityBatch : entities) {
                 if (entityBatch instanceof LivingEntity target) {
@@ -106,13 +111,6 @@ public class CrescentiaDragon extends ThrowableProjectile implements GeoEntity, 
                 float offZ = (random.nextFloat() * 20) - 10;
                 CrescentiaItem.createCrescentiaFirework(fireworkStack, level(), playerOwner, getX() + offX, getY() + offY,  getZ() + offZ, false);
             }
-        }
-
-        String side = level().isClientSide() ? "Client" : "Server";
-        if (chomped != null) {
-            System.out.println(side + ": " + chomped.getDisplayName().getString());
-        } else {
-            System.out.println(side + ": " + "Empty");
         }
 
         if (tickCount > lifespan) {

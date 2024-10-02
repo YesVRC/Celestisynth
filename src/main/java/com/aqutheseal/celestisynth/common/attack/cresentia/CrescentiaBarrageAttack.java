@@ -10,7 +10,6 @@ import com.aqutheseal.celestisynth.common.item.weapons.CrescentiaItem;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +35,7 @@ public class CrescentiaBarrageAttack extends WeaponAttackInstance {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.crescentiaSkillCD.get();
+        return 100;
     }
 
     @Override

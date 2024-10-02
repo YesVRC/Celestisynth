@@ -5,13 +5,10 @@ import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.aqutheseal.celestisynth.common.attack.cresentia.CrescentiaBarrageAttack;
 import com.aqutheseal.celestisynth.common.attack.cresentia.CrescentiaDragonAttack;
-import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.common.item.base.SkilledSwordItem;
 import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,8 +17,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -33,7 +28,6 @@ import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 
 import java.util.List;
-import java.util.UUID;
 
 public class CrescentiaItem extends SkilledSwordItem implements CSGeoItem {
     public CrescentiaItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
@@ -57,13 +51,6 @@ public class CrescentiaItem extends SkilledSwordItem implements CSGeoItem {
                 new CrescentiaBarrageAttack(player, stack),
                 new CrescentiaDragonAttack(player, stack)
         );
-    }
-
-    @Override
-    public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
-        if (CSIntegrationManager.checkIronsSpellbooks()) {
-            map.put(AttributeRegistry.SPELL_RESIST.get(), new AttributeModifier(UUID.randomUUID(), "Item spell resist", 0.25, AttributeModifier.Operation.MULTIPLY_BASE));
-        }
     }
 
     @Override

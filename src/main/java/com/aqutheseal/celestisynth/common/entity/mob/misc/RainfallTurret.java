@@ -113,9 +113,10 @@ public class RainfallTurret extends SummonableEntity implements GeoEntity {
                 FloatArrayList angles = new FloatArrayList();
                 angles.add(0);
 
-                int multishotEnchLvl = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, createBowFromData());
-                if (multishotEnchLvl > 0) {
-                    for (int i = 0; i < multishotEnchLvl + 1; i++) {
+                int multishot = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.MULTISHOT, createBowFromData());
+
+                if (multishot > 0) {
+                    for (int i = 0; i < multishot + 1; i++) {
                         angles.add(10 * i);
                         angles.add(-10 * i);
                     }

@@ -1,12 +1,11 @@
 package com.aqutheseal.celestisynth.common.entity.skillcast;
 
-import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
-import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.api.item.AttackHurtTypes;
 import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
+import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
+import com.aqutheseal.celestisynth.common.entity.base.EffectControllerEntity;
 import com.aqutheseal.celestisynth.common.item.weapons.CrescentiaItem;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -54,7 +53,7 @@ public class SkillCastCrescentiaRanged extends EffectControllerEntity {
         for (Entity entityBatch : entities) {
             if (entityBatch instanceof LivingEntity target) {
                 if (target != ownerPlayer && target.isAlive()) {
-                    initiateAbilityAttack(ownerPlayer, target, (float) (double) CSConfigManager.COMMON.crescentiaShiftSkillDmg.get(), AttackHurtTypes.RAPID_NO_KB);
+                    initiateAbilityAttack(ownerPlayer, target, 0.45F, AttackHurtTypes.RAPID_NO_KB);
                     target.addEffect(CSWeaponUtil.nonVisiblePotionEffect(MobEffects.MOVEMENT_SLOWDOWN, 20, 2));
                 }
             }

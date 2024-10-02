@@ -2,6 +2,7 @@ package com.aqutheseal.celestisynth.client.renderers.misc;
 
 import com.aqutheseal.celestisynth.Celestisynth;
 import com.aqutheseal.celestisynth.api.mixin.PlayerMixinSupport;
+import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -72,20 +73,22 @@ public class CSGuiRenderer {
 
             int pointerX = (getWidth() / 2);
             int pointerY = (getHeight() / 2);
-            if (mixinPlayer.getChantMark() < 20 && !mixinPlayer.getChantMessage().isEmpty()) {
-                Component text = Component.translatable(mixinPlayer.getChantMessage());
-                int textLength = font.width(text.getVisualOrderText());
+            if (CSConfigManager.CLIENT.showChantMessages.get()) {
+                if (mixinPlayer.getChantMark() < 20 && !mixinPlayer.getChantMessage().isEmpty()) {
+                    Component text = Component.translatable(mixinPlayer.getChantMessage());
+                    int textLength = font.width(text.getVisualOrderText());
 
-                int lerp = (int) Mth.lerp(mixinPlayer.getChantMark() / 20F, 255F, 0);
-                Color base = new Color(mixinPlayer.getChantColor());
-                Color pulse = Color.ofRGBA(base.getRed(), base.getGreen(), base.getBlue(), Mth.clamp(lerp, 0, 255));
-                Color modifiedPulse = pulse.darker(5);
+                    int lerp = (int) Mth.lerp(mixinPlayer.getChantMark() / 20F, 255F, 0);
+                    Color base = new Color(mixinPlayer.getChantColor());
+                    Color pulse = Color.ofRGBA(base.getRed(), base.getGreen(), base.getBlue(), Mth.clamp(lerp, 0, 255));
+                    Color modifiedPulse = pulse.darker(5);
 
-                float txt = textLength / 2F;
-                float xOffset = -(getWidth() / 8F) * 1.3F;
-                float yOffset = -((getHeight() / 8F) * 1.3F) + 7.5F;
-                font.drawInBatch8xOutline(text.getVisualOrderText(), pointerX + xOffset - txt, pointerY + yOffset, pulse.argbInt(), modifiedPulse.argbInt(), poseMatrix.scale(1.5F), buffer, LightTexture.FULL_BRIGHT);
-                poseMatrix.normal().scale(1.5F);
+                    float txt = textLength / 2F;
+                    float xOffset = -(getWidth() / 8F) * 1.3F;
+                    float yOffset = -((getHeight() / 8F) * 1.3F) + 7.5F;
+                    font.drawInBatch8xOutline(text.getVisualOrderText(), pointerX + xOffset - txt, pointerY + yOffset, pulse.argbInt(), modifiedPulse.argbInt(), poseMatrix.scale(1.5F), buffer, LightTexture.FULL_BRIGHT);
+                    poseMatrix.normal().scale(1.5F);
+                }
             }
         }
     }

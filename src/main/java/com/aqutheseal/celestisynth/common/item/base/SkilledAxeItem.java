@@ -2,7 +2,6 @@ package com.aqutheseal.celestisynth.common.item.base;
 
 import com.aqutheseal.celestisynth.api.item.CSDataPackableStatItem;
 import com.aqutheseal.celestisynth.api.item.CSWeapon;
-import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.attack.base.WeaponAttackInstance;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -44,9 +43,6 @@ public abstract class SkilledAxeItem extends AxeItem implements CSWeapon, CSData
 
     public SkilledAxeItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
-    }
-
-    public void addExtraAttributes(ImmutableMultimap.Builder<Attribute, AttributeModifier> map) {
     }
 
     public abstract ImmutableList<WeaponAttackInstance> getPossibleAttacks(Player player, ItemStack stack, int useDuration);

@@ -6,7 +6,6 @@ import com.aqutheseal.celestisynth.api.item.CSWeaponUtil;
 import com.aqutheseal.celestisynth.common.entity.base.CSEffectEntity;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +27,7 @@ public class AquafloraBlastOffAttack extends AquafloraAttack {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.aquafloraShiftSkillCD.get();
+        return 30;
     }
 
     @Override

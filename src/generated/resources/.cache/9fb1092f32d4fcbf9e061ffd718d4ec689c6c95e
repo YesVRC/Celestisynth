@@ -1,4 +1,4 @@
-// 1.20.1	2024-05-26T16:00:40.7269214	Recipes
+// 1.20.1	2024-09-30T14:58:33.9922204	Recipes
 8f889e3d049e4e19fa4b780d92b40dfa5add47ef data/celestisynth/advancements/recipes/combat/celestial_spellbook.json
 ea92acdab854805b7252a60db25a9f4e67702387 data/celestisynth/advancements/recipes/combat/lunar_stone_boots.json
 e67533aeda0f6dbe642472cd307bce0eb0964349 data/celestisynth/advancements/recipes/combat/lunar_stone_chestplate.json
@@ -41,7 +41,7 @@ e21d56a2ff42a028a6a7c098caa4b9a594020175 data/celestisynth/recipes/lunar_scrap_b
 16d4e9ee1f304c6706094828053ebe0ddb5154fb data/celestisynth/recipes/lunar_stone_helmet.json
 465bfb76861a06c48dd2c4cf885aab9b54af0a56 data/celestisynth/recipes/lunar_stone_leggings.json
 54bd215e1582a037456d06c7e7ed805ba7dc2c66 data/celestisynth/recipes/poltergeist.json
-ac5d8539b6616d5ce5122dde7e3fd3bdfebd7738 data/celestisynth/recipes/rainfall_serenity.json
+10e0b89c149b4d0a604ba5bd9552f9621bc3a7ef data/celestisynth/recipes/rainfall_serenity.json
 4922c2ab0116eaba7a1d2a8ae716a32d2de472a4 data/celestisynth/recipes/solaris.json
 5f51b5984a6004266373ad9bb288da7184039b97 data/celestisynth/recipes/solar_crystal_boots.json
 d3a785129562932ea318f013235852a444a9785e data/celestisynth/recipes/solar_crystal_chestplate.json

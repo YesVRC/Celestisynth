@@ -12,12 +12,10 @@ import com.aqutheseal.celestisynth.common.entity.helper.CSVisualAnimation;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.projectile.RainfallArrow;
 import com.aqutheseal.celestisynth.common.registry.*;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.manager.CSIntegrationManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +28,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -62,16 +59,12 @@ import java.util.stream.StreamSupport;
 
 public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem {
     public static CSVisualAnimation SPECIAL_RAINFALL = new CSVisualAnimation("animation.cs_effect.special_rainfall", 50);
-    public Multimap<Attribute, AttributeModifier> defaultModifiers;
     public static final String PULL = "cs.pull";
     public static final String PULLING = "cs.pulling";
 
     public RainfallSerenityItem(Properties pProperties) {
         super(pProperties);
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        this.addExtraAttributes(builder);
-        this.defaultModifiers = builder.build();
     }
 
     @Override
@@ -119,11 +112,6 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
     @Override
     public ImmutableList<WeaponAttackInstance> getPossibleAttacks(Player player, ItemStack stack, int useDuration) {
         return null;
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pSlot) {
-        return pSlot == EquipmentSlot.MAINHAND ? defaultModifiers : super.getDefaultAttributeModifiers(pSlot);
     }
 
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
@@ -351,7 +339,7 @@ public class RainfallSerenityItem extends BowItem implements CSWeapon, CSGeoItem
 
         float apoth_drawSpeed = CSCompatAP.apothRainfallSerenityDrawSpeed(entity);
 
-        return (float) (CSConfigManager.COMMON.rainfallSerenityDrawSpeed.get() + (piercingEnchLvl * 10)) / ((quickEnchLvl + 1) * 0.6f) + apoth_drawSpeed;
+        return (7.5F + (piercingEnchLvl * 10)) / ((quickEnchLvl + 1) * 0.6f) + apoth_drawSpeed;
     }
 
     public static float getPowerForTime(LivingEntity pEntityLiving, ItemStack stack, int pCharge) {

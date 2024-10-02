@@ -9,7 +9,6 @@ import com.aqutheseal.celestisynth.common.registry.CSParticleTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
 import com.aqutheseal.celestisynth.common.registry.CSVisualTypes;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import com.aqutheseal.celestisynth.util.ParticleUtil;
 import com.aqutheseal.celestisynth.util.SkinUtil;
 import com.mojang.datafixers.util.Pair;
@@ -36,7 +35,7 @@ public class FrostboundDanceAttack extends FrostboundAttack {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.frostboundSkillCD.get();
+        return 160;
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.aqutheseal.celestisynth.common.entity.projectile.CrescentiaDragon;
 import com.aqutheseal.celestisynth.common.registry.CSEntityTypes;
 import com.aqutheseal.celestisynth.common.registry.CSPlayerAnimations;
 import com.aqutheseal.celestisynth.common.registry.CSSoundEvents;
-import com.aqutheseal.celestisynth.manager.CSConfigManager;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +29,7 @@ public class CrescentiaDragonAttack extends WeaponAttackInstance {
 
     @Override
     public int getCooldown() {
-        return CSConfigManager.COMMON.crescentiaShiftSkillCD.get();
+        return 60;
     }
 
     @Override
