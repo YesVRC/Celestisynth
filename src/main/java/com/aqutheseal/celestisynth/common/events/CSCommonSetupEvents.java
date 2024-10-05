@@ -1,7 +1,6 @@
 package com.aqutheseal.celestisynth.common.events;
 
 import com.aqutheseal.celestisynth.Celestisynth;
-import com.aqutheseal.celestisynth.api.item.CSDataPackableStatItem;
 import com.aqutheseal.celestisynth.common.entity.helper.CSVisualType;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.RainfallTurret;
 import com.aqutheseal.celestisynth.common.entity.mob.misc.StarMonolith;
@@ -11,8 +10,6 @@ import com.aqutheseal.celestisynth.common.entity.tempestboss_scrapped.TempestBos
 import com.aqutheseal.celestisynth.common.registry.*;
 import com.aqutheseal.celestisynth.datagen.providers.*;
 import com.aqutheseal.celestisynth.datagen.providers.compat.CSBetterCombatProvider;
-import com.google.common.collect.ImmutableMultimap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -21,11 +18,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -34,9 +27,7 @@ import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
@@ -46,46 +37,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class CSCommonSetupEvents {
 
     public static class CSForgeSetupEvents {
-
-        @SubscribeEvent
-        public static void onAddReloadListenerEvent(AddReloadListenerEvent event) {
-            event.addListener(CSDataLoaders.TIERED_ITEM_STATS);
-
-            ObjectOpenHashSet<ResourceLocation> registryItemsByLoc = new ObjectOpenHashSet<>(CSItems.ITEMS.getEntries().stream().map(RegistryObject::getKey).filter(Objects::nonNull).map(ResourceKey::location).collect(Collectors.toSet()));
-            ObjectOpenHashSet<ResourceLocation> dataEntriesByLoc = new ObjectOpenHashSet<>(CSDataLoaders.TIERED_ITEM_STATS.getData().keySet());
-
-            registryItemsByLoc.retainAll(dataEntriesByLoc);
-
-            registryItemsByLoc.forEach(curItemByLoc -> { //TODO I love nested loops :smiling_face_with_3_hearts: (Refactor this l8r)
-                Celestisynth.LOGGER.debug("Item: " + curItemByLoc);
-
-                CSItems.ITEMS.getEntries().forEach(curItem -> {
-                    if (curItem.getKey().location().equals(curItemByLoc) && curItem.get() instanceof CSDataPackableStatItem dataPackableStatItem) {
-                        CSDataLoaders.TIERED_ITEM_STATS.getData().computeIfPresent(curItemByLoc, (loc, data) -> {
-                            dataPackableStatItem.setAttributes(Lazy.of(() -> {
-                                ImmutableMultimap.Builder<Attribute, AttributeModifier> attrModMapBuilder = ImmutableMultimap.builder();
-
-                                data.modifiers().forEach((attr, mod) -> attrModMapBuilder.put(attr, new AttributeModifier(attr.getDescriptionId() + "_mod", mod.modAmount(), mod.modOperation())));
-
-                                return attrModMapBuilder.build();
-                            }));
-                            return data;
-                        });
-                    }
-                });
-            });
-        }
     }
 
     public static class CSModSetupEvents {
