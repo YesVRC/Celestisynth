@@ -26,7 +26,10 @@ public class CSItemStackCapabilityProvider extends CapabilityAttacher {
     }
 
     private static void attach(AttachCapabilitiesEvent<ItemStack> event, ItemStack itemStack) {
-        genericAttachCapability(event, new CSItemStackCapability(itemStack), CAPABILITY, CS_ENTITY_CAP_RL);
+        Item item = itemStack.getItem();
+        if (item instanceof CSWeapon || item instanceof CSArmorItem) {
+            genericAttachCapability(event, new CSItemStackCapability(itemStack), CAPABILITY, CS_ENTITY_CAP_RL);
+        }
     }
 
     public static void register() {
